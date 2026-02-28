@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\FleetController;
 use App\Http\Controllers\Api\NodeController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ShipmentPaymentReferenceController;
+use App\Http\Controllers\Api\ShipmentLegController;
 use App\Http\Controllers\Api\GovernanceController;
 use App\Http\Controllers\Api\ShipmentBoardListingController;
 use App\Http\Controllers\Api\Webhooks\FreeBlackMarketWebhookController;
@@ -24,6 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::post('shipment-board-listings/{shipmentBoardListing}/claim', [ShipmentBoardListingController::class, 'claim']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/bids', [ShipmentBoardListingController::class, 'submitBid']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/status', [ShipmentBoardListingController::class, 'updateStatus']);
+    Route::get('shipment-board-listings/{shipmentBoardListing}/legs', [ShipmentLegController::class, 'index']);
+    Route::post('shipment-board-listings/{shipmentBoardListing}/legs', [ShipmentLegController::class, 'store']);
+    Route::patch('shipment-board-listings/{shipmentBoardListing}/legs/{shipmentLeg}', [ShipmentLegController::class, 'update']);
 
     Route::get('shipment-payment-references', [ShipmentPaymentReferenceController::class, 'index']);
     Route::get('shipment-payment-references/{shipmentPaymentReference}', [ShipmentPaymentReferenceController::class, 'show']);

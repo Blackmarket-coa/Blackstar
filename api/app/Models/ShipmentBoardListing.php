@@ -72,6 +72,11 @@ class ShipmentBoardListing extends Model
         return $this->hasMany(ShipmentBid::class);
     }
 
+    public function legs(): HasMany
+    {
+        return $this->hasMany(ShipmentLeg::class)->orderBy('sequence');
+    }
+
     public function paymentReference(): HasOne
     {
         return $this->hasOne(ShipmentPaymentReference::class);
