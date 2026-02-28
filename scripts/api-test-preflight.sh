@@ -37,6 +37,12 @@ else
   else
     warns+=("No Composer auth override detected (COMPOSER_AUTH or COMPOSER_GITHUB_OAUTH_TOKEN).")
   fi
+
+  if [[ -n "${COMPOSER_GITHUB_MIRROR:-}" ]]; then
+    ok "Using COMPOSER_GITHUB_MIRROR override for git clone fallback."
+  else
+    warns+=("COMPOSER_GITHUB_MIRROR not set; git fallback may still hit blocked github.com origins.")
+  fi
 fi
 
 for ext in sodium pdo_sqlite mbstring xml curl json; do

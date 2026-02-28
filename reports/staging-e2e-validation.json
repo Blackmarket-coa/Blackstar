@@ -5,14 +5,14 @@
     "php_binary": "/root/.phpenv/versions/8.2snapshot/bin/php",
     "php_version": "8.2.31-dev",
     "composer_install": {
-      "command": "PATH=/root/.phpenv/versions/8.2snapshot/bin:$PATH composer --working-dir=api install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sodium",
+      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (composer step)",
       "exit_code": 1,
-      "log": "reports/logs/composer-install-php82.log"
+      "log": "reports/logs/composer-install-g12.log"
     },
     "preflight": {
-      "command": "PATH=/root/.phpenv/versions/8.2snapshot/bin:$PATH ./scripts/api-test-preflight.sh",
+      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (preflight step)",
       "exit_code": 1,
-      "log": "reports/logs/preflight-php82.log"
+      "log": "reports/logs/preflight-g12-check.log"
     }
   },
   "scenarios": [
@@ -57,7 +57,7 @@
     }
   ],
   "vendor_visibility_suite": {
-    "command": "PATH=/root/.phpenv/versions/8.2snapshot/bin:$PATH php api/artisan test --env=testing api/tests/Feature/VendorVisibilityContractTest.php",
+    "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (vendor suite step)",
     "exit_code": 255,
     "log": "reports/logs/VendorVisibilityContractTest.log"
   },

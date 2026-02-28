@@ -2,8 +2,8 @@
 
 ## Runtime used for this rerun
 - PHP binary: `/root/.phpenv/versions/8.2snapshot/bin/php` (8.2.31-dev)
-- Composer install attempt: `reports/logs/composer-install-php82.log` (exit 1)
-- Preflight attempt: `reports/logs/preflight-php82.log` (exit 1)
+- Composer install attempt: `reports/logs/composer-install-g12.log` (exit 1)
+- Preflight attempt: `reports/logs/preflight-g12-check.log` (exit 1)
 
 ## Validation matrix
 
@@ -14,7 +14,7 @@
 | S3 Cancellation edge | listing claimed/in_transit -> `order.cancelled` -> cancelled | **BLOCKED** | 255 | `reports/logs/staging-s3-cancellation-edge.log` |
 
 ## Vendor visibility suite execution
-- Command: `PATH=/root/.phpenv/versions/8.2snapshot/bin:$PATH php api/artisan test --env=testing api/tests/Feature/VendorVisibilityContractTest.php`
+- Command: `PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh` (runs vendor suite and Gate 1 scenario filters)
 - Result: **BLOCKED** (exit 255)
 - Evidence: `reports/logs/VendorVisibilityContractTest.log`, `reports/logs/VendorVisibilityContractTest.exit`
 

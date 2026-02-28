@@ -47,11 +47,15 @@ If your runtime cannot access default Packagist/GitHub endpoints directly, set o
 ```bash
 export COMPOSER_REPO_PACKAGIST=https://<internal-packagist-mirror>
 export COMPOSER_GITHUB_OAUTH_TOKEN=<token>
+# optional git fallback mirror for blocked github.com origins
+export COMPOSER_GITHUB_MIRROR=https://<git-mirror-host>/
 # or full JSON auth blob
 export COMPOSER_AUTH='{"github-oauth":{"github.com":"<token>"}}'
 ```
 
 `./scripts/setup-api-test-env.sh` will apply these overrides before `composer install`.
+
+If your Composer falls back to `git clone` and `github.com` is blocked, set `COMPOSER_GITHUB_MIRROR` to an internal git mirror URL ending in `/`.
 
 ## Troubleshooting
 - **Unsupported PHP version**: use PHP `8.2.x`.

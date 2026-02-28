@@ -52,6 +52,12 @@ if [[ -n "${COMPOSER_AUTH:-}" ]]; then
   export COMPOSER_AUTH
 fi
 
+
+if [[ -n "${COMPOSER_GITHUB_MIRROR:-}" ]]; then
+  git config --global url."${COMPOSER_GITHUB_MIRROR}".insteadOf https://github.com/
+  git config --global url."${COMPOSER_GITHUB_MIRROR}".insteadOf git@github.com:
+fi
+
 composer install --no-interaction --prefer-dist --optimize-autoloader
 
 php artisan key:generate --env=testing --force
