@@ -1,0 +1,32 @@
+# Simulation: outbound-dead-letter-growth
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 inspect outbound publisher failure path
+$ rg -n "retryPending|markFailed|dead_letter|attempts|outbound_url" api/app/Services/FreeBlackMarket/OutboundEventPublisher.php
+20:            'attempts' => 0,
+30:        $event->attempts += 1;
+32:        $url = config('freeblackmarket.outbound_url');
+34:            $this->markFailed($event, 'Missing FBM outbound URL.');
+58:        $this->markFailed($event, 'HTTP ' . $response->status() . ': ' . $response->body());
+61:    public function retryPending(): void
+71:    protected function markFailed(FbmOutboundEvent $event, string $error): void
+78:        if ($event->attempts >= $maxRetries) {
+79:            $event->status = 'dead_letter';
+83:            $event->next_attempt_at = now()->addSeconds($backoff * $event->attempts);
+
+[timeline] T+10 inspect outbound event schema for status tracking
+$ rg -n "fbm_outbound_events|status|attempts|next_attempt_at" api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php
+16:            $table->string('status')->default('processing')->index();
+17:            $table->unsignedInteger('attempts')->default(0);
+20:            $table->timestamp('next_attempt_at')->nullable();
+24:        Schema::create('fbm_outbound_events', function (Blueprint $table) {
+30:            $table->string('status')->default('pending')->index();
+31:            $table->unsignedInteger('attempts')->default(0);
+34:            $table->timestamp('next_attempt_at')->nullable();
+41:        Schema::dropIfExists('fbm_outbound_events');
+
+expected=failed dispatch increments attempts and enters failed/dead_letter with backoff
+observed=markFailed + retryPending pathways present
+
+end_utc=2026-02-28T19:16:56Z
