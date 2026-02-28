@@ -53,6 +53,12 @@ class ShipmentEligibilityService
             }
         }
 
+        if (!is_null($listing->required_volume_limit)) {
+            if (is_null($transportClass->volume_limit) || $transportClass->volume_limit < $listing->required_volume_limit) {
+                return false;
+            }
+        }
+
         if (!is_null($listing->required_range_limit)) {
             if (is_null($transportClass->range_limit) || $transportClass->range_limit < $listing->required_range_limit) {
                 return false;

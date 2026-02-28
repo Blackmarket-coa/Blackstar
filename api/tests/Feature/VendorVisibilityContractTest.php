@@ -18,17 +18,21 @@ class VendorVisibilityContractTest extends TestCase
         'id',
         'source_order_ref',
         'status',
+        'origin',
+        'destination',
         'claim_policy',
         'jurisdiction',
         'required_category',
         'required_subtype',
         'required_weight_limit',
+        'required_volume_limit',
         'required_range_limit',
         'requires_hazard_capability',
         'required_regulatory_class',
         'insurance_required_flag',
         'required_transport_capabilities',
         'claimed_by_node_id',
+        'current_node_id',
         'claimed_at',
         'in_transit_at',
         'delivered_at',
@@ -45,6 +49,7 @@ class VendorVisibilityContractTest extends TestCase
 
     private const OUTBOUND_EVENT_ENVELOPE_FIELDS = ['event_type', 'payload', 'correlation_id'];
     private const OUTBOUND_EVENT_PAYLOAD_FIELDS = ['shipment_listing_id', 'source_order_ref', 'claimed_by_node_id', 'status'];
+    private const BID_RESPONSE_FIELDS = ['id', 'shipment_board_listing_id', 'node_id', 'amount', 'currency', 'note', 'created_at', 'updated_at'];
 
     private const DENYLIST_KEYS = [
         'created_by_user_id',
@@ -146,7 +151,7 @@ class VendorVisibilityContractTest extends TestCase
         $this->assertDenylistAbsent($response, self::DENYLIST_KEYS);
     }
 
-    public function test_outbound_event_payload_contract_for_claimed_in_transit_delivered_disputed(): void
+    public function test_outbound_event_payload_contract_for_claimed_in_transit_delivered_disputed_cancelled(): void
     {
         Http::fake(['https://fbm.example/events' => Http::response(['ok' => true], 200)]);
 
@@ -165,6 +170,18 @@ class VendorVisibilityContractTest extends TestCase
         $this->actingAs($user)->postJson('/api/shipment-board-listings/' . $listing->id . '/claim', [], ['X-Correlation-ID' => 'corr-evt-claimed-001'])->assertOk();
         $this->actingAs($user)->postJson('/api/shipment-board-listings/' . $listing->id . '/status', ['status' => 'in_transit'], ['X-Correlation-ID' => 'corr-evt-transit-001'])->assertOk();
         $this->actingAs($user)->postJson('/api/shipment-board-listings/' . $listing->id . '/status', ['status' => 'disputed'], ['X-Correlation-ID' => 'corr-evt-disputed-001'])->assertOk();
+
+        $listingCancelled = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'source_order_ref' => 'order-visibility-outbound-003',
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+        ]);
+
+        $this->actingAs($user)->postJson('/api/shipment-board-listings/' . $listingCancelled->id . '/claim', [], ['X-Correlation-ID' => 'corr-evt-claimed-003'])->assertOk();
+        $this->actingAs($user)->postJson('/api/shipment-board-listings/' . $listingCancelled->id . '/status', ['status' => 'cancelled'], ['X-Correlation-ID' => 'corr-evt-cancelled-001'])->assertOk();
 
         $listingDelivered = ShipmentBoardListing::factory()->create([
             'created_by_user_id' => $creator->id,
@@ -191,6 +208,7 @@ class VendorVisibilityContractTest extends TestCase
             'shipment.in_transit' => 'corr-evt-transit-001',
             'shipment.disputed' => 'corr-evt-disputed-001',
             'shipment.delivered' => 'corr-evt-delivered-001',
+            'shipment.cancelled' => 'corr-evt-cancelled-001',
         ];
 
         foreach ($expectedByType as $type => $correlationId) {
@@ -201,6 +219,44 @@ class VendorVisibilityContractTest extends TestCase
             $this->assertExactKeys($matching['payload'], self::OUTBOUND_EVENT_PAYLOAD_FIELDS);
             $this->assertDenylistAbsent($matching, self::DENYLIST_KEYS);
         }
+    }
+
+
+    public function test_webhook_retry_response_is_allowlisted(): void
+    {
+        $response = $this->postJson('/api/webhooks/freeblackmarket/retry')
+            ->assertOk()
+            ->json();
+
+        $this->assertExactKeys($response, ['status']);
+        $this->assertDenylistAbsent($response, self::DENYLIST_KEYS);
+    }
+
+    public function test_bid_response_contract_is_allowlisted(): void
+    {
+        $creator = User::factory()->create();
+        [$node, $user] = $this->makeEligibleNodeUser();
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'claim_policy' => 'bid',
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/bids', [
+                'amount' => 44.25,
+                'currency' => 'USD',
+                'note' => 'Bid from contract test',
+            ])
+            ->assertCreated()
+            ->json();
+
+        $this->assertExactKeys($response, self::BID_RESPONSE_FIELDS);
+        $this->assertDenylistAbsent($response, self::DENYLIST_KEYS);
     }
 
     private function makeEligibleNodeUser(): array

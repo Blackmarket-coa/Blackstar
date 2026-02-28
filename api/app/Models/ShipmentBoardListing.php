@@ -25,11 +25,14 @@ class ShipmentBoardListing extends Model
     protected $fillable = [
         'source_order_ref',
         'status',
+        'origin',
+        'destination',
         'claim_policy',
         'jurisdiction',
         'required_category',
         'required_subtype',
         'required_weight_limit',
+        'required_volume_limit',
         'required_range_limit',
         'requires_hazard_capability',
         'required_regulatory_class',
@@ -37,6 +40,7 @@ class ShipmentBoardListing extends Model
         'required_transport_capabilities',
         'created_by_user_id',
         'claimed_by_node_id',
+        'current_node_id',
         'claimed_at',
         'in_transit_at',
         'delivered_at',
@@ -47,6 +51,7 @@ class ShipmentBoardListing extends Model
     protected $casts = [
         'required_transport_capabilities' => 'array',
         'required_weight_limit' => 'decimal:2',
+        'required_volume_limit' => 'decimal:2',
         'required_range_limit' => 'decimal:2',
         'requires_hazard_capability' => 'boolean',
         'insurance_required_flag' => 'boolean',
@@ -65,6 +70,12 @@ class ShipmentBoardListing extends Model
     public function claimedByNode(): BelongsTo
     {
         return $this->belongsTo(Node::class, 'claimed_by_node_id');
+    }
+
+
+    public function currentNode(): BelongsTo
+    {
+        return $this->belongsTo(Node::class, 'current_node_id');
     }
 
     public function bids(): HasMany
