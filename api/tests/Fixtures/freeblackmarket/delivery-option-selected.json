@@ -1,0 +1,20 @@
+{
+  "event_id": "evt-delivery-selected-001",
+  "event_type": "delivery.option.selected",
+  "correlation_id": "corr-delivery-001",
+  "payload": {
+    "source_order_ref": "ORD-2001",
+    "delivery_option": "federated_delivery_network",
+    "claim_policy": "first_claim",
+    "jurisdiction": "US",
+    "required_category": "ground",
+    "required_subtype": "van",
+    "required_weight_limit": 100,
+    "required_range_limit": 50,
+    "requires_hazard_capability": false,
+    "required_regulatory_class": "STD",
+    "insurance_required_flag": false,
+    "required_transport_capabilities": ["van"],
+    "created_by_user_id": "__CREATED_BY_USER_ID__"
+  }
+}

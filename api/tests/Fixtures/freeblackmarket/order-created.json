@@ -1,0 +1,8 @@
+{
+  "event_id": "evt-order-created-001",
+  "event_type": "order.created",
+  "correlation_id": "corr-order-001",
+  "payload": {
+    "source_order_ref": "ORD-1001"
+  }
+}

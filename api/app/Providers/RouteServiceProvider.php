@@ -15,20 +15,15 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->routes(
-            function () {
-                Route::get(
-                    '/health',
-                    function (Request $request) {
-                        return response()->json(
-                            [
-                                'status' => 'ok',
-                                'time' => microtime(true) - $request->attributes->get('request_start_time')
-                            ]
-                        );
-                    }
-                );
-            }
-        );
+        $this->routes(function () {
+            Route::middleware('api')->prefix('api')->group(base_path('routes/api.php'));
+
+            Route::get('/health', function (Request $request) {
+                return response()->json([
+                    'status' => 'ok',
+                    'time' => microtime(true) - $request->attributes->get('request_start_time'),
+                ]);
+            });
+        });
     }
 }
