@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\FleetController;
 use App\Http\Controllers\Api\NodeController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ShipmentPaymentReferenceController;
+use App\Http\Controllers\Api\GovernanceController;
 use App\Http\Controllers\Api\ShipmentBoardListingController;
 use App\Http\Controllers\Api\Webhooks\FreeBlackMarketWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -28,4 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::get('shipment-payment-references/{shipmentPaymentReference}', [ShipmentPaymentReferenceController::class, 'show']);
     Route::post('shipment-payment-references', [ShipmentPaymentReferenceController::class, 'store']);
     Route::patch('shipment-payment-references/{shipmentPaymentReference}', [ShipmentPaymentReferenceController::class, 'update']);
+
+    Route::get('governance/settings', [GovernanceController::class, 'settings']);
+    Route::patch('governance/settings', [GovernanceController::class, 'updateSettings']);
+    Route::post('governance/outcomes', [GovernanceController::class, 'appendOutcome']);
+    Route::get('governance/outcomes', [GovernanceController::class, 'outcomes']);
+    Route::get('governance/outcomes/{governanceDecisionReference}', [GovernanceController::class, 'showOutcome']);
 });
