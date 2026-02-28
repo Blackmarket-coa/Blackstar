@@ -1,29 +1,4 @@
-<div id="hero">
-  <p align="center" dir="auto">
-      <a href="https://fleetbase.io" rel="nofollow">
-        <img src="https://user-images.githubusercontent.com/58805033/191936702-fed04b0f-7966-4041-96d0-95e27bf98248.png" alt="Blackstar FLP logo" width="500" height="120" style="max-width: 100%;">
-      </a>
-    </p>
-    <p align="center" dir="auto">
-      <a href="https://github.com/fleetbase/fleetbase/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/fleetbase/fleetbase" alt="License"></a>
-      <a href="https://github.com/fleetbase/fleetbase/releases"><img src="https://img.shields.io/github/v/release/fleetbase/fleetbase" alt="Latest Release"></a>
-      <a href="https://github.com/fleetbase/fleetbase/stargazers"><img src="https://img.shields.io/github/stars/fleetbase/fleetbase?style=social" alt="GitHub Stars"></a>
-      <a href="https://discord.gg/V7RVWRQ2Wm"><img src="https://img.shields.io/discord/699834923032248430?logo=discord&label=Discord" alt="Discord"></a>
-      <a href="https://github.com/fleetbase/fleetbase/issues"><img src="https://img.shields.io/github/issues/fleetbase/fleetbase" alt="GitHub Issues"></a>
-    </p>
-    <p align="center" dir="auto">
-      Federated logistics coordination protocol for independent nodes
-      <br>
-      <a href="./api/docs/testing-quickstart.md">Docs</a>
-      ·
-      <a href="./FEDERATED_LOGISTICS_COMPATIBILITY.md">Compatibility Blueprint</a>
-      ·
-      <a href="./workflows/full-functionality-workplan.md">Workplan</a>
-      ·
-      <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
-    </p>
-    <hr />
-</div>
+
 
 ## What is Blackstar Federated Logistics Protocol (FLP)?
 
