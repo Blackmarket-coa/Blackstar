@@ -1,7 +1,7 @@
 <div id="hero">
   <p align="center" dir="auto">
       <a href="https://fleetbase.io" rel="nofollow">
-        <img src="https://user-images.githubusercontent.com/58805033/191936702-fed04b0f-7966-4041-96d0-95e27bf98248.png" alt="Fleetbase logo" width="500" height="120" style="max-width: 100%;">
+        <img src="https://user-images.githubusercontent.com/58805033/191936702-fed04b0f-7966-4041-96d0-95e27bf98248.png" alt="Blackstar FLP logo" width="500" height="120" style="max-width: 100%;">
       </a>
     </p>
     <p align="center" dir="auto">
@@ -12,37 +12,49 @@
       <a href="https://github.com/fleetbase/fleetbase/issues"><img src="https://img.shields.io/github/issues/fleetbase/fleetbase" alt="GitHub Issues"></a>
     </p>
     <p align="center" dir="auto">
-      Modular logistics and supply chain operating system
+      Federated logistics coordination protocol for independent nodes
       <br>
-      <a href="https://docs.fleetbase.io/" rel="nofollow" target="_fleetbase_docs">Documentation</a>
+      <a href="./api/docs/testing-quickstart.md">Docs</a>
       ·
-      <a href="https://console.fleetbase.io" rel="nofollow" target="_fleetbase_console">Cloud Version</a>
+      <a href="./FEDERATED_LOGISTICS_COMPATIBILITY.md">Compatibility Blueprint</a>
       ·
-      <a href="https://tally.so/r/3NBpAW" rel="nofollow">Book a Demo</a>
+      <a href="./workflows/full-functionality-workplan.md">Workplan</a>
       ·
       <a href="https://discord.gg/V7RVWRQ2Wm" target="discord" rel="nofollow">Discord</a>
     </p>
     <hr />
 </div>
 
-## What is Fleetbase?
+## What is Blackstar Federated Logistics Protocol (FLP)?
 
-Fleetbase is a modular logistics and supply chain operating system designed to streamline management, planning, optimization, and operational control across various sectors of the supply chain industry.
+Blackstar FLP is a federated, multi-tenant logistics coordination protocol derived from Fleetbase and tailored for FreeBlackMarket + Blackout interoperability.
 
-<p align="center" dir="auto">
-  <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleetbase_overview.png" alt="Fleetbase Console" width="1200" style="max-width: 100%;" />
-</p>
+Unlike traditional dispatch software, Blackstar FLP centers on **independent node autonomy**:
 
-## 🎯 Who Is Fleetbase For?
+- Vendors publish shipment demand.
+- Eligible nodes discover and claim work voluntarily.
+- Nodes execute transport independently (single-leg or relay).
+- Lifecycle and compliance artifacts are synchronized through auditable APIs/events.
 
-Fleetbase is designed for organizations that need powerful logistics and supply chain management:
+Blackstar FLP is a **software coordination layer**, not a carrier, dispatcher, or custody wallet.
 
-- **E-commerce & Retail** - Manage deliveries, track orders, and optimize last-mile logistics
-- **Food & Beverage** - Coordinate restaurant deliveries, manage drivers, and track real-time orders
-- **Courier Services** - Dispatch drivers, optimize routes, and provide customer tracking
-- **Field Services** - Schedule technicians, manage service areas, and track job completion
-- **Enterprise Logistics** - Build custom supply chain solutions with full API access
-- **Developers** - Extend and customize with a modular architecture and comprehensive API
+### Core platform posture
+
+- **Federated architecture**: independent node operators coordinate without centralized force-assignment.
+- **Transport-agnostic model**: capabilities are declared through transport classes.
+- **Non-custodial settlement boundary**: payment references are tracked, principal custody is out-of-platform.
+- **Governance-reference integration**: Blackout rooms/decision refs are logged for auditability.
+- **Vendor-safe visibility contract**: payloads are allowlisted and tested to prevent leakage of private coordination data.
+
+## 🎯 Who Is Blackstar FLP For?
+
+Blackstar FLP is designed for ecosystems that need interoperable fulfillment without centralized operational control:
+
+- **Marketplace operators** needing checkout-to-shipment lifecycle sync via event contracts.
+- **Independent logistics nodes** (LLCs, co-ops, owner-operators) that need claim-based workload access.
+- **Federated delivery networks** requiring relay handoffs, trust scoring, and auditable governance references.
+- **Compliance-conscious operators** that require attestation workflows and explicit responsibility boundaries.
+- **Protocol integrators/developers** extending APIs, webhooks, and policy-safe visibility layers.
 
 ## Visual Feature Showcase
 
@@ -76,28 +88,60 @@ flb install-fleetbase
   - [Creators](#creators)
   - [License & Copyright](#license--copyright)
 
-## 📦 Features
+## 📦 Features (Detailed)
 
-| Feature | Description |
-|---------|-------------|
-| 🔌 **Extensible** | Build installable extensions and additional functionality directly into the OS via modular architecture. |
-| 👨‍💻 **Developer Friendly** | RESTful API, socket, and webhooks to seamlessly integrate with external systems or develop custom applications. |
-| 📱 **Native Apps** | Collection of open-source and native apps designed for operations and customer facing. |
-| 🤝 **Collaboration** | Dedicated chat and comments system for collaboration across your organization. |
-| 🔒 **Security** | Secure data encryption, adherence to industry-standard security practices, and a comprehensive dynamic Identity and Access Management (IAM) system. |
-| 📡 **Telematics** | Integrate and connect to hardware devices and sensors to provide more feedback and visibility into operations. |
-| 🌐 **Internationalized** | Translate into multiple languages to accommodate diverse user bases and global operations. |
-| ⚙️ **Framework** | PHP core built around logistics and supply chain abstractions to streamline extension development. |
-| 🔄 **Dynamic** | Configurable rules, flows and logic to enable automation and customization. |
-| 🎨 **UI/UX** | Clean, responsive user-friendly interface for efficient management and operations from desktop or mobile. |
-| 📊 **Dashboards** | Create custom dashboards and widgets to get full visibility into operations. |
-| 📈 **Scalability** | Uninterrupted growth with scalable infrastructure and design, capable of handling increasing data volume and user demand as your business expands. |
-| 🔄 **Continuous Improvements** | Commitment to continuous improvement, providing regular updates that seamlessly introduce optimizations, new features, and overall enhancements to the OS. |
-| 🌍 **Open Source** | Deploy it either on-premise or in the cloud according to your organization's needs and preferences. |
+### 1) Federated Shipment Board
+- Claim-based listing lifecycle (`open -> claimed -> in_transit -> delivered/disputed/cancelled`).
+- No centralized dispatcher force-assigning work.
+- Eligibility filtering by node activation + attestation + transport capability constraints.
+
+### 2) FreeBlackMarket Interoperability
+- Inbound webhook contract supports `order.created`, `delivery.option.selected`, `order.cancelled`.
+- Outbound lifecycle events include `shipment.claimed`, `shipment.in_transit`, `shipment.delivered`, `shipment.disputed`, `shipment.cancelled`.
+- Idempotent inbound receipt handling with retry/dead-letter transitions.
+
+### 3) Correlation and Traceability
+- Correlation ID propagation from inbound requests to outbound events and API responses.
+- Persisted correlation references for cross-system incident and audit tracing.
+
+### 4) Node Tenancy and Capability Model
+- Node-scoped operational ownership boundaries.
+- Transport class matching (`category`, `subtype`, limits, hazard/regulatory/insurance flags).
+- Eligibility checks that block non-attested or incompatible nodes from claiming restricted listings.
+
+### 5) Inter-Node Relay Workflow
+- Shipment leg sequencing with handoff proof and settlement references.
+- Multi-leg completion/dispute semantics with auditable leg history.
+- Relay-oriented event emission for leg updates and proofs.
+
+### 6) Governance Audit References (Blackout)
+- Stores governance room IDs and decision references for auditability.
+- Explicitly keeps vote/proposal workflow logic out of logistics core.
+- Append-only governance outcome logging APIs.
+
+### 7) Non-Custodial Payment Reference Layer
+- Tracks buyer->vendor, vendor->node, and platform fee references.
+- Designed to avoid pooled custody of shipment principal.
+- Reconciliation-oriented APIs and data references.
+
+### 8) Vendor Visibility Safety Controls
+- Allowlist-based response payload shaping for vendor-facing listing APIs.
+- Denylist coverage for route internals, private coordination data, and non-required telemetry.
+- Contract tests to guard payload regressions.
+
+### 9) Release and Test Reliability Tooling
+- Deterministic API preflight/setup scripts for local and CI.
+- CI critical-suite job with log artifact publishing.
+- Staging E2E and incident-readiness reporting artifacts under `reports/`.
+
+### 10) Incident Readiness Assets
+- Runbooks for signature mismatch/outage, replay storms, dead-letter growth, and rollback scenarios.
+- Simulation scripts/logs with responder timeline and command evidence.
+- Readiness scorecards and prioritized action items.
 
 ## 💾 Install
 
-The easiest way to get started with Fleetbase is using the Fleetbase CLI, which automates the entire Docker-based installation process. If you'd like to use Fleetbase without Docker, read the [full install guide in the Fleetbase documentation](https://docs.fleetbase.io/getting-started/install).
+The easiest way to get started with Blackstar FLP is using the Fleetbase CLI bootstrap path in this repository, which automates Docker-based installation for protocol services. For non-Docker installation patterns, use the upstream install guide as a Laravel/Fleetbase baseline and apply this repository's federated configuration overlays.
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -123,11 +167,11 @@ git clone git@github.com:fleetbase/fleetbase.git
 cd fleetbase && ./scripts/docker-install.sh
 ```
 
-### Accessing Fleetbase
-Once successfully installed and running you can then access the Fleetbase console on port 4200 and the API will be accessible from port 8000.  
+### Accessing Blackstar FLP
+Once successfully installed and running you can access the Blackstar operations console on port 4200 and the API on port 8000.  
   
-Fleetbase Console: http://localhost:4200
-Fleetbase API: http://localhost:8000
+Blackstar Console: http://localhost:4200
+Blackstar API: http://localhost:8000
 
 ### Additional Configurations
 
@@ -177,7 +221,7 @@ You can learn more about full installation, and configuration in the [official d
 
 ## ⌨️ Fleetbase CLI 
 
-The Fleetbase CLI is a powerful tool for managing your Fleetbase instance. It simplifies installation, extension management, authentication, and development workflows.
+The Fleetbase CLI remains the primary bootstrap tool for managing a Blackstar deployment derived from Fleetbase. It simplifies installation, extension management, authentication, and development workflows.
 
 Install the CLI globally with npm:
 
@@ -203,7 +247,7 @@ npm install -g @fleetbase/cli
 
 # 🧩 Extensions 
 
-Extensions are modular components that enhance the functionality of your Fleetbase instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
+Extensions are modular components that enhance the functionality of your Blackstar instance. They allow you to add new features, customize existing behavior, or integrate with external systems.
 
 ### Browsing Extensions
 
@@ -307,6 +351,7 @@ Fleetbase has comprehensive documentation to help you get started and make the m
 - **Extension Development**: [Building Extensions](https://docs.fleetbase.io/developers/building-an-extension)
 - **Deployment**: [Deployment Guides](https://docs.fleetbase.io/deployment)
 - **Federated Logistics Compatibility**: [FreeBlackMarket + Blackout blueprint](FEDERATED_LOGISTICS_COMPATIBILITY.md)
+- **API Test Quickstart (Local + CI)**: [Deterministic test bootstrap](api/docs/testing-quickstart.md)
 
 ## 🤝 Contributing
 
