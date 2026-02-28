@@ -39,6 +39,20 @@ The CI workflow includes an `API Critical Feature Suites` job that:
 5. runs critical feature suites,
 6. uploads `reports/logs/*.log` as artifact.
 
+
+## Restricted-network Composer bootstrap
+
+If your runtime cannot access default Packagist/GitHub endpoints directly, set one or more of:
+
+```bash
+export COMPOSER_REPO_PACKAGIST=https://<internal-packagist-mirror>
+export COMPOSER_GITHUB_OAUTH_TOKEN=<token>
+# or full JSON auth blob
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"<token>"}}'
+```
+
+`./scripts/setup-api-test-env.sh` will apply these overrides before `composer install`.
+
 ## Troubleshooting
 - **Unsupported PHP version**: use PHP `8.2.x`.
 - **Missing extension (`sodium`, `pdo_sqlite`, etc.)**: install/enable extension.

@@ -74,6 +74,24 @@ class GovernanceOutcomeAuditTest extends TestCase
         $this->assertDatabaseMissing('governance_decision_references', ['decision_ref' => 'blackout#cross-write']);
     }
 
+
+    public function test_in_core_governance_execution_endpoints_are_forbidden_or_absent(): void
+    {
+        [, $user] = $this->createNodeUser();
+
+        $this->actingAs($user)
+            ->postJson('/api/governance/proposals', ['title' => 'Should not exist'])
+            ->assertNotFound();
+
+        $this->actingAs($user)
+            ->postJson('/api/governance/votes', ['proposal_id' => 'p-1', 'vote' => 'yes'])
+            ->assertNotFound();
+
+        $this->actingAs($user)
+            ->postJson('/api/governance/outcomes/execute', ['decision_ref' => 'blackout#123'])
+            ->assertNotFound();
+    }
+
     public function test_governance_decisions_are_immutable_once_logged(): void
     {
         [$node, $user] = $this->createNodeUser();

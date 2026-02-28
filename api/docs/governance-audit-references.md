@@ -14,6 +14,14 @@ This module stores governance references for auditability only.
 - No proposal state machine
 - No encrypted room message handling
 
+## Forbidden in-core behaviors checklist
+
+- [x] No `POST /api/governance/proposals` endpoint.
+- [x] No `POST /api/governance/votes` endpoint.
+- [x] No governance decision execution endpoint (the core stores references only).
+- [x] Governance outcomes remain append-only (`create` + `read` only).
+- [x] Governance writes are node-scoped to the authenticated actor.
+
 ## APIs
 
 Authenticated endpoints:

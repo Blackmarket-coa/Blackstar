@@ -15,10 +15,10 @@ if ! command -v php >/dev/null 2>&1; then
   errors+=("PHP binary not found. Install PHP 8.2.x.")
 else
   php_version="$(php -r 'echo PHP_VERSION;')"
-  if php -r 'exit(version_compare(PHP_VERSION, "8.0.0", ">=") && version_compare(PHP_VERSION, "8.2.30", "<=") ? 0 : 1);'; then
-    ok "PHP version $php_version is within supported range (>=8.0 <=8.2.30)."
+  if php -r 'exit(version_compare(PHP_VERSION, "8.0.0", ">=") && version_compare(PHP_VERSION, "8.3.0", "<") ? 0 : 1);'; then
+    ok "PHP version $php_version is within supported range (>=8.0 <8.3)."
   else
-    errors+=("PHP version $php_version is unsupported by api/composer.json (requires >=8.0 <=8.2.30).")
+    errors+=("PHP version $php_version is unsupported by api/composer.json (requires >=8.0 <8.3).")
   fi
 fi
 
@@ -26,6 +26,17 @@ if ! command -v composer >/dev/null 2>&1; then
   errors+=("Composer binary not found. Install Composer 2.x.")
 else
   ok "Composer is available: $(composer --version | head -n1)"
+  if [[ -n "${COMPOSER_REPO_PACKAGIST:-}" ]]; then
+    ok "Using COMPOSER_REPO_PACKAGIST override for restricted network bootstrap."
+  else
+    warns+=("COMPOSER_REPO_PACKAGIST not set; default Packagist/GitHub sources will be used.")
+  fi
+
+  if [[ -n "${COMPOSER_AUTH:-}" || -n "${COMPOSER_GITHUB_OAUTH_TOKEN:-}" ]]; then
+    ok "Composer auth override detected for private/rate-limited dependency access."
+  else
+    warns+=("No Composer auth override detected (COMPOSER_AUTH or COMPOSER_GITHUB_OAUTH_TOKEN).")
+  fi
 fi
 
 for ext in sodium pdo_sqlite mbstring xml curl json; do

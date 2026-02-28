@@ -21,6 +21,7 @@ class ShipmentEligibilityServiceTest extends TestCase
             'subtype' => 'van',
             'weight_limit' => 1500,
             'range_limit' => 500,
+            'volume_limit' => 30,
             'hazard_capability' => true,
             'regulatory_class' => 'HZ-A',
             'insurance_required_flag' => true,
@@ -33,6 +34,7 @@ class ShipmentEligibilityServiceTest extends TestCase
             'required_category' => 'ground',
             'required_subtype' => 'van',
             'required_weight_limit' => 800,
+            'required_volume_limit' => 20,
             'required_range_limit' => 200,
             'requires_hazard_capability' => true,
             'required_regulatory_class' => 'HZ-A',
@@ -42,6 +44,30 @@ class ShipmentEligibilityServiceTest extends TestCase
         $eligible = app(ShipmentEligibilityService::class)->isNodeEligibleForListing($node, $listing);
 
         $this->assertTrue($eligible);
+    }
+
+
+    public function test_does_not_match_when_volume_constraint_fails(): void
+    {
+        $node = Node::factory()->create(['jurisdiction' => 'US']);
+        $transportClass = TransportClass::factory()->create([
+            'category' => 'ground',
+            'subtype' => 'van',
+            'weight_limit' => 1500,
+            'volume_limit' => 5,
+            'range_limit' => 500,
+        ]);
+        $node->transportClasses()->attach($transportClass->id);
+
+        $listing = ShipmentBoardListing::factory()->make([
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'required_volume_limit' => 10,
+        ]);
+
+        $this->assertFalse(app(ShipmentEligibilityService::class)->isNodeEligibleForListing($node, $listing));
     }
 
     public function test_does_not_match_when_constraints_fail(): void

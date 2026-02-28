@@ -30,6 +30,41 @@ class ShipmentBoardListingTest extends TestCase
         $this->assertSame(ShipmentBoardListing::STATUS_OPEN, $listing->status);
     }
 
+
+    public function test_claim_updates_current_node_without_auto_reassignment_path(): void
+    {
+        $creator = User::factory()->create();
+
+        $nodeA = Node::factory()->create(['jurisdiction' => 'US']);
+        $nodeB = Node::factory()->create(['jurisdiction' => 'US']);
+        $transport = TransportClass::factory()->create(['category' => 'ground', 'subtype' => 'van']);
+        $nodeA->transportClasses()->attach($transport->id);
+        $nodeB->transportClasses()->attach($transport->id);
+
+        $userA = User::factory()->create(['node_id' => $nodeA->id]);
+        $userB = User::factory()->create(['node_id' => $nodeB->id]);
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+        ]);
+
+        $this->actingAs($userA)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/claim')
+            ->assertOk()
+            ->assertJsonPath('current_node_id', $nodeA->id);
+
+        $this->actingAs($userB)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/status', ['status' => 'in_transit'])
+            ->assertForbidden();
+
+        $listing->refresh();
+        $this->assertSame($nodeA->id, $listing->current_node_id);
+        $this->assertSame($nodeA->id, $listing->claimed_by_node_id);
+    }
+
     public function test_only_eligible_nodes_can_claim_listing(): void
     {
         $eligibleNode = Node::factory()->create(['jurisdiction' => 'US']);
