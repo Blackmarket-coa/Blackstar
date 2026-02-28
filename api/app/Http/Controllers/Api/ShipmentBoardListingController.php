@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\ShipmentBid;
 use App\Models\ShipmentBoardListing;
 use App\Services\ShipmentEligibilityService;
+use App\Services\FreeBlackMarket\OutboundEventPublisher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ShipmentBoardListingController extends Controller
 {
-    public function __construct(protected ShipmentEligibilityService $eligibility)
+    public function __construct(protected ShipmentEligibilityService $eligibility, protected OutboundEventPublisher $publisher)
     {
     }
 
@@ -71,6 +72,14 @@ class ShipmentBoardListingController extends Controller
         $shipmentBoardListing->claimed_at = now();
         $shipmentBoardListing->save();
 
+        $correlationId = request()->header('X-Correlation-ID') ?: (string) str()->uuid();
+        $this->publisher->queueAndDispatch('shipment.claimed', [
+            'shipment_listing_id' => $shipmentBoardListing->id,
+            'source_order_ref' => $shipmentBoardListing->source_order_ref,
+            'claimed_by_node_id' => $shipmentBoardListing->claimed_by_node_id,
+            'status' => $shipmentBoardListing->status,
+        ], $correlationId);
+
         return response()->json($shipmentBoardListing->refresh());
     }
 
@@ -111,6 +120,15 @@ class ShipmentBoardListingController extends Controller
         abort_if($shipmentBoardListing->claimed_by_node_id !== $node->id, 403, 'Only claiming node can update status.');
 
         $shipmentBoardListing->transitionTo($status);
+
+        $eventType = 'shipment.' . $shipmentBoardListing->status;
+        $correlationId = request()->header('X-Correlation-ID') ?: (string) str()->uuid();
+        $this->publisher->queueAndDispatch($eventType, [
+            'shipment_listing_id' => $shipmentBoardListing->id,
+            'source_order_ref' => $shipmentBoardListing->source_order_ref,
+            'claimed_by_node_id' => $shipmentBoardListing->claimed_by_node_id,
+            'status' => $shipmentBoardListing->status,
+        ], $correlationId);
 
         return response()->json($shipmentBoardListing->refresh());
     }

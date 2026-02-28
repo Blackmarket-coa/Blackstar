@@ -1,0 +1,8 @@
+{
+  "event_id": "evt-unsupported-001",
+  "event_type": "unsupported.event",
+  "correlation_id": "corr-unsupported-001",
+  "payload": {
+    "foo": "bar"
+  }
+}

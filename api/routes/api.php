@@ -5,7 +5,11 @@ use App\Http\Controllers\Api\FleetController;
 use App\Http\Controllers\Api\NodeController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ShipmentBoardListingController;
+use App\Http\Controllers\Api\Webhooks\FreeBlackMarketWebhookController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('webhooks/freeblackmarket', [FreeBlackMarketWebhookController::class, 'handle']);
+Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController::class, 'retry']);
 
 Route::middleware('auth')->group(function () {
     Route::apiResource('nodes', NodeController::class);
