@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Validation\ValidationException;
 
 class ShipmentBoardListing extends Model
@@ -69,6 +70,11 @@ class ShipmentBoardListing extends Model
     public function bids(): HasMany
     {
         return $this->hasMany(ShipmentBid::class);
+    }
+
+    public function paymentReference(): HasOne
+    {
+        return $this->hasOne(ShipmentPaymentReference::class);
     }
 
     public function transitionTo(string $status): void
