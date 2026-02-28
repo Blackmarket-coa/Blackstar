@@ -16,9 +16,13 @@ return new class extends Migration {
             $table->json('contact')->nullable();
             $table->string('insurance_attestation_hash')->nullable();
             $table->string('license_attestation_hash')->nullable();
+            $table->string('transport_law_attestation_hash')->nullable();
+            $table->string('platform_indemnification_attestation_hash')->nullable();
             $table->json('transport_capabilities')->nullable();
             $table->string('governance_room_id')->nullable();
             $table->decimal('reputation_score', 5, 2)->default(0);
+            $table->boolean('is_active')->default(false);
+            $table->timestamp('activated_at')->nullable();
             $table->timestamps();
         });
     }

@@ -24,9 +24,13 @@ class NodeFactory extends Factory
             ],
             'insurance_attestation_hash' => hash('sha256', $this->faker->uuid()),
             'license_attestation_hash' => hash('sha256', $this->faker->uuid()),
+            'transport_law_attestation_hash' => hash('sha256', $this->faker->uuid()),
+            'platform_indemnification_attestation_hash' => hash('sha256', $this->faker->uuid()),
             'transport_capabilities' => ['van', 'bike'],
             'governance_room_id' => 'room-' . Str::lower(Str::random(10)),
             'reputation_score' => $this->faker->randomFloat(2, 0, 5),
+            'is_active' => true,
+            'activated_at' => now(),
         ];
     }
 }

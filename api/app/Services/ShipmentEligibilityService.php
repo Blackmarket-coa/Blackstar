@@ -14,6 +14,10 @@ class ShipmentEligibilityService
             return false;
         }
 
+        if (!$node->is_active || !$node->hasCompletedAttestation()) {
+            return false;
+        }
+
         if (!empty($listing->jurisdiction) && $node->jurisdiction !== $listing->jurisdiction) {
             return false;
         }
