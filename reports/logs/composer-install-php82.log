@@ -1,0 +1,1093 @@
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Warning: The lock file is not up to date with the latest changes in composer.json. You may be getting outdated dependencies. It is recommended that you run `composer update` or `composer update <package name>`.
+Package operations: 258 installs, 0 updates, 0 removals
+  - Downloading php-http/discovery (1.20.0)
+  - Downloading voku/portable-ascii (2.0.3)
+  - Downloading symfony/polyfill-php80 (v1.33.0)
+  - Downloading symfony/polyfill-mbstring (v1.33.0)
+  - Downloading symfony/polyfill-ctype (v1.33.0)
+  - Downloading phpoption/phpoption (1.9.5)
+  - Downloading graham-campbell/result-type (v1.1.4)
+  - Downloading vlucas/phpdotenv (v5.6.3)
+  - Downloading symfony/css-selector (v7.4.6)
+  - Downloading tijsverkoyen/css-to-inline-styles (v2.4.0)
+  - Downloading symfony/deprecation-contracts (v3.6.0)
+  - Downloading symfony/var-dumper (v6.4.32)
+  - Downloading symfony/polyfill-uuid (v1.33.0)
+  - Downloading symfony/uid (v6.4.32)
+  - Downloading symfony/routing (v6.4.34)
+  - Downloading symfony/process (v6.4.33)
+  - Downloading symfony/polyfill-intl-normalizer (v1.33.0)
+  - Downloading symfony/polyfill-intl-idn (v1.33.0)
+  - Downloading symfony/mime (v6.4.34)
+  - Downloading psr/container (2.0.2)
+  - Downloading symfony/service-contracts (v3.6.1)
+  - Downloading psr/event-dispatcher (1.0.0)
+  - Downloading symfony/event-dispatcher-contracts (v3.6.0)
+  - Downloading symfony/event-dispatcher (v7.4.4)
+  - Downloading psr/log (3.0.2)
+  - Downloading doctrine/lexer (3.0.1)
+  - Downloading egulias/email-validator (4.0.4)
+  - Downloading symfony/mailer (v6.4.34)
+  - Downloading symfony/polyfill-php83 (v1.33.0)
+  - Downloading symfony/http-foundation (v6.4.34)
+  - Downloading symfony/error-handler (v6.4.32)
+  - Downloading symfony/http-kernel (v6.4.34)
+  - Downloading symfony/finder (v6.4.34)
+  - Downloading symfony/polyfill-intl-grapheme (v1.33.0)
+  - Downloading symfony/string (v7.4.6)
+  - Downloading symfony/console (v6.4.34)
+  - Downloading ramsey/collection (2.1.1)
+  - Downloading brick/math (0.12.3)
+  - Downloading ramsey/uuid (4.9.2)
+  - Downloading psr/simple-cache (3.0.0)
+  - Downloading nunomaduro/termwind (v1.17.0)
+  - Downloading symfony/translation-contracts (v3.6.1)
+  - Downloading symfony/translation (v6.4.34)
+  - Downloading psr/clock (1.0.0)
+  - Downloading carbonphp/carbon-doctrine-types (2.1.0)
+  - Downloading nesbot/carbon (2.73.0)
+  - Downloading monolog/monolog (3.10.0)
+  - Downloading league/mime-type-detection (1.16.0)
+  - Downloading league/flysystem (3.32.0)
+  - Downloading league/flysystem-local (3.31.0)
+  - Downloading nette/utils (v4.1.3)
+  - Downloading nette/schema (v1.3.5)
+  - Downloading dflydev/dot-access-data (v3.0.3)
+  - Downloading league/config (v1.2.0)
+  - Downloading league/commonmark (2.8.0)
+  - Downloading laravel/serializable-closure (v1.3.7)
+  - Downloading laravel/framework (10.50.2)
+  - Downloading laravel/prompts (v0.1.25)
+  - Downloading guzzlehttp/uri-template (v1.0.5)
+  - Downloading fruitcake/php-cors (v1.4.0)
+  - Downloading dragonmantank/cron-expression (v3.6.0)
+  - Downloading doctrine/inflector (2.1.0)
+  - Downloading psr/http-message (2.0)
+  - Downloading psr/http-client (1.0.3)
+  - Downloading ralouphie/getallheaders (3.0.3)
+  - Downloading psr/http-factory (1.1.0)
+  - Downloading guzzlehttp/psr7 (2.8.0)
+  - Downloading guzzlehttp/promises (2.3.0)
+  - Downloading guzzlehttp/guzzle (7.10.0)
+  - Downloading appstract/laravel-opcache (4.0.2)
+  - Downloading aws/aws-crt-php (v1.2.7)
+  - Downloading symfony/filesystem (v7.4.6)
+  - Downloading mtdowling/jmespath.php (2.8.0)
+  - Downloading aws/aws-sdk-php (3.371.3)
+  - Downloading aws/aws-sdk-php-laravel (3.10.0)
+  - Downloading sabberworm/php-css-parser (v8.9.0)
+  - Downloading phenx/php-svg-lib (0.5.4)
+  - Downloading phenx/php-font-lib (0.5.6)
+  - Downloading masterminds/html5 (2.10.0)
+  - Downloading dompdf/dompdf (v2.0.8)
+  - Downloading barryvdh/laravel-dompdf (v2.2.0)
+  - Downloading brick/geo (0.7.2)
+  - Downloading moneyphp/money (v4.8.0)
+  - Downloading cknow/laravel-money (v7.2.1)
+  - Downloading doctrine/deprecations (1.1.6)
+  - Downloading doctrine/event-manager (2.1.1)
+  - Downloading fakerphp/faker (v1.24.1)
+  - Downloading pragmarx/ia-str (v7.3.1)
+  - Downloading pragmarx/ia-collection (v7.3.2)
+  - Downloading pragmarx/ia-arr (v7.3.3)
+  - Downloading pragmarx/coollection (v0.8.1)
+  - Downloading nette/caching (v3.4.1)
+  - Downloading colinodell/json5 (v2.3.0)
+  - Downloading fleetbase/countries (0.8.3)
+  - Downloading jmikola/geojson (1.2.0)
+  - Downloading geo-io/interface (v1.0.1)
+  - Downloading geo-io/wkb-parser (v1.0.2)
+  - Downloading psr/cache (3.0.0)
+  - Downloading doctrine/dbal (3.10.5)
+  - Downloading fleetbase/laravel-mysql-spatial (1.0.2)
+  - Downloading stripe/stripe-php (v17.6.0)
+  - Downloading http-interop/http-factory-guzzle (1.2.1)
+  - Downloading laminas/laminas-diactoros (3.8.0)
+  - Downloading nyholm/psr7 (1.8.2)
+  - Downloading php-http/promise (1.3.1)
+  - Downloading php-http/httplug (2.4.1)
+  - Downloading php-http/guzzle7-adapter (1.1.0)
+  - Downloading symfony/polyfill-php84 (v1.33.0)
+  - Downloading symfony/polyfill-intl-icu (v1.33.0)
+  - Downloading laravel/cashier (v16.3.0)
+  - Downloading xantios/mimey (v2.2.0)
+  - Downloading sqids/sqids (0.4.1)
+  - Downloading spatie/laravel-sluggable (3.8.0)
+  - Downloading spatie/laravel-package-tools (1.93.0)
+  - Downloading lorisleiva/cron-translator (v0.4.6)
+  - Downloading spatie/laravel-schedule-monitor (3.10.3)
+  - Downloading spatie/laravel-responsecache (7.7.2)
+  - Downloading spatie/laravel-permission (6.24.1)
+  - Downloading rize/uri-template (0.4.1)
+  - Downloading grpc/grpc (1.74.0)
+  - Downloading google/protobuf (v4.33.5)
+  - Downloading google/longrunning (0.6.0)
+  - Downloading firebase/php-jwt (v7.0.3)
+  - Downloading google/auth (v1.50.0)
+  - Downloading google/grpc-gcp (v0.4.1)
+  - Downloading google/common-protos (4.12.4)
+  - Downloading google/gax (v1.42.0)
+  - Downloading google/cloud-core (v1.71.1)
+  - Downloading google/cloud-storage (v1.49.2)
+  - Downloading league/flysystem-google-cloud-storage (3.31.0)
+  - Downloading spatie/laravel-google-cloud-storage (2.3.4)
+  - Downloading spatie/laravel-activitylog (4.12.1)
+  - Downloading symfony/psr-http-message-bridge (v7.4.4)
+  - Downloading symfony/options-resolver (v7.4.0)
+  - Downloading jean85/pretty-package-versions (2.1.1)
+  - Downloading sentry/sentry (4.21.0)
+  - Downloading sentry/sentry-laravel (4.21.0)
+  - Downloading phrity/util-errorhandler (1.2.2)
+  - Downloading phrity/net-uri (1.3.0)
+  - Downloading phrity/net-stream (1.3.0)
+  - Downloading phrity/websocket (1.7.3)
+  - Downloading markbaker/matrix (3.0.1)
+  - Downloading markbaker/complex (3.0.2)
+  - Downloading maennchen/zipstream-php (3.1.2)
+  - Downloading ezyang/htmlpurifier (v4.19.0)
+  - Downloading composer/pcre (3.3.2)
+  - Downloading phpoffice/phpspreadsheet (1.30.2)
+  - Downloading composer/semver (3.4.4)
+  - Downloading maatwebsite/excel (3.1.67)
+  - Downloading lcobucci/jwt (5.6.0)
+  - Downloading lcobucci/clock (3.3.1)
+  - Downloading laravel/sanctum (v3.2.4)
+  - Downloading twilio/sdk (6.44.4)
+  - Downloading laravel-notification-channels/twilio (3.4.0)
+  - Downloading symfony/var-exporter (v7.4.0)
+  - Downloading symfony/cache-contracts (v3.6.0)
+  - Downloading symfony/cache (v7.4.6)
+  - Downloading fig/http-message-util (1.1.5)
+  - Downloading beste/clock (3.0.0)
+  - Downloading kreait/firebase-tokens (5.3.0)
+  - Downloading cuyz/valinor (2.3.2)
+  - Downloading beste/json (1.7.0)
+  - Downloading beste/in-memory-cache (1.4.0)
+  - Downloading kreait/firebase-php (7.24.1)
+  - Downloading kreait/laravel-firebase (5.10.0)
+  - Downloading laravel-notification-channels/fcm (4.5.0)
+  - Downloading symfony/http-client-contracts (v3.6.0)
+  - Downloading symfony/http-client (v7.4.6)
+  - Downloading spomky-labs/pki-framework (1.4.1)
+  - Downloading paragonie/sodium_compat (v2.5.0)
+  - Downloading paragonie/constant_time_encoding (v3.1.3)
+  - Downloading web-token/jwt-library (3.4.9)
+  - Downloading edamov/pushok (0.18.1)
+  - Downloading laravel-notification-channels/apn (v5.5.0)
+  - Downloading jdorn/sql-formatter (v1.2.17)
+  - Downloading intervention/gif (4.2.4)
+  - Downloading intervention/image (3.11.7)
+  - Downloading innoge/laravel-msgraph-mail (1.5.0)
+  - Downloading inkrot/php-compress-json (v0.1.3)
+  - Downloading hammerstone/fast-paginate (v1.1.1)
+  - Downloading paragonie/random_compat (v9.99.100)
+  - Downloading phpseclib/phpseclib (3.0.49)
+  - Downloading google/apiclient-services (v0.434.0)
+  - Downloading google/apiclient (v2.19.0)
+  - Downloading giggsey/locale (2.9.0)
+  - Downloading giggsey/libphonenumber-for-php (8.13.55)
+  - Downloading fleetbase/twilio (5.0.1)
+  - Downloading fleetbase/core-api (1.6.37)
+  - Downloading fleetbase/registry-bridge (0.1.7)
+  - Downloading willdurand/geocoder (4.6.0)
+  - Downloading clue/stream-filter (v1.7.0)
+  - Downloading php-http/message (1.16.2)
+  - Downloading php-http/curl-client (2.4.0)
+  - Downloading geocoder-php/common-http (4.7.0)
+  - Downloading geocoder-php/google-maps-provider (4.8.0)
+  - Downloading igorw/get-in (v1.0.3)
+  - Downloading geocoder-php/geo-plugin-provider (4.4.0)
+  - Downloading geocoder-php/chain-provider (4.6.0)
+  - Downloading toin0u/geocoder-laravel (4.7.0)
+  - Downloading milon/barcode (v10.0.1)
+  - Downloading geocoder-php/google-maps-places-provider (1.5.0)
+  - Downloading webit/eval-math (1.0.2)
+  - Downloading php-units-of-measure/php-units-of-measure (v2.2.0)
+  - Downloading symfony/serializer (v7.4.6)
+  - Downloading symfony/type-info (v7.4.6)
+  - Downloading symfony/property-info (v7.4.6)
+  - Downloading symfony/property-access (v7.4.4)
+  - Downloading react/promise (v3.3.0)
+  - Downloading react/event-loop (v1.6.0)
+  - Downloading league/geotools (1.3.0)
+  - Downloading fleetbase/fleetops-api (0.6.37)
+  - Downloading fleetbase/storefront-api (0.4.13)
+  - Downloading laravel/octane (v2.14.0)
+  - Downloading symfony/yaml (v7.4.6)
+  - Downloading laravel/sail (v1.53.0)
+  - Downloading nikic/php-parser (v5.7.0)
+  - Downloading psy/psysh (v0.12.20)
+  - Downloading laravel/tinker (v2.11.1)
+  - Downloading league/flysystem-aws-s3-v3 (3.32.0)
+  - Downloading hamcrest/hamcrest-php (v2.1.1)
+  - Downloading mockery/mockery (1.6.12)
+  - Downloading filp/whoops (2.18.4)
+  - Downloading nunomaduro/collision (v7.12.0)
+  - Downloading sebastian/version (4.0.1)
+  - Downloading sebastian/type (4.0.0)
+  - Downloading sebastian/recursion-context (5.0.1)
+  - Downloading sebastian/object-reflector (3.0.0)
+  - Downloading sebastian/object-enumerator (5.0.0)
+  - Downloading sebastian/global-state (6.0.2)
+  - Downloading sebastian/exporter (5.1.4)
+  - Downloading sebastian/environment (6.1.0)
+  - Downloading sebastian/diff (5.1.1)
+  - Downloading sebastian/comparator (5.0.5)
+  - Downloading sebastian/code-unit (2.0.0)
+  - Downloading sebastian/cli-parser (2.0.1)
+  - Downloading phpunit/php-timer (6.0.0)
+  - Downloading phpunit/php-text-template (3.0.1)
+  - Downloading phpunit/php-invoker (4.0.0)
+  - Downloading phpunit/php-file-iterator (4.1.0)
+  - Downloading theseer/tokenizer (1.3.1)
+  - Downloading sebastian/lines-of-code (2.0.2)
+  - Downloading sebastian/complexity (3.2.0)
+  - Downloading sebastian/code-unit-reverse-lookup (3.0.0)
+  - Downloading phpunit/php-code-coverage (10.1.16)
+  - Downloading phar-io/version (3.2.1)
+  - Downloading phar-io/manifest (2.0.4)
+  - Downloading myclabs/deep-copy (1.13.4)
+  - Downloading phpunit/phpunit (10.5.63)
+  - Downloading predis/predis (v2.4.1)
+  - Downloading resend/resend-php (v0.14.0)
+  - Downloading s-ichikawa/laravel-sendgrid-driver (4.0.10)
+  - Downloading spatie/error-solutions (1.1.3)
+  - Downloading spatie/backtrace (1.8.1)
+  - Downloading spatie/flare-client-php (1.10.1)
+  - Downloading spatie/ignition (1.15.1)
+  - Downloading spatie/laravel-ignition (2.9.1)
+  - Downloading symfony/mailgun-mailer (v7.1.6)
+  - Downloading symfony/postmark-mailer (v7.1.6)
+   0/258 [>---------------------------]   0%    Failed to download voku/portable-ascii from dist: curl error 56 while downloading https://api.github.com/repos/voku/portable-ascii/zipball/b1d923f88091c6bf09699efcd7c8a1b1bfd7351d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing voku/portable-ascii (2.0.3) into cache
+    Failed to download php-http/discovery from dist: curl error 56 while downloading https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/discovery (1.20.0) into cache
+    Failed to download symfony/polyfill-php80 from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-php80/zipball/0cc9dd0f17f61d8131e7df6b84bd344899fe2608: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-php80 (v1.33.0) into cache
+    Failed to download symfony/polyfill-mbstring from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-mbstring/zipball/6d857f4d76bd4b343eac26d6b539585d2bc56493: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-mbstring (v1.33.0) into cache
+    Failed to download symfony/polyfill-ctype from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-ctype/zipball/a3cc8b044a6ea513310cbd48ef7333b384945638: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-ctype (v1.33.0) into cache
+    Failed to download phpoption/phpoption from dist: curl error 56 while downloading https://api.github.com/repos/schmittjoh/php-option/zipball/75365b91986c2405cf5e1e012c5595cd487a98be: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpoption/phpoption (1.9.5) into cache
+    Failed to download graham-campbell/result-type from dist: curl error 56 while downloading https://api.github.com/repos/GrahamCampbell/Result-Type/zipball/e01f4a821471308ba86aa202fed6698b6b695e3b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing graham-campbell/result-type (v1.1.4) into cache
+    Failed to download vlucas/phpdotenv from dist: curl error 56 while downloading https://api.github.com/repos/vlucas/phpdotenv/zipball/955e7815d677a3eaa7075231212f2110983adecc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing vlucas/phpdotenv (v5.6.3) into cache
+    Failed to download symfony/css-selector from dist: curl error 56 while downloading https://api.github.com/repos/symfony/css-selector/zipball/2e7c52c647b406e2107dd867db424a4dbac91864: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/css-selector (v7.4.6) into cache
+
+   9/258 [>---------------------------]   3%    Failed to download symfony/var-dumper from dist: curl error 56 while downloading https://api.github.com/repos/symfony/var-dumper/zipball/131fc9915e0343052af5ed5040401b481ca192aa: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/var-dumper (v6.4.32) into cache
+    Failed to download symfony/polyfill-uuid from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-uuid/zipball/21533be36c24be3f4b1669c4725c7d1d2bab4ae2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-uuid (v1.33.0) into cache
+    Failed to download tijsverkoyen/css-to-inline-styles from dist: curl error 56 while downloading https://api.github.com/repos/tijsverkoyen/CssToInlineStyles/zipball/f0292ccf0ec75843d65027214426b6b163b48b41: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing tijsverkoyen/css-to-inline-styles (v2.4.0) into cache
+    Failed to download symfony/deprecation-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/deprecation-contracts/zipball/63afe740e99a13ba87ec199bb07bbdee937a5b62: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/deprecation-contracts (v3.6.0) into cache
+    Failed to download symfony/uid from dist: curl error 56 while downloading https://api.github.com/repos/symfony/uid/zipball/6b973c385f00341b246f697d82dc01a09107acdd: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/uid (v6.4.32) into cache
+    Failed to download symfony/routing from dist: curl error 56 while downloading https://api.github.com/repos/symfony/routing/zipball/5ab3a3e1a03535ec5ca6ce2d39e4369a1096ae47: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/routing (v6.4.34) into cache
+    Failed to download symfony/process from dist: curl error 56 while downloading https://api.github.com/repos/symfony/process/zipball/c46e854e79b52d07666e43924a20cb6dc546644e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/process (v6.4.33) into cache
+    Failed to download symfony/polyfill-intl-normalizer from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/3833d7255cc303546435cb650316bff708a1c75c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-normalizer (v1.33.0) into cache
+    Failed to download symfony/polyfill-intl-idn from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/9614ac4d8061dc257ecc64cba1b140873dce8ad3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-idn (v1.33.0) into cache
+    Failed to download symfony/service-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/service-contracts/zipball/45112560a3ba2d715666a509a0bc9521d10b6c43: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/service-contracts (v3.6.1) into cache
+    Failed to download symfony/mime from dist: curl error 56 while downloading https://api.github.com/repos/symfony/mime/zipball/2b32fbbe10b36a8379efab6e702ad8b917151839: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/mime (v6.4.34) into cache
+    Failed to download psr/container from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/container (2.0.2) into cache
+
+  21/258 [==>-------------------------]   8%    Failed to download psr/event-dispatcher from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/event-dispatcher (1.0.0) into cache
+    Failed to download symfony/event-dispatcher-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/59eb412e93815df44f05f342958efa9f46b1e586: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/event-dispatcher-contracts (v3.6.0) into cache
+    Failed to download symfony/event-dispatcher from dist: curl error 56 while downloading https://api.github.com/repos/symfony/event-dispatcher/zipball/dc2c0eba1af673e736bb851d747d266108aea746: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/event-dispatcher (v7.4.4) into cache
+    Failed to download psr/log from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/log (3.0.2) into cache
+    Failed to download doctrine/lexer from dist: curl error 56 while downloading https://api.github.com/repos/doctrine/lexer/zipball/31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing doctrine/lexer (3.0.1) into cache
+    Failed to download egulias/email-validator from dist: curl error 56 while downloading https://api.github.com/repos/egulias/EmailValidator/zipball/d42c8731f0624ad6bdc8d3e5e9a4524f68801cfa: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing egulias/email-validator (4.0.4) into cache
+    Failed to download symfony/mailer from dist: curl error 56 while downloading https://api.github.com/repos/symfony/mailer/zipball/01b846f48e53ee4096692a383637a1fa4d577301: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/mailer (v6.4.34) into cache
+    Failed to download symfony/polyfill-php83 from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-php83/zipball/17f6f9a6b1735c0f163024d959f700cfbc5155e5: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-php83 (v1.33.0) into cache
+
+  29/258 [===>------------------------]  11%    Failed to download symfony/http-foundation from dist: curl error 56 while downloading https://api.github.com/repos/symfony/http-foundation/zipball/5bb346d1b4b2a616e5c3d99b3ee4d5810735c535: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/http-foundation (v6.4.34) into cache
+    Failed to download symfony/error-handler from dist: curl error 56 while downloading https://api.github.com/repos/symfony/error-handler/zipball/8c18400784fcb014dc73c8d5601a9576af7f8ad4: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/error-handler (v6.4.32) into cache
+    Failed to download symfony/http-kernel from dist: curl error 56 while downloading https://api.github.com/repos/symfony/http-kernel/zipball/006a49fc4f41ee21a6ca61e69caed1c30b29f07c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/http-kernel (v6.4.34) into cache
+    Failed to download symfony/finder from dist: curl error 56 while downloading https://api.github.com/repos/symfony/finder/zipball/9590e86be1d1c57bfbb16d0dd040345378c20896: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/finder (v6.4.34) into cache
+    Failed to download symfony/polyfill-intl-grapheme from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/380872130d3a5dd3ace2f4010d95125fde5d5c70: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-grapheme (v1.33.0) into cache
+    Failed to download symfony/string from dist: curl error 56 while downloading https://api.github.com/repos/symfony/string/zipball/9f209231affa85aa930a5e46e6eb03381424b30b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/string (v7.4.6) into cache
+    Failed to download symfony/console from dist: curl error 56 while downloading https://api.github.com/repos/symfony/console/zipball/7b1f1c37eff5910ddda2831345467e593a5120ad: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/console (v6.4.34) into cache
+    Failed to download ramsey/collection from dist: curl error 56 while downloading https://api.github.com/repos/ramsey/collection/zipball/344572933ad0181accbf4ba763e85a0306a8c5e2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing ramsey/collection (2.1.1) into cache
+
+  37/258 [====>-----------------------]  14%    Failed to download brick/math from dist: curl error 56 while downloading https://api.github.com/repos/brick/math/zipball/866551da34e9a618e64a819ee1e01c20d8a588ba: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing brick/math (0.12.3) into cache
+    Failed to download ramsey/uuid from dist: curl error 56 while downloading https://api.github.com/repos/ramsey/uuid/zipball/8429c78ca35a09f27565311b98101e2826affde0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing ramsey/uuid (4.9.2) into cache
+    Failed to download psr/simple-cache from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/simple-cache/zipball/764e0b3939f5ca87cb904f570ef9be2d78a07865: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/simple-cache (3.0.0) into cache
+    Failed to download nunomaduro/termwind from dist: curl error 56 while downloading https://api.github.com/repos/nunomaduro/termwind/zipball/5369ef84d8142c1d87e4ec278711d4ece3cbf301: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nunomaduro/termwind (v1.17.0) into cache
+    Failed to download symfony/translation-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/translation-contracts/zipball/65a8bc82080447fae78373aa10f8d13b38338977: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/translation-contracts (v3.6.1) into cache
+    Failed to download symfony/translation from dist: curl error 56 while downloading https://api.github.com/repos/symfony/translation/zipball/d07d117db41341511671b0a1a2be48f2772189ce: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/translation (v6.4.34) into cache
+    Failed to download psr/clock from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/clock/zipball/e41a24703d4560fd0acb709162f73b8adfc3aa0d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/clock (1.0.0) into cache
+    Failed to download carbonphp/carbon-doctrine-types from dist: curl error 56 while downloading https://api.github.com/repos/CarbonPHP/carbon-doctrine-types/zipball/99f76ffa36cce3b70a4a6abce41dba15ca2e84cb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing carbonphp/carbon-doctrine-types (2.1.0) into cache
+    Failed to download nesbot/carbon from dist: curl error 56 while downloading https://api.github.com/repos/CarbonPHP/carbon/zipball/9228ce90e1035ff2f0db84b40ec2e023ed802075: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nesbot/carbon (2.73.0) into cache
+    Failed to download monolog/monolog from dist: curl error 56 while downloading https://api.github.com/repos/Seldaek/monolog/zipball/b321dd6749f0bf7189444158a3ce785cc16d69b0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing monolog/monolog (3.10.0) into cache
+    Failed to download league/mime-type-detection from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/mime-type-detection/zipball/2d6702ff215bf922936ccc1ad31007edc76451b9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/mime-type-detection (1.16.0) into cache
+    Failed to download league/flysystem from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/flysystem/zipball/254b1595b16b22dbddaaef9ed6ca9fdac4956725: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/flysystem (3.32.0) into cache
+
+  49/258 [=====>----------------------]  18%    Failed to download league/flysystem-local from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/flysystem-local/zipball/2f669db18a4c20c755c2bb7d3a7b0b2340488079: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/flysystem-local (3.31.0) into cache
+    Failed to download nette/utils from dist: curl error 56 while downloading https://api.github.com/repos/nette/utils/zipball/bb3ea637e3d131d72acc033cfc2746ee893349fe: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nette/utils (v4.1.3) into cache
+    Failed to download nette/schema from dist: curl error 56 while downloading https://api.github.com/repos/nette/schema/zipball/f0ab1a3cda782dbc5da270d28545236aa80c4002: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nette/schema (v1.3.5) into cache
+    Failed to download dflydev/dot-access-data from dist: curl error 56 while downloading https://api.github.com/repos/dflydev/dflydev-dot-access-data/zipball/a23a2bf4f31d3518f3ecb38660c95715dfead60f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing dflydev/dot-access-data (v3.0.3) into cache
+
+  53/258 [=====>----------------------]  20%    Failed to download league/config from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/config/zipball/754b3604fb2984c71f4af4a9cbe7b57f346ec1f3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/config (v1.2.0) into cache
+    Failed to download league/commonmark from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/commonmark/zipball/4efa10c1e56488e658d10adf7b7b7dcd19940bfb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/commonmark (2.8.0) into cache
+    Failed to download laravel/serializable-closure from dist: curl error 56 while downloading https://api.github.com/repos/laravel/serializable-closure/zipball/4f48ade902b94323ca3be7646db16209ec76be3d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/serializable-closure (v1.3.7) into cache
+    Failed to download laravel/framework from dist: curl error 56 while downloading https://api.github.com/repos/laravel/framework/zipball/3ff39b7a9b83e633383ec9b019827ed54b6d38bc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/framework (10.50.2) into cache
+    Failed to download laravel/prompts from dist: curl error 56 while downloading https://api.github.com/repos/laravel/prompts/zipball/7b4029a84c37cb2725fc7f011586e2997040bc95: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/prompts (v0.1.25) into cache
+    Failed to download guzzlehttp/uri-template from dist: curl error 56 while downloading https://api.github.com/repos/guzzle/uri-template/zipball/4f4bbd4e7172148801e76e3decc1e559bdee34e1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing guzzlehttp/uri-template (v1.0.5) into cache
+    Failed to download fruitcake/php-cors from dist: curl error 56 while downloading https://api.github.com/repos/fruitcake/php-cors/zipball/38aaa6c3fd4c157ffe2a4d10aa8b9b16ba8de379: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fruitcake/php-cors (v1.4.0) into cache
+    Failed to download dragonmantank/cron-expression from dist: curl error 56 while downloading https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing dragonmantank/cron-expression (v3.6.0) into cache
+    Failed to download doctrine/inflector from dist: curl error 56 while downloading https://api.github.com/repos/doctrine/inflector/zipball/6d6c96277ea252fc1304627204c3d5e6e15faa3b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing doctrine/inflector (2.1.0) into cache
+    Failed to download psr/http-message from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/http-message (2.0) into cache
+    Failed to download psr/http-client from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/http-client/zipball/bb5906edc1c324c9a05aa0873d40117941e5fa90: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/http-client (1.0.3) into cache
+    Failed to download ralouphie/getallheaders from dist: curl error 56 while downloading https://api.github.com/repos/ralouphie/getallheaders/zipball/120b605dfeb996808c31b6477290a714d356e822: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing ralouphie/getallheaders (3.0.3) into cache
+
+  65/258 [=======>--------------------]  25%    Failed to download psr/http-factory from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/http-factory/zipball/2b4765fddfe3b508ac62f829e852b1501d3f6e8a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/http-factory (1.1.0) into cache
+    Failed to download guzzlehttp/psr7 from dist: curl error 56 while downloading https://api.github.com/repos/guzzle/psr7/zipball/21dc724a0583619cd1652f673303492272778051: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing guzzlehttp/psr7 (2.8.0) into cache
+    Failed to download guzzlehttp/promises from dist: curl error 56 while downloading https://api.github.com/repos/guzzle/promises/zipball/481557b130ef3790cf82b713667b43030dc9c957: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing guzzlehttp/promises (2.3.0) into cache
+    Failed to download guzzlehttp/guzzle from dist: curl error 56 while downloading https://api.github.com/repos/guzzle/guzzle/zipball/b51ac707cfa420b7bfd4e4d5e510ba8008e822b4: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing guzzlehttp/guzzle (7.10.0) into cache
+    Failed to download appstract/laravel-opcache from dist: curl error 56 while downloading https://api.github.com/repos/appstract/laravel-opcache/zipball/d2ce88cddda6af54c14d1f9ceaaf94b54f38f9d3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing appstract/laravel-opcache (4.0.2) into cache
+    Failed to download aws/aws-crt-php from dist: curl error 56 while downloading https://api.github.com/repos/awslabs/aws-crt-php/zipball/d71d9906c7bb63a28295447ba12e74723bd3730e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing aws/aws-crt-php (v1.2.7) into cache
+    Failed to download symfony/filesystem from dist: curl error 56 while downloading https://api.github.com/repos/symfony/filesystem/zipball/3ebc794fa5315e59fd122561623c2e2e4280538e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/filesystem (v7.4.6) into cache
+    Failed to download mtdowling/jmespath.php from dist: curl error 56 while downloading https://api.github.com/repos/jmespath/jmespath.php/zipball/a2a865e05d5f420b50cc2f85bb78d565db12a6bc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing mtdowling/jmespath.php (2.8.0) into cache
+    Failed to download aws/aws-sdk-php from dist: curl error 56 while downloading https://api.github.com/repos/aws/aws-sdk-php/zipball/d300ec1c861e52dc8f17ca3d75dc754da949f065: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing aws/aws-sdk-php (3.371.3) into cache
+    Failed to download aws/aws-sdk-php-laravel from dist: curl error 56 while downloading https://api.github.com/repos/aws/aws-sdk-php-laravel/zipball/c1477b1efd43a61238090c0e8f1ede979573dd4b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing aws/aws-sdk-php-laravel (3.10.0) into cache
+    Failed to download sabberworm/php-css-parser from dist: curl error 56 while downloading https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/d8e916507b88e389e26d4ab03c904a082aa66bb9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sabberworm/php-css-parser (v8.9.0) into cache
+    Failed to download phenx/php-svg-lib from dist: curl error 56 while downloading https://api.github.com/repos/dompdf/php-svg-lib/zipball/46b25da81613a9cf43c83b2a8c2c1bdab27df691: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phenx/php-svg-lib (0.5.4) into cache
+
+  77/258 [========>-------------------]  29%    Failed to download phenx/php-font-lib from dist: curl error 56 while downloading https://api.github.com/repos/dompdf/php-font-lib/zipball/a1681e9793040740a405ac5b189275059e2a9863: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phenx/php-font-lib (0.5.6) into cache
+    Failed to download masterminds/html5 from dist: curl error 56 while downloading https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing masterminds/html5 (2.10.0) into cache
+    Failed to download dompdf/dompdf from dist: curl error 56 while downloading https://api.github.com/repos/dompdf/dompdf/zipball/c20247574601700e1f7c8dab39310fca1964dc52: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing dompdf/dompdf (v2.0.8) into cache
+    Failed to download barryvdh/laravel-dompdf from dist: curl error 56 while downloading https://api.github.com/repos/barryvdh/laravel-dompdf/zipball/c96f90c97666cebec154ca1ffb67afed372114d8: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing barryvdh/laravel-dompdf (v2.2.0) into cache
+
+  81/258 [========>-------------------]  31%    Failed to download brick/geo from dist: curl error 56 while downloading https://api.github.com/repos/brick/geo/zipball/725789f7c090235e230b9a666acf59e0fc7f8e24: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing brick/geo (0.7.2) into cache
+    Failed to download moneyphp/money from dist: curl error 56 while downloading https://api.github.com/repos/moneyphp/money/zipball/b358727ea5a5cd2d7475e59c31dfc352440ae7ec: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing moneyphp/money (v4.8.0) into cache
+    Failed to download cknow/laravel-money from dist: curl error 56 while downloading https://api.github.com/repos/cknow/laravel-money/zipball/82d506202f95e8b6977a9ffffcdbd218bc58bdc5: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing cknow/laravel-money (v7.2.1) into cache
+    Failed to download doctrine/deprecations from dist: curl error 56 while downloading https://api.github.com/repos/doctrine/deprecations/zipball/d4fe3e6fd9bb9e72557a19674f44d8ac7db4c6ca: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing doctrine/deprecations (1.1.6) into cache
+    Failed to download doctrine/event-manager from dist: curl error 56 while downloading https://api.github.com/repos/doctrine/event-manager/zipball/dda33921b198841ca8dbad2eaa5d4d34769d18cf: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing doctrine/event-manager (2.1.1) into cache
+    Failed to download fakerphp/faker from dist: curl error 56 while downloading https://api.github.com/repos/FakerPHP/Faker/zipball/e0ee18eb1e6dc3cda3ce9fd97e5a0689a88a64b5: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fakerphp/faker (v1.24.1) into cache
+    Failed to download pragmarx/ia-str from dist: curl error 56 while downloading https://api.github.com/repos/antonioribeiro/ia-str/zipball/ce022c92a972bee66e1d54f32a604b0ee19e6488: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing pragmarx/ia-str (v7.3.1) into cache
+    Failed to download pragmarx/ia-collection from dist: curl error 56 while downloading https://api.github.com/repos/antonioribeiro/ia-collection/zipball/c88a4ca6842fbaed57ac394ecff7ee3e7d27d15e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing pragmarx/ia-collection (v7.3.2) into cache
+    Failed to download pragmarx/ia-arr from dist: curl error 56 while downloading https://api.github.com/repos/antonioribeiro/ia-arr/zipball/6f4303c25cc1a79a55044ca413e0a0d757628fab: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing pragmarx/ia-arr (v7.3.3) into cache
+    Failed to download pragmarx/coollection from dist: curl error 56 while downloading https://api.github.com/repos/antonioribeiro/coollection/zipball/4b05b086ee37bee048bff25dda2094b9bd5777df: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing pragmarx/coollection (v0.8.1) into cache
+    Failed to download nette/caching from dist: curl error 56 while downloading https://api.github.com/repos/nette/caching/zipball/7133d653156b3b9fac2f6f0b5ba35fa020a94e8c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nette/caching (v3.4.1) into cache
+    Failed to download colinodell/json5 from dist: curl error 56 while downloading https://api.github.com/repos/colinodell/json5/zipball/15b063f8cb5e6deb15f0cd39123264ec0d19c710: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing colinodell/json5 (v2.3.0) into cache
+
+  93/258 [==========>-----------------]  36%    Failed to download fleetbase/countries from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/countries/zipball/0ea7476fd12b4d9254e9e6b387880d96a07b3119: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/countries (0.8.3) into cache
+    Failed to download jmikola/geojson from dist: curl error 56 while downloading https://api.github.com/repos/jmikola/geojson/zipball/e28f3855bb61a91aab32b74c176d76dd0b5658d7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing jmikola/geojson (1.2.0) into cache
+    Failed to download geo-io/interface from dist: curl error 56 while downloading https://api.github.com/repos/geo-io/interface/zipball/cf46fe7b013de20ab8b601238c7d91b480810644: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geo-io/interface (v1.0.1) into cache
+    Failed to download geo-io/wkb-parser from dist: curl error 56 while downloading https://api.github.com/repos/geo-io/wkb-parser/zipball/d6c3101e6fa255c2a5064fedb33551c4d50e58f6: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geo-io/wkb-parser (v1.0.2) into cache
+    Failed to download psr/cache from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/cache/zipball/aa5030cfa5405eccfdcb1083ce040c2cb8d253bf: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psr/cache (3.0.0) into cache
+    Failed to download doctrine/dbal from dist: curl error 56 while downloading https://api.github.com/repos/doctrine/dbal/zipball/95d84866bf3c04b2ddca1df7c049714660959aef: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing doctrine/dbal (3.10.5) into cache
+    Failed to download fleetbase/laravel-mysql-spatial from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/laravel-mysql-spatial/zipball/3dd0c72de5758eea0ec499620c8fed8babb85cb6: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/laravel-mysql-spatial (1.0.2) into cache
+    Failed to download stripe/stripe-php from dist: curl error 56 while downloading https://api.github.com/repos/stripe/stripe-php/zipball/a6219df5df1324a0d3f1da25fb5e4b8a3307ea16: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing stripe/stripe-php (v17.6.0) into cache
+    Failed to download http-interop/http-factory-guzzle from dist: curl error 56 while downloading https://api.github.com/repos/http-interop/http-factory-guzzle/zipball/c2c859ceb05c3f42e710b60555f4c35b6a4a3995: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing http-interop/http-factory-guzzle (1.2.1) into cache
+    Failed to download laminas/laminas-diactoros from dist: curl error 56 while downloading https://api.github.com/repos/laminas/laminas-diactoros/zipball/60c182916b2749480895601649563970f3f12ec4: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laminas/laminas-diactoros (3.8.0) into cache
+    Failed to download nyholm/psr7 from dist: curl error 56 while downloading https://api.github.com/repos/Nyholm/psr7/zipball/a71f2b11690f4b24d099d6b16690a90ae14fc6f3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nyholm/psr7 (1.8.2) into cache
+    Failed to download php-http/promise from dist: curl error 56 while downloading https://api.github.com/repos/php-http/promise/zipball/fc85b1fba37c169a69a07ef0d5a8075770cc1f83: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/promise (1.3.1) into cache
+
+ 105/258 [===========>----------------]  40%    Failed to download php-http/httplug from dist: curl error 56 while downloading https://api.github.com/repos/php-http/httplug/zipball/5cad731844891a4c282f3f3e1b582c46839d22f4: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/httplug (2.4.1) into cache
+    Failed to download php-http/guzzle7-adapter from dist: curl error 56 while downloading https://api.github.com/repos/php-http/guzzle7-adapter/zipball/03a415fde709c2f25539790fecf4d9a31bc3d0eb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/guzzle7-adapter (1.1.0) into cache
+    Failed to download symfony/polyfill-php84 from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-php84/zipball/d8ced4d875142b6a7426000426b8abc631d6b191: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-php84 (v1.33.0) into cache
+    Failed to download symfony/polyfill-intl-icu from dist: curl error 56 while downloading https://api.github.com/repos/symfony/polyfill-intl-icu/zipball/bfc8fa13dbaf21d69114b0efcd72ab700fb04d0c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-icu (v1.33.0) into cache
+    Failed to download laravel/cashier from dist: curl error 56 while downloading https://api.github.com/repos/laravel/cashier-stripe/zipball/a718fbdc399eb73ef35604b42daff5221c4b704b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/cashier (v16.3.0) into cache
+    Failed to download xantios/mimey from dist: curl error 56 while downloading https://api.github.com/repos/Xantios/mimey/zipball/8cb6f0c29b8eadde38777ed947847f4253c00b60: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing xantios/mimey (v2.2.0) into cache
+    Failed to download sqids/sqids from dist: curl error 56 while downloading https://api.github.com/repos/sqids/sqids-php/zipball/ff3d1214c0c2119ae4b676cc00f3abb22f61da42: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sqids/sqids (0.4.1) into cache
+    Failed to download spatie/laravel-sluggable from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-sluggable/zipball/8050bf38a6e03ac4974e1f7bc722983242abfae0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-sluggable (3.8.0) into cache
+    Failed to download spatie/laravel-package-tools from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-package-tools/zipball/0d097bce95b2bf6802fb1d83e1e753b0f5a948e7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-package-tools (1.93.0) into cache
+    Failed to download lorisleiva/cron-translator from dist: curl error 56 while downloading https://api.github.com/repos/lorisleiva/cron-translator/zipball/082e3cd493de13bd5816bfdda484d07bb2326768: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing lorisleiva/cron-translator (v0.4.6) into cache
+    Failed to download spatie/laravel-schedule-monitor from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/8731755b91d5d724a5bd2c7028e3d0c8c930e8a1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-schedule-monitor (3.10.3) into cache
+    Failed to download spatie/laravel-responsecache from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-responsecache/zipball/039f8b9c2e2b2d838d0bfce32cfe52cf5d1cb8fc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-responsecache (7.7.2) into cache
+
+ 117/258 [============>---------------]  45%    Failed to download spatie/laravel-permission from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-permission/zipball/eefc9d17eba80d023d6bff313f882cb2bcd691a3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-permission (6.24.1) into cache
+    Failed to download rize/uri-template from dist: curl error 56 while downloading https://api.github.com/repos/rize/UriTemplate/zipball/abb53c8b73a5b6c24e11f49036ab842f560cad33: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing rize/uri-template (0.4.1) into cache
+    Failed to download grpc/grpc from dist: curl error 56 while downloading https://api.github.com/repos/grpc/grpc-php/zipball/32bf4dba256d60d395582fb6e4e8d3936bcdb713: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing grpc/grpc (1.74.0) into cache
+    Failed to download google/protobuf from dist: curl error 56 while downloading https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/ebe8010a61b2ae0cff0d246fe1c4d44e9f7dfa6d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/protobuf (v4.33.5) into cache
+    Failed to download google/longrunning from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/php-longrunning/zipball/226d3b5166eaa13754cc5e452b37872478e23375: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/longrunning (0.6.0) into cache
+    Failed to download firebase/php-jwt from dist: curl error 56 while downloading https://api.github.com/repos/firebase/php-jwt/zipball/28aa0694bcfdfa5e2959c394d5a1ee7a5083629e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing firebase/php-jwt (v7.0.3) into cache
+    Failed to download google/auth from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/google-auth-library-php/zipball/e1c26a718198e16d8a3c69b1cae136b73f959b0f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/auth (v1.50.0) into cache
+    Failed to download google/grpc-gcp from dist: curl error 56 while downloading https://api.github.com/repos/GoogleCloudPlatform/grpc-gcp-php/zipball/e585b7721bbe806ef45b5c52ae43dfc2bff89968: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/grpc-gcp (v0.4.1) into cache
+    Failed to download google/common-protos from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/common-protos-php/zipball/0127156899af0df2681bd42024c60bd5360d64e3: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/common-protos (4.12.4) into cache
+    Failed to download google/gax from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/gax-php/zipball/7ad13e5b9ca201a5f60e7b3342842d1217bc23a6: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/gax (v1.42.0) into cache
+    Failed to download google/cloud-core from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/b170c5d2095f05def125a1f7452f7fcca0a9ffaf: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/cloud-core (v1.71.1) into cache
+    Failed to download google/cloud-storage from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/1cab44377fc65c7feba1f706970f3abf5ccba392: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/cloud-storage (v1.49.2) into cache
+
+ 129/258 [==============>-------------]  50%    Failed to download league/flysystem-google-cloud-storage from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/flysystem-google-cloud-storage/zipball/0e877148edb3809954559b2987da57e21f7f15a6: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/flysystem-google-cloud-storage (3.31.0) into cache
+    Failed to download spatie/laravel-google-cloud-storage from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-google-cloud-storage/zipball/10c91e6dcaebf83eba9f21b8107267595bb40d2a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-google-cloud-storage (2.3.4) into cache
+    Failed to download spatie/laravel-activitylog from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-activitylog/zipball/bf66b5bbe9a946e977e876420d16b30b9aff1b2d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-activitylog (4.12.1) into cache
+    Failed to download symfony/psr-http-message-bridge from dist: curl error 56 while downloading https://api.github.com/repos/symfony/psr-http-message-bridge/zipball/929ffe10bbfbb92e711ac3818d416f9daffee067: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/psr-http-message-bridge (v7.4.4) into cache
+    Failed to download symfony/options-resolver from dist: curl error 56 while downloading https://api.github.com/repos/symfony/options-resolver/zipball/b38026df55197f9e39a44f3215788edf83187b80: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/options-resolver (v7.4.0) into cache
+    Failed to download jean85/pretty-package-versions from dist: curl error 56 while downloading https://api.github.com/repos/Jean85/pretty-package-versions/zipball/4d7aa5dab42e2a76d99559706022885de0e18e1a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing jean85/pretty-package-versions (2.1.1) into cache
+    Failed to download sentry/sentry from dist: curl error 56 while downloading https://api.github.com/repos/getsentry/sentry-php/zipball/2bf405fc4d38f00073a7d023cf321e59f614d54c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sentry/sentry (4.21.0) into cache
+    Failed to download sentry/sentry-laravel from dist: curl error 56 while downloading https://api.github.com/repos/getsentry/sentry-laravel/zipball/4b939116c2d3c5de328f23a5f1dfb97b40e0c17b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sentry/sentry-laravel (4.21.0) into cache
+    Failed to download phrity/util-errorhandler from dist: curl error 56 while downloading https://api.github.com/repos/sirn-se/phrity-util-errorhandler/zipball/70a669cc22db2eed6a109ec66fd95168a4332c9b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phrity/util-errorhandler (1.2.2) into cache
+    Failed to download phrity/net-uri from dist: curl error 56 while downloading https://api.github.com/repos/sirn-se/phrity-net-uri/zipball/3f458e0c4d1ddc0e218d7a5b9420127c63925f43: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phrity/net-uri (1.3.0) into cache
+    Failed to download phrity/net-stream from dist: curl error 56 while downloading https://api.github.com/repos/sirn-se/phrity-net-stream/zipball/9105931b65ad90c75f4885a40b268b0f65802e3e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phrity/net-stream (1.3.0) into cache
+    Failed to download phrity/websocket from dist: curl error 56 while downloading https://api.github.com/repos/sirn-se/websocket-php/zipball/8a525da4457b599ab1960f24183f25626c96ce3c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phrity/websocket (1.7.3) into cache
+
+ 141/258 [===============>------------]  54%    Failed to download markbaker/matrix from dist: curl error 56 while downloading https://api.github.com/repos/MarkBaker/PHPMatrix/zipball/728434227fe21be27ff6d86621a1b13107a2562c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing markbaker/matrix (3.0.1) into cache
+    Failed to download markbaker/complex from dist: curl error 56 while downloading https://api.github.com/repos/MarkBaker/PHPComplex/zipball/95c56caa1cf5c766ad6d65b6344b807c1e8405b9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing markbaker/complex (3.0.2) into cache
+    Failed to download maennchen/zipstream-php from dist: curl error 56 while downloading https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/aeadcf5c412332eb426c0f9b4485f6accba2a99f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing maennchen/zipstream-php (3.1.2) into cache
+    Failed to download ezyang/htmlpurifier from dist: curl error 56 while downloading https://api.github.com/repos/ezyang/htmlpurifier/zipball/b287d2a16aceffbf6e0295559b39662612b77fcf: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing ezyang/htmlpurifier (v4.19.0) into cache
+    Failed to download composer/pcre from dist: curl error 56 while downloading https://api.github.com/repos/composer/pcre/zipball/b2bed4734f0cc156ee1fe9c0da2550420d99a21e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing composer/pcre (3.3.2) into cache
+    Failed to download phpoffice/phpspreadsheet from dist: curl error 56 while downloading https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/09cdde5e2f078b9a3358dd217e2c8cb4dac84be2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpoffice/phpspreadsheet (1.30.2) into cache
+    Failed to download composer/semver from dist: curl error 56 while downloading https://api.github.com/repos/composer/semver/zipball/198166618906cb2de69b95d7d47e5fa8aa1b2b95: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing composer/semver (3.4.4) into cache
+    Failed to download maatwebsite/excel from dist: curl error 56 while downloading https://api.github.com/repos/SpartnerNL/Laravel-Excel/zipball/e508e34a502a3acc3329b464dad257378a7edb4d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing maatwebsite/excel (3.1.67) into cache
+    Failed to download lcobucci/jwt from dist: curl error 56 while downloading https://api.github.com/repos/lcobucci/jwt/zipball/bb3e9f21e4196e8afc41def81ef649c164bca25e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing lcobucci/jwt (5.6.0) into cache
+    Failed to download lcobucci/clock from dist: curl error 56 while downloading https://api.github.com/repos/lcobucci/clock/zipball/db3713a61addfffd615b79bf0bc22f0ccc61b86b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing lcobucci/clock (3.3.1) into cache
+    Failed to download laravel/sanctum from dist: curl error 56 while downloading https://api.github.com/repos/laravel/sanctum/zipball/c8269dcff3cda261ce113ab9548a0253d709aa91: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/sanctum (v3.2.4) into cache
+    Failed to download twilio/sdk from dist: curl error 56 while downloading https://api.github.com/repos/twilio/twilio-php/zipball/08aad5f377e2245b9cd7508e7762d95e7392fa4d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing twilio/sdk (6.44.4) into cache
+
+ 153/258 [================>-----------]  59%    Failed to download laravel-notification-channels/twilio from dist: curl error 56 while downloading https://api.github.com/repos/laravel-notification-channels/twilio/zipball/761d57bfccf7c2eccb0ca9fe0e7a66173e0e203f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel-notification-channels/twilio (3.4.0) into cache
+    Failed to download symfony/var-exporter from dist: curl error 56 while downloading https://api.github.com/repos/symfony/var-exporter/zipball/03a60f169c79a28513a78c967316fbc8bf17816f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/var-exporter (v7.4.0) into cache
+    Failed to download symfony/cache-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/cache-contracts/zipball/5d68a57d66910405e5c0b63d6f0af941e66fc868: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/cache-contracts (v3.6.0) into cache
+    Failed to download symfony/cache from dist: curl error 56 while downloading https://api.github.com/repos/symfony/cache/zipball/1d06192e8f164e2729b0031e6807d72a6195b8bb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/cache (v7.4.6) into cache
+
+ 157/258 [=================>----------]  60%    Failed to download fig/http-message-util from dist: curl error 56 while downloading https://api.github.com/repos/php-fig/http-message-util/zipball/9d94dc0154230ac39e5bf89398b324a86f63f765: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fig/http-message-util (1.1.5) into cache
+    Failed to download beste/clock from dist: curl error 56 while downloading https://api.github.com/repos/beste/clock/zipball/7004b55fcd54737b539886244b3a3b2188181974: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing beste/clock (3.0.0) into cache
+    Failed to download kreait/firebase-tokens from dist: curl error 56 while downloading https://api.github.com/repos/beste/firebase-tokens-php/zipball/5dc119c8c29fcab1fb3a35ed5164dee0d33e4430: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing kreait/firebase-tokens (5.3.0) into cache
+    Failed to download cuyz/valinor from dist: curl error 56 while downloading https://api.github.com/repos/CuyZ/Valinor/zipball/3b9f3f54901371d589776502aab3da3a046801a7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing cuyz/valinor (2.3.2) into cache
+    Failed to download beste/json from dist: curl error 56 while downloading https://api.github.com/repos/beste/json/zipball/976525f1ce2323a4e044364269d60b402603e216: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing beste/json (1.7.0) into cache
+    Failed to download beste/in-memory-cache from dist: curl error 56 while downloading https://api.github.com/repos/beste/in-memory-cache-php/zipball/1b9fbfcfbd0b657b90a759ac41b22748501c7f0e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing beste/in-memory-cache (1.4.0) into cache
+    Failed to download kreait/firebase-php from dist: curl error 56 while downloading https://api.github.com/repos/beste/firebase-php/zipball/935292e2af33af0120654ce704f1dc8f1c03025b: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing kreait/firebase-php (7.24.1) into cache
+    Failed to download kreait/laravel-firebase from dist: curl error 56 while downloading https://api.github.com/repos/beste/laravel-firebase/zipball/d00093fdc6ef006a489ea0fe59f1a2feb5045057: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing kreait/laravel-firebase (5.10.0) into cache
+    Failed to download laravel-notification-channels/fcm from dist: curl error 56 while downloading https://api.github.com/repos/laravel-notification-channels/fcm/zipball/292c482bd6318c95e167fa2dad63ca6ab32c9899: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel-notification-channels/fcm (4.5.0) into cache
+    Failed to download symfony/http-client-contracts from dist: curl error 56 while downloading https://api.github.com/repos/symfony/http-client-contracts/zipball/75d7043853a42837e68111812f4d964b01e5101c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/http-client-contracts (v3.6.0) into cache
+    Failed to download symfony/http-client from dist: curl error 56 while downloading https://api.github.com/repos/symfony/http-client/zipball/2bde8afd5ab2fe0b05a9c2d4c3c0e28ceb98a154: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/http-client (v7.4.6) into cache
+    Failed to download spomky-labs/pki-framework from dist: curl error 56 while downloading https://api.github.com/repos/Spomky-Labs/pki-framework/zipball/f0e9a548df4e3942886adc9b7830581a46334631: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spomky-labs/pki-framework (1.4.1) into cache
+
+ 169/258 [==================>---------]  65%    Failed to download paragonie/sodium_compat from dist: curl error 56 while downloading https://api.github.com/repos/paragonie/sodium_compat/zipball/4714da6efdc782c06690bc72ce34fae7941c2d9f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing paragonie/sodium_compat (v2.5.0) into cache
+    Failed to download paragonie/constant_time_encoding from dist: curl error 56 while downloading https://api.github.com/repos/paragonie/constant_time_encoding/zipball/d5b01a39b3415c2cd581d3bd3a3575c1ebbd8e77: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing paragonie/constant_time_encoding (v3.1.3) into cache
+    Failed to download web-token/jwt-library from dist: curl error 56 while downloading https://api.github.com/repos/web-token/jwt-library/zipball/8fe1650bf3a73673a9c520feff8f9a0e9cbbcd8f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing web-token/jwt-library (3.4.9) into cache
+    Failed to download edamov/pushok from dist: curl error 56 while downloading https://api.github.com/repos/edamov/pushok/zipball/f404cbcb5479b88d2d121ef174e34862491ffc42: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing edamov/pushok (0.18.1) into cache
+    Failed to download laravel-notification-channels/apn from dist: curl error 56 while downloading https://api.github.com/repos/laravel-notification-channels/apn/zipball/4ed67d59640fb93a2e100ba354d54cfe3e2d5fd2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel-notification-channels/apn (v5.5.0) into cache
+    Failed to download jdorn/sql-formatter from dist: curl error 56 while downloading https://api.github.com/repos/jdorn/sql-formatter/zipball/64990d96e0959dff8e059dfcdc1af130728d92bc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing jdorn/sql-formatter (v1.2.17) into cache
+    Failed to download intervention/gif from dist: curl error 56 while downloading https://api.github.com/repos/Intervention/gif/zipball/c3598a16ebe7690cd55640c44144a9df383ea73c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing intervention/gif (4.2.4) into cache
+    Failed to download intervention/image from dist: curl error 56 while downloading https://api.github.com/repos/Intervention/image/zipball/2159bcccff18f09d2a392679b81a82c5a003f9bb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing intervention/image (3.11.7) into cache
+    Failed to download innoge/laravel-msgraph-mail from dist: curl error 56 while downloading https://api.github.com/repos/InnoGE/laravel-msgraph-mail/zipball/0c93af359c4d6c49445b0523b75cf7870056c41d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing innoge/laravel-msgraph-mail (1.5.0) into cache
+    Failed to download inkrot/php-compress-json from dist: curl error 56 while downloading https://api.github.com/repos/inkrot/php-compress-json/zipball/16226b495cd889a6069e8d93423480aea62dc6aa: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing inkrot/php-compress-json (v0.1.3) into cache
+    Failed to download hammerstone/fast-paginate from dist: curl error 56 while downloading https://api.github.com/repos/hammerstonedev/fast-paginate/zipball/6a1fb26c860d04176d00761ae8a93f04da14c81c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing hammerstone/fast-paginate (v1.1.1) into cache
+    Failed to download paragonie/random_compat from dist: curl error 56 while downloading https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing paragonie/random_compat (v9.99.100) into cache
+
+ 181/258 [===================>--------]  70%    Failed to download phpseclib/phpseclib from dist: curl error 56 while downloading https://api.github.com/repos/phpseclib/phpseclib/zipball/6233a1e12584754e6b5daa69fe1289b47775c1b9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpseclib/phpseclib (3.0.49) into cache
+    Failed to download google/apiclient-services from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/65550d5fd5c468badd75db9ec73c2c187470a00d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/apiclient-services (v0.434.0) into cache
+    Failed to download google/apiclient from dist: curl error 56 while downloading https://api.github.com/repos/googleapis/google-api-php-client/zipball/b18fa8aed7b2b2dd4bcce74e2c7d267e16007ea9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing google/apiclient (v2.19.0) into cache
+    Failed to download giggsey/locale from dist: curl error 56 while downloading https://api.github.com/repos/giggsey/Locale/zipball/fe741e99ae6ccbe8132f3d63d8ec89924e689778: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing giggsey/locale (2.9.0) into cache
+    Failed to download giggsey/libphonenumber-for-php from dist: curl error 56 while downloading https://api.github.com/repos/giggsey/libphonenumber-for-php/zipball/6e28b3d53cf96d7f41c83d9b80b6021ecbd00537: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing giggsey/libphonenumber-for-php (8.13.55) into cache
+    Failed to download fleetbase/twilio from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/laravel-twilio/zipball/1f7f411d6c5b5071a0d7353bb6432f6e71aa9d87: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/twilio (5.0.1) into cache
+    Failed to download fleetbase/core-api from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/core-api/zipball/f6500fb4bd23d57044140e58f2672b5ffdf17bbc: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/core-api (1.6.37) into cache
+    Failed to download fleetbase/registry-bridge from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/registry-bridge/zipball/52441e2b2c56d74afb02a216f962cd712c356efd: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/registry-bridge (0.1.7) into cache
+
+ 189/258 [====================>-------]  73%    Failed to download willdurand/geocoder from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/php-common/zipball/be3d9ed0fddf8c698ee079d8a07ae9520b4a49a1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing willdurand/geocoder (4.6.0) into cache
+    Failed to download clue/stream-filter from dist: curl error 56 while downloading https://api.github.com/repos/clue/stream-filter/zipball/049509fef80032cb3f051595029ab75b49a3c2f7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing clue/stream-filter (v1.7.0) into cache
+    Failed to download php-http/message from dist: curl error 56 while downloading https://api.github.com/repos/php-http/message/zipball/06dd5e8562f84e641bf929bfe699ee0f5ce8080a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/message (1.16.2) into cache
+    Failed to download php-http/curl-client from dist: curl error 56 while downloading https://api.github.com/repos/php-http/curl-client/zipball/f59d6992065f44be8b8fb484dd678a919c27dbf2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-http/curl-client (2.4.0) into cache
+    Failed to download geocoder-php/common-http from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/php-common-http/zipball/4209be6c31946ed5a658f6240ab21faaf5413f61: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geocoder-php/common-http (4.7.0) into cache
+    Failed to download geocoder-php/google-maps-provider from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/google-maps-provider/zipball/587aac3647ebd2ce2090b613fc56c753b9dee9a7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geocoder-php/google-maps-provider (4.8.0) into cache
+    Failed to download igorw/get-in from dist: curl error 56 while downloading https://api.github.com/repos/igorw/get-in/zipball/170ded831f49abc6a6061f655aba9bdbcf7b8111: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing igorw/get-in (v1.0.3) into cache
+    Failed to download geocoder-php/geo-plugin-provider from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/geo-plugin-provider/zipball/0fffb478260d8c3ec6cb5388a67d0684b006191a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geocoder-php/geo-plugin-provider (4.4.0) into cache
+    Failed to download geocoder-php/chain-provider from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/chain-provider/zipball/38e03ddb2c16ac3c964072f4f9d06837164341df: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geocoder-php/chain-provider (4.6.0) into cache
+    Failed to download toin0u/geocoder-laravel from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/GeocoderLaravel/zipball/f354165d10768b04da0e46b76dd99fd44dba89d2: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing toin0u/geocoder-laravel (4.7.0) into cache
+    Failed to download milon/barcode from dist: curl error 56 while downloading https://api.github.com/repos/milon/barcode/zipball/e643a713466f0109aa3ad7d29dae4900444187a5: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing milon/barcode (v10.0.1) into cache
+    Failed to download geocoder-php/google-maps-places-provider from dist: curl error 56 while downloading https://api.github.com/repos/geocoder-php/google-maps-places-provider/zipball/eff3ced1b249d6a18418c47b3d7c90517879e0b0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing geocoder-php/google-maps-places-provider (1.5.0) into cache
+
+ 201/258 [=====================>------]  77%    Failed to download webit/eval-math from dist: curl error 56 while downloading https://api.github.com/repos/dbojdo/eval-math/zipball/ffe48f6d86eb461795918b754b83aa63e645ef87: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing webit/eval-math (1.0.2) into cache
+    Failed to download php-units-of-measure/php-units-of-measure from dist: curl error 56 while downloading https://api.github.com/repos/PhpUnitsOfMeasure/php-units-of-measure/zipball/cf1b83b1ef7615dd53f70864c9e7f496b1ec0fd1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing php-units-of-measure/php-units-of-measure (v2.2.0) into cache
+    Failed to download symfony/serializer from dist: curl error 56 while downloading https://api.github.com/repos/symfony/serializer/zipball/83c3cbd6dcb96c1dbe197499a0714f8dceb0f274: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/serializer (v7.4.6) into cache
+    Failed to download symfony/type-info from dist: curl error 56 while downloading https://api.github.com/repos/symfony/type-info/zipball/4855ceea609b2c09e48ff76e12a97a3955531735: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/type-info (v7.4.6) into cache
+    Failed to download symfony/property-info from dist: curl error 56 while downloading https://api.github.com/repos/symfony/property-info/zipball/6396b28f44d7c28b209a1bd73acf0dd985a0a4ef: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/property-info (v7.4.6) into cache
+    Failed to download symfony/property-access from dist: curl error 56 while downloading https://api.github.com/repos/symfony/property-access/zipball/fa49bf1ca8fce1ba0e2dba4e4658554cfb9364b1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/property-access (v7.4.4) into cache
+    Failed to download react/promise from dist: curl error 56 while downloading https://api.github.com/repos/reactphp/promise/zipball/23444f53a813a3296c1368bb104793ce8d88f04a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing react/promise (v3.3.0) into cache
+    Failed to download react/event-loop from dist: curl error 56 while downloading https://api.github.com/repos/reactphp/event-loop/zipball/ba276bda6083df7e0050fd9b33f66ad7a4ac747a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing react/event-loop (v1.6.0) into cache
+
+ 209/258 [======================>-----]  81%    Failed to download league/geotools from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/geotools/zipball/1717c99fc7e65f3c68059d5d3ac9f61cbc71635e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/geotools (1.3.0) into cache
+    Failed to download fleetbase/fleetops-api from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/fleetops/zipball/071a0f06fbe60b7a98fb84686112cc0cd2c3018c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/fleetops-api (0.6.37) into cache
+    Failed to download fleetbase/storefront-api from dist: curl error 56 while downloading https://api.github.com/repos/fleetbase/storefront/zipball/aa2a2bc0bdbc78108bf3d60f8e4cd19064b6697a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing fleetbase/storefront-api (0.4.13) into cache
+    Failed to download laravel/octane from dist: curl error 56 while downloading https://api.github.com/repos/laravel/octane/zipball/5d6eb82d12596f2d73e5c8b23c0abe896938fa0e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/octane (v2.14.0) into cache
+    Failed to download symfony/yaml from dist: curl error 56 while downloading https://api.github.com/repos/symfony/yaml/zipball/58751048de17bae71c5aa0d13cb19d79bca26391: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/yaml (v7.4.6) into cache
+    Failed to download laravel/sail from dist: curl error 56 while downloading https://api.github.com/repos/laravel/sail/zipball/e340eaa2bea9b99192570c48ed837155dbf24fbb: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/sail (v1.53.0) into cache
+    Failed to download nikic/php-parser from dist: curl error 56 while downloading https://api.github.com/repos/nikic/PHP-Parser/zipball/dca41cd15c2ac9d055ad70dbfd011130757d1f82: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nikic/php-parser (v5.7.0) into cache
+    Failed to download psy/psysh from dist: curl error 56 while downloading https://api.github.com/repos/bobthecow/psysh/zipball/19678eb6b952a03b8a1d96ecee9edba518bb0373: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing psy/psysh (v0.12.20) into cache
+
+ 217/258 [=======================>----]  84%    Failed to download laravel/tinker from dist: curl error 56 while downloading https://api.github.com/repos/laravel/tinker/zipball/c9f80cc835649b5c1842898fb043f8cc098dd741: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing laravel/tinker (v2.11.1) into cache
+    Failed to download league/flysystem-aws-s3-v3 from dist: curl error 56 while downloading https://api.github.com/repos/thephpleague/flysystem-aws-s3-v3/zipball/a1979df7c9784d334ea6df356aed3d18ac6673d0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing league/flysystem-aws-s3-v3 (3.32.0) into cache
+    Failed to download hamcrest/hamcrest-php from dist: curl error 56 while downloading https://api.github.com/repos/hamcrest/hamcrest-php/zipball/f8b1c0173b22fa6ec77a81fe63e5b01eba7e6487: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing hamcrest/hamcrest-php (v2.1.1) into cache
+    Failed to download mockery/mockery from dist: curl error 56 while downloading https://api.github.com/repos/mockery/mockery/zipball/1f4efdd7d3beafe9807b08156dfcb176d18f1699: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing mockery/mockery (1.6.12) into cache
+    Failed to download filp/whoops from dist: curl error 56 while downloading https://api.github.com/repos/filp/whoops/zipball/d2102955e48b9fd9ab24280a7ad12ed552752c4d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing filp/whoops (2.18.4) into cache
+    Failed to download nunomaduro/collision from dist: curl error 56 while downloading https://api.github.com/repos/nunomaduro/collision/zipball/995245421d3d7593a6960822063bdba4f5d7cf1a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing nunomaduro/collision (v7.12.0) into cache
+    Failed to download sebastian/version from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/version/zipball/c51fa83a5d8f43f1402e3f32a005e6262244ef17: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/version (4.0.1) into cache
+    Failed to download sebastian/type from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/type/zipball/462699a16464c3944eefc02ebdd77882bd3925bf: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/type (4.0.0) into cache
+
+ 225/258 [========================>---]  87%    Failed to download sebastian/recursion-context from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/recursion-context/zipball/47e34210757a2f37a97dcd207d032e1b01e64c7a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/recursion-context (5.0.1) into cache
+    Failed to download sebastian/object-reflector from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/object-reflector/zipball/24ed13d98130f0e7122df55d06c5c4942a577957: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/object-reflector (3.0.0) into cache
+    Failed to download sebastian/object-enumerator from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/object-enumerator/zipball/202d0e344a580d7f7d04b3fafce6933e59dae906: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/object-enumerator (5.0.0) into cache
+    Failed to download sebastian/global-state from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/global-state/zipball/987bafff24ecc4c9ac418cab1145b96dd6e9cbd9: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/global-state (6.0.2) into cache
+    Failed to download sebastian/exporter from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/exporter/zipball/0735b90f4da94969541dac1da743446e276defa6: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/exporter (5.1.4) into cache
+    Failed to download sebastian/environment from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/environment/zipball/8074dbcd93529b357029f5cc5058fd3e43666984: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/environment (6.1.0) into cache
+    Failed to download sebastian/diff from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/diff/zipball/c41e007b4b62af48218231d6c2275e4c9b975b2e: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/diff (5.1.1) into cache
+    Failed to download sebastian/comparator from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/comparator/zipball/55dfef806eb7dfeb6e7a6935601fef866f8ca48d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/comparator (5.0.5) into cache
+
+ 233/258 [=========================>--]  90%    Failed to download sebastian/code-unit from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/code-unit/zipball/a81fee9eef0b7a76af11d121767abc44c104e503: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/code-unit (2.0.0) into cache
+    Failed to download sebastian/cli-parser from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/cli-parser/zipball/c34583b87e7b7a8055bf6c450c2c77ce32a24084: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/cli-parser (2.0.1) into cache
+    Failed to download phpunit/php-timer from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/php-timer/zipball/e2a2d67966e740530f4a3343fe2e030ffdc1161d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/php-timer (6.0.0) into cache
+    Failed to download phpunit/php-text-template from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/0c7b06ff49e3d5072f057eb1fa59258bf287a748: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/php-text-template (3.0.1) into cache
+    Failed to download phpunit/php-invoker from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/php-invoker/zipball/f5e568ba02fa5ba0ddd0f618391d5a9ea50b06d7: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/php-invoker (4.0.0) into cache
+    Failed to download phpunit/php-file-iterator from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/a95037b6d9e608ba092da1b23931e537cadc3c3c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/php-file-iterator (4.1.0) into cache
+    Failed to download theseer/tokenizer from dist: curl error 56 while downloading https://api.github.com/repos/theseer/tokenizer/zipball/b7489ce515e168639d17feec34b8847c326b0b3c: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing theseer/tokenizer (1.3.1) into cache
+    Failed to download sebastian/lines-of-code from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/lines-of-code/zipball/856e7f6a75a84e339195d48c556f23be2ebf75d0: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/lines-of-code (2.0.2) into cache
+    Failed to download sebastian/complexity from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/complexity/zipball/68ff824baeae169ec9f2137158ee529584553799: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/complexity (3.2.0) into cache
+    Failed to download sebastian/code-unit-reverse-lookup from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/code-unit-reverse-lookup/zipball/5e3a687f7d8ae33fb362c5c0743794bbb2420a1d: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing sebastian/code-unit-reverse-lookup (3.0.0) into cache
+    Failed to download phpunit/php-code-coverage from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/7e308268858ed6baedc8704a304727d20bc07c77: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/php-code-coverage (10.1.16) into cache
+    Failed to download phar-io/version from dist: curl error 56 while downloading https://api.github.com/repos/phar-io/version/zipball/4f7fd7836c6f332bb2933569e566a0d6c4cbed74: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phar-io/version (3.2.1) into cache
+
+ 245/258 [==========================>-]  94%    Failed to download phar-io/manifest from dist: curl error 56 while downloading https://api.github.com/repos/phar-io/manifest/zipball/54750ef60c58e43759730615a392c31c80e23176: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phar-io/manifest (2.0.4) into cache
+    Failed to download myclabs/deep-copy from dist: curl error 56 while downloading https://api.github.com/repos/myclabs/DeepCopy/zipball/07d290f0c47959fd5eed98c95ee5602db07e0b6a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing myclabs/deep-copy (1.13.4) into cache
+    Failed to download phpunit/phpunit from dist: curl error 56 while downloading https://api.github.com/repos/sebastianbergmann/phpunit/zipball/33198268dad71e926626b618f3ec3966661e4d90: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing phpunit/phpunit (10.5.63) into cache
+    Failed to download predis/predis from dist: curl error 56 while downloading https://api.github.com/repos/predis/predis/zipball/07105e050622ed80bd60808367ced9e379f31530: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing predis/predis (v2.4.1) into cache
+    Failed to download resend/resend-php from dist: curl error 56 while downloading https://api.github.com/repos/resend/resend-php/zipball/d7900752bb9839421d40d9e66362bffb3ec07aac: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing resend/resend-php (v0.14.0) into cache
+    Failed to download s-ichikawa/laravel-sendgrid-driver from dist: curl error 56 while downloading https://api.github.com/repos/s-ichikawa/laravel-sendgrid-driver/zipball/710ea735fb545c6615a06b2e94a13bb32d282569: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing s-ichikawa/laravel-sendgrid-driver (4.0.10) into cache
+    Failed to download spatie/error-solutions from dist: curl error 56 while downloading https://api.github.com/repos/spatie/error-solutions/zipball/e495d7178ca524f2dd0fe6a1d99a1e608e1c9936: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/error-solutions (1.1.3) into cache
+    Failed to download spatie/backtrace from dist: curl error 56 while downloading https://api.github.com/repos/spatie/backtrace/zipball/8c0f16a59ae35ec8c62d85c3c17585158f430110: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/backtrace (1.8.1) into cache
+    Failed to download spatie/flare-client-php from dist: curl error 56 while downloading https://api.github.com/repos/spatie/flare-client-php/zipball/bf1716eb98bd689451b071548ae9e70738dce62f: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/flare-client-php (1.10.1) into cache
+    Failed to download spatie/ignition from dist: curl error 56 while downloading https://api.github.com/repos/spatie/ignition/zipball/31f314153020aee5af3537e507fef892ffbf8c85: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/ignition (1.15.1) into cache
+    Failed to download spatie/laravel-ignition from dist: curl error 56 while downloading https://api.github.com/repos/spatie/laravel-ignition/zipball/1baee07216d6748ebd3a65ba97381b051838707a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing spatie/laravel-ignition (2.9.1) into cache
+    Failed to download symfony/mailgun-mailer from dist: curl error 56 while downloading https://api.github.com/repos/symfony/mailgun-mailer/zipball/b0117bf42b6dd8dfcfcab2a7e18508b594520b5a: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/mailgun-mailer (v7.1.6) into cache
+
+ 257/258 [===========================>]  99%    Failed to download symfony/postmark-mailer from dist: curl error 56 while downloading https://api.github.com/repos/symfony/postmark-mailer/zipball/91c86a65dec04bc8313094087671486eac6ed3c1: CONNECT tunnel failed, response 403
+    Now trying to download from source
+  - Syncing symfony/postmark-mailer (v7.1.6) into cache
+
+ 258/258 [============================] 100%
+In Git.php line 604:
+                                                                               
+  Failed to clone https://github.com/voku/portable-ascii.git via https, ssh,   
+  git protocols, aborting.                                                     
+                                                                               
+  - https://github.com/voku/portable-ascii.git                                 
+    Cloning into bare repository '/root/.cache/composer/vcs/https---github.co  
+  m-voku-portable-ascii.git'...                                                
+    fatal: unable to access 'https://github.com/voku/portable-ascii.git/': CO  
+  NNECT tunnel failed, response 403                                            
+                                                                               
+  - git@github.com:voku/portable-ascii.git                                     
+    Cloning into bare repository '/root/.cache/composer/vcs/https---github.co  
+  m-voku-portable-ascii.git'...                                                
+    ssh: connect to host github.com port 22: Network is unreachable            
+    fatal: Could not read from remote repository.                              
+                                                                               
+    Please make sure you have the correct access rights                        
+    and the repository exists.                                                 
+                                                                               
+  - git://github.com/voku/portable-ascii.git                                   
+    Cloning into bare repository '/root/.cache/composer/vcs/https---github.co  
+  m-voku-portable-ascii.git'...                                                
+    fatal: unable to connect to github.com:                                    
+    github.com[0: 140.82.113.3]: errno=Network is unreachable                  
+                                                                               
+
+install [--prefer-source] [--prefer-dist] [--prefer-install PREFER-INSTALL] [--dry-run] [--download-only] [--dev] [--no-suggest] [--no-dev] [--no-security-blocking] [--no-autoloader] [--no-progress] [--no-install] [--audit] [--audit-format AUDIT-FORMAT] [-v|vv|vvv|--verbose] [-o|--optimize-autoloader] [-a|--classmap-authoritative] [--apcu-autoloader] [--apcu-autoloader-prefix APCU-AUTOLOADER-PREFIX] [--ignore-platform-req IGNORE-PLATFORM-REQ] [--ignore-platform-reqs] [--] [<packages>...]
+

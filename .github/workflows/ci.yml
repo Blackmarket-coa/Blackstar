@@ -75,3 +75,56 @@ jobs:
       with:
         name: api-test-logs
         path: reports/logs/*.log
+
+
+  gates-1-2:
+    name: Gate 1/2 Completion Check
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, curl, json, sodium, pdo_sqlite
+        coverage: none
+
+    - name: Configure restricted-network overrides
+      env:
+        COMPOSER_REPO_PACKAGIST: ${{ secrets.COMPOSER_REPO_PACKAGIST }}
+        COMPOSER_GITHUB_OAUTH_TOKEN: ${{ secrets.COMPOSER_GITHUB_OAUTH_TOKEN }}
+        COMPOSER_GITHUB_MIRROR: ${{ secrets.COMPOSER_GITHUB_MIRROR }}
+      run: |
+        if [[ -n "$COMPOSER_REPO_PACKAGIST" ]]; then
+          echo "COMPOSER_REPO_PACKAGIST=$COMPOSER_REPO_PACKAGIST" >> $GITHUB_ENV
+        fi
+        if [[ -n "$COMPOSER_GITHUB_OAUTH_TOKEN" ]]; then
+          echo "COMPOSER_GITHUB_OAUTH_TOKEN=$COMPOSER_GITHUB_OAUTH_TOKEN" >> $GITHUB_ENV
+        fi
+        if [[ -n "$COMPOSER_GITHUB_MIRROR" ]]; then
+          echo "COMPOSER_GITHUB_MIRROR=$COMPOSER_GITHUB_MIRROR" >> $GITHUB_ENV
+        fi
+
+    - name: Execute Gate 1/2 runner
+      run: PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
+
+    - name: Assert Gate 1/2 complete
+      run: ./scripts/assert-gates-1-2-complete.sh
+
+    - name: Upload Gate 1/2 artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: gate-1-2-artifacts
+        path: |
+          reports/release-gate-status.json
+          reports/release-gate-status.md
+          reports/staging-e2e-validation.json
+          reports/staging-e2e-validation.md
+          reports/logs/*.log
+          reports/logs/*.exit
