@@ -172,6 +172,8 @@ All gates are complete only when each has:
 
 - `scripts/complete-gates-1-2.sh` runs the Gate 1 scenarios + Gate 2 vendor contract suite with captured `.log/.exit` artifacts.
 - `scripts/verify-release-gates.sh` generates `reports/release-gate-status.json` and `reports/release-gate-status.md` from current evidence files.
+- `scripts/assert-gates-1-2-complete.sh` enforces Gate 1/2 completion from `reports/release-gate-status.json` (used by CI).
+- `.github/workflows/ci.yml` now includes a dedicated `gates-1-2` job for end-to-end gate execution and artifact upload.
 
 ### Deferred Scope
 

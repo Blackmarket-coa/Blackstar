@@ -62,3 +62,13 @@ If your Composer falls back to `git clone` and `github.com` is blocked, set `COM
 - **Missing extension (`sodium`, `pdo_sqlite`, etc.)**: install/enable extension.
 - **`vendor/autoload.php` missing**: run `./scripts/setup-api-test-env.sh`.
 - **Registry/auth fetch errors**: configure Composer auth for required package sources.
+
+
+## Gate 1 + Gate 2 one-command execution
+
+```bash
+PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
+./scripts/assert-gates-1-2-complete.sh
+```
+
+This is the canonical sequence used by CI to run Gate 1 scenarios and Gate 2 vendor visibility suite, regenerate gate status, and fail the pipeline unless both gates are complete.
