@@ -16,4 +16,4 @@ yarn-error.log
 .composer.dev.json
 /caddy
 frankenphp
-frankenphp-worker.php
+/frankenphp-worker.php
