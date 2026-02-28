@@ -35,3 +35,43 @@ jobs:
       with:
         files: |
           ./docker-bake.hcl
+
+
+  api-tests:
+    name: API Critical Feature Suites
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, curl, json, sodium, pdo_sqlite
+        coverage: none
+
+    - name: Setup Composer
+      uses: ramsey/composer-install@v3
+      with:
+        working-directory: api
+        composer-options: --no-interaction --prefer-dist --optimize-autoloader
+
+    - name: Initialize deterministic API test env
+      run: ./scripts/setup-api-test-env.sh
+
+    - name: Preflight
+      run: ./scripts/api-test-preflight.sh
+
+    - name: Run critical feature suites
+      run: ./scripts/run-api-tests.sh
+
+    - name: Upload API test logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: api-test-logs
+        path: reports/logs/*.log

@@ -307,6 +307,7 @@ Fleetbase has comprehensive documentation to help you get started and make the m
 - **Extension Development**: [Building Extensions](https://docs.fleetbase.io/developers/building-an-extension)
 - **Deployment**: [Deployment Guides](https://docs.fleetbase.io/deployment)
 - **Federated Logistics Compatibility**: [FreeBlackMarket + Blackout blueprint](FEDERATED_LOGISTICS_COMPATIBILITY.md)
+- **API Test Quickstart (Local + CI)**: [Deterministic test bootstrap](api/docs/testing-quickstart.md)
 
 ## 🤝 Contributing
 
