@@ -31,3 +31,16 @@ A node is eligible to claim/bid only if:
 - listing status is `open`,
 - listing jurisdiction matches node jurisdiction when listing jurisdiction is specified,
 - node includes all listing required transport capabilities.
+
+
+## Transport constraints (create listing)
+
+Optional listing fields for capability matching:
+
+- `required_category`
+- `required_subtype`
+- `required_weight_limit`
+- `required_range_limit`
+- `requires_hazard_capability`
+- `required_regulatory_class`
+- `insurance_required_flag`

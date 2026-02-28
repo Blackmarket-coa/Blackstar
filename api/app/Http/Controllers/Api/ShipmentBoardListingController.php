@@ -21,6 +21,13 @@ class ShipmentBoardListingController extends Controller
             'source_order_ref' => ['required', 'string', 'max:255'],
             'claim_policy' => ['nullable', 'string', 'in:first_claim,bid'],
             'jurisdiction' => ['nullable', 'string', 'max:255'],
+            'required_category' => ['nullable', 'string', 'max:255'],
+            'required_subtype' => ['nullable', 'string', 'max:255'],
+            'required_weight_limit' => ['nullable', 'numeric', 'min:0'],
+            'required_range_limit' => ['nullable', 'numeric', 'min:0'],
+            'requires_hazard_capability' => ['nullable', 'boolean'],
+            'required_regulatory_class' => ['nullable', 'string', 'max:255'],
+            'insurance_required_flag' => ['nullable', 'boolean'],
             'required_transport_capabilities' => ['nullable', 'array'],
         ]) + [
             'status' => ShipmentBoardListing::STATUS_OPEN,

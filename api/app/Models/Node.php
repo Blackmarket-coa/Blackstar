@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Node extends Model
@@ -45,5 +46,11 @@ class Node extends Model
     public function drivers(): HasMany
     {
         return $this->hasMany(Driver::class);
+    }
+
+    public function transportClasses(): BelongsToMany
+    {
+        return $this->belongsToMany(TransportClass::class, 'node_transport_classes')
+            ->withTimestamps();
     }
 }
