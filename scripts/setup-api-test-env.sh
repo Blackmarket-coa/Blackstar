@@ -39,6 +39,25 @@ EOF
 mkdir -p database
 : > database/testing.sqlite
 
+
+if [[ -n "${COMPOSER_REPO_PACKAGIST:-}" ]]; then
+  composer config -g repo.packagist composer "$COMPOSER_REPO_PACKAGIST"
+fi
+
+if [[ -n "${COMPOSER_GITHUB_OAUTH_TOKEN:-}" ]]; then
+  composer config -g github-oauth.github.com "$COMPOSER_GITHUB_OAUTH_TOKEN"
+fi
+
+if [[ -n "${COMPOSER_AUTH:-}" ]]; then
+  export COMPOSER_AUTH
+fi
+
+
+if [[ -n "${COMPOSER_GITHUB_MIRROR:-}" ]]; then
+  git config --global url."${COMPOSER_GITHUB_MIRROR}".insteadOf https://github.com/
+  git config --global url."${COMPOSER_GITHUB_MIRROR}".insteadOf git@github.com:
+fi
+
 composer install --no-interaction --prefer-dist --optimize-autoloader
 
 php artisan key:generate --env=testing --force

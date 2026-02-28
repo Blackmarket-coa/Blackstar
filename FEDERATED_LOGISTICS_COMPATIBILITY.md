@@ -1,5 +1,7 @@
 # Federated Logistics Compatibility Blueprint
 
+Canonical formal spec: [`api/docs/specification.md`](api/docs/specification.md). This blueprint remains the implementation and release-planning companion.
+
 This document adapts the federated logistics migration plan for compatibility with:
 
 - `free-black-market` (order creation, vendor checkout, order status UX)

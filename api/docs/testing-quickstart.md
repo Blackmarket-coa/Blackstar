@@ -39,8 +39,36 @@ The CI workflow includes an `API Critical Feature Suites` job that:
 5. runs critical feature suites,
 6. uploads `reports/logs/*.log` as artifact.
 
+
+## Restricted-network Composer bootstrap
+
+If your runtime cannot access default Packagist/GitHub endpoints directly, set one or more of:
+
+```bash
+export COMPOSER_REPO_PACKAGIST=https://<internal-packagist-mirror>
+export COMPOSER_GITHUB_OAUTH_TOKEN=<token>
+# optional git fallback mirror for blocked github.com origins
+export COMPOSER_GITHUB_MIRROR=https://<git-mirror-host>/
+# or full JSON auth blob
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"<token>"}}'
+```
+
+`./scripts/setup-api-test-env.sh` will apply these overrides before `composer install`.
+
+If your Composer falls back to `git clone` and `github.com` is blocked, set `COMPOSER_GITHUB_MIRROR` to an internal git mirror URL ending in `/`.
+
 ## Troubleshooting
 - **Unsupported PHP version**: use PHP `8.2.x`.
 - **Missing extension (`sodium`, `pdo_sqlite`, etc.)**: install/enable extension.
 - **`vendor/autoload.php` missing**: run `./scripts/setup-api-test-env.sh`.
 - **Registry/auth fetch errors**: configure Composer auth for required package sources.
+
+
+## Gate 1 + Gate 2 one-command execution
+
+```bash
+PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
+./scripts/assert-gates-1-2-complete.sh
+```
+
+This is the canonical sequence used by CI to run Gate 1 scenarios and Gate 2 vendor visibility suite, regenerate gate status, and fail the pipeline unless both gates are complete.

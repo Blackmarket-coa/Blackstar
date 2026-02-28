@@ -84,10 +84,13 @@ class InboundEventProcessor
                 [
                     'status' => ShipmentBoardListing::STATUS_OPEN,
                     'claim_policy' => $payload['claim_policy'] ?? 'first_claim',
+                    'origin' => $payload['origin'] ?? null,
+                    'destination' => $payload['destination'] ?? null,
                     'jurisdiction' => $payload['jurisdiction'] ?? null,
                     'required_category' => $payload['required_category'] ?? null,
                     'required_subtype' => $payload['required_subtype'] ?? null,
                     'required_weight_limit' => $payload['required_weight_limit'] ?? null,
+                    'required_volume_limit' => $payload['required_volume_limit'] ?? null,
                     'required_range_limit' => $payload['required_range_limit'] ?? null,
                     'requires_hazard_capability' => (bool) ($payload['requires_hazard_capability'] ?? false),
                     'required_regulatory_class' => $payload['required_regulatory_class'] ?? null,
