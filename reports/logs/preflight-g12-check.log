@@ -1,0 +1,25 @@
+[OK] PHP version 8.2.31-dev is within supported range (>=8.0 <8.3).
+PHP version 8.2.31-dev (/root/.phpenv/versions/8.2snapshot/bin/php)
+Run the "diagnose" command to get more detailed diagnostics output.
+[OK] Composer is available: Composer version 2.9.3 2025-12-30 13:40:17
+[OK] PHP extension 'pdo_sqlite' is enabled.
+[OK] PHP extension 'mbstring' is enabled.
+[OK] PHP extension 'xml' is enabled.
+[OK] PHP extension 'curl' is enabled.
+[OK] PHP extension 'json' is enabled.
+[OK] composer.lock present.
+[OK] Composer vendor autoload present.
+[OK] SQLite test database present (api/database/testing.sqlite).
+[WARN] COMPOSER_REPO_PACKAGIST not set; default Packagist/GitHub sources will be used.
+[WARN] No Composer auth override detected (COMPOSER_AUTH or COMPOSER_GITHUB_OAUTH_TOKEN).
+[WARN] COMPOSER_GITHUB_MIRROR not set; git fallback may still hit blocked github.com origins.
+[WARN] api/.env.testing missing; run scripts/setup-api-test-env.sh to generate deterministic test env.
+[ERR] Missing PHP extension 'sodium'.
+
+Actionable guidance:
+1) Use supported PHP: 8.2.x.
+2) Install required PHP extensions: sodium, pdo_sqlite, mbstring, xml, curl, json.
+3) Initialize test environment:
+   ./scripts/setup-api-test-env.sh
+4) Run critical suites:
+   ./scripts/run-api-tests.sh

@@ -26,11 +26,22 @@ def read_json(rel):
     except Exception:
         return None
 
+
+def read_exit_code(rel):
+    path = root / rel
+    if not path.exists():
+        return None
+    try:
+        return int(path.read_text().strip())
+    except Exception:
+        return None
+
 gates = []
 
 staging = read_json('reports/staging-e2e-validation.json') or {}
 scenario_statuses = [s.get('status') for s in staging.get('scenarios', [])]
-s1 = bool(scenario_statuses) and all(status in {'passed', 'complete'} for status in scenario_statuses)
+scenario_exits = [read_exit_code('reports/logs/staging-s1-normal-rerun.exit'), read_exit_code('reports/logs/staging-s2-delayed-retry.exit'), read_exit_code('reports/logs/staging-s3-cancellation-edge.exit')]
+s1 = bool(scenario_statuses) and all(status in {'passed', 'complete'} for status in scenario_statuses) and all(code == 0 for code in scenario_exits if code is not None)
 gates.append({
     'gate': 'Gate 1: Staging End-to-End Order Flow Validation',
     'status': 'complete' if s1 else 'incomplete',
@@ -46,7 +57,8 @@ gates.append({
 coverage = read_json('reports/vendor-visibility-contract-coverage.json') or {}
 coverage_ok = all(s.get('covered') for s in coverage.get('api_surfaces', [])) and all(e.get('covered') for e in coverage.get('outbound_events', []))
 vendor_log_ok = exists('reports/logs/VendorVisibilityContractTest.log')
-s2 = coverage_ok and vendor_log_ok
+vendor_exit_ok = read_exit_code('reports/logs/VendorVisibilityContractTest.exit') == 0
+s2 = coverage_ok and vendor_log_ok and vendor_exit_ok
 gates.append({
     'gate': 'Gate 2: Vendor Visibility Constraints Verification',
     'status': 'complete' if s2 else 'incomplete',

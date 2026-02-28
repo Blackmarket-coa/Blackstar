@@ -1,40 +1,69 @@
 {
   "system": "Blackstar + FreeBlackMarket integration",
   "execution_timestamp_utc": "2026-02-28T00:00:00Z",
+  "runtime": {
+    "php_binary": "/root/.phpenv/versions/8.2snapshot/bin/php",
+    "php_version": "8.2.31-dev",
+    "composer_install": {
+      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (composer step)",
+      "exit_code": 1,
+      "log": "reports/logs/composer-install-g12.log"
+    },
+    "preflight": {
+      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (preflight step)",
+      "exit_code": 1,
+      "log": "reports/logs/preflight-g12-check.log"
+    }
+  },
   "scenarios": [
     {
       "id": "S1-normal",
-      "path": ["checkout", "delivery.option.selected", "listing_created", "claim", "in_transit", "delivered"],
       "status": "blocked",
       "steps": [
-        {"name": "run_test_filter", "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s1-normal-rerun.log"}
-      ]
+        {
+          "name": "run_test_filter",
+          "result": "blocked",
+          "exit_code": 255,
+          "log": "reports/logs/staging-s1-normal-rerun.log"
+        }
+      ],
+      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
     },
     {
       "id": "S2-delayed-retry",
-      "path": ["delivery.option.selected", "listing_created", "claim", "outbound_failed", "retry", "dispatched"],
       "status": "blocked",
       "steps": [
-        {"name": "run_test_filter", "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s2-delayed-retry.log"}
-      ]
+        {
+          "name": "run_test_filter",
+          "result": "blocked",
+          "exit_code": 255,
+          "log": "reports/logs/staging-s2-delayed-retry.log"
+        }
+      ],
+      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
     },
     {
       "id": "S3-cancellation-edge",
-      "path": ["delivery.option.selected", "listing_created", "claim", "in_transit", "order.cancelled", "cancelled"],
       "status": "blocked",
       "steps": [
-        {"name": "run_test_filter", "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s3-cancellation-edge.log"}
-      ]
+        {
+          "name": "run_test_filter",
+          "result": "blocked",
+          "exit_code": 255,
+          "log": "reports/logs/staging-s3-cancellation-edge.log"
+        }
+      ],
+      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
     }
   ],
-  "commands": [
-    "php api/artisan test --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency api/tests/Feature/StagingE2EValidationTest.php",
-    "php api/artisan test --filter=test_scenario_delayed_retry_dispatches_outbound_event_after_initial_failure api/tests/Feature/StagingE2EValidationTest.php",
-    "php api/artisan test --filter=test_scenario_cancellation_edge_cancels_in_transit_listing api/tests/Feature/StagingE2EValidationTest.php"
-  ],
+  "vendor_visibility_suite": {
+    "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (vendor suite step)",
+    "exit_code": 255,
+    "log": "reports/logs/VendorVisibilityContractTest.log"
+  },
   "blockers": [
-    "api/vendor/autoload.php missing, preventing artisan test bootstrap",
-    "php runtime in this container is 8.5.3-dev while project policy is >=8.0 <8.3",
-    "required extension ext-sodium missing in this runtime"
+    "GitHub access blocked in this environment (CONNECT tunnel failed, response 403) during composer install",
+    "ext-sodium unavailable for php 8.2snapshot in this container",
+    "Laravel bootstrap cannot complete after partial vendor install"
   ]
 }
