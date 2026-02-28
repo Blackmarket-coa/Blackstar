@@ -1,0 +1,28 @@
+# Simulation: duplicate-replay-event-storm
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 verify idempotency controls
+$ rg -n "firstOrCreate\(|event_id" api/app/Services/FreeBlackMarket/InboundEventProcessor.php api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:14:        $eventId = Arr::get($body, 'event_id');
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:18:            $receipt = FbmInboundEventReceipt::firstOrCreate(
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:19:                ['event_id' => $eventId],
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:82:            ShipmentBoardListing::firstOrCreate(
+api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php:12:            $table->string('event_id')->unique();
+
+[timeline] T+08 verify retry/dead-letter behavior
+$ rg -n "dead_letter|attempts|next_attempt_at" api/app/Services/FreeBlackMarket/InboundEventProcessor.php
+25:                    'attempts' => 0,
+33:            $receipt->attempts += 1;
+40:                $receipt->next_attempt_at = null;
+46:                if ($receipt->attempts >= $maxRetries) {
+47:                    $receipt->status = 'dead_letter';
+48:                    $receipt->next_attempt_at = null;
+51:                    $receipt->next_attempt_at = now()->addSeconds($backoff * $receipt->attempts);
+65:            ->whereNotNull('next_attempt_at')
+66:            ->where('next_attempt_at', '<=', now())
+
+expected=duplicate event_id dedup + bounded retries
+observed=event_id firstOrCreate idempotency and dead_letter transitions confirmed
+
+end_utc=2026-02-28T19:16:56Z

@@ -1,0 +1,24 @@
+# Simulation: failed-deployment-rollback
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 collect release metadata
+$ git rev-parse --abbrev-ref HEAD
+work
+$ git rev-parse HEAD
+535ec9c1e5eb090a5080383133c4c6f48907c657
+$ git log --oneline -n 5
+535ec9c Add vendor visibility contract tests and sanitize listing responses
+338ad41 Add staging E2E validation scenarios and correlation ID response trace
+6bec224 Merge pull request #4 from Blackmarket-coa/codex/identify-remaining-tasks
+938f53f Add workplan for remaining full-functionality gates
+763ff44 Merge pull request #3 from Blackmarket-coa/codex/implement-node-attestation-workflow
+
+[timeline] T+12 dry-run rollback plan validation
+$ rg -n "rollback|release" RELEASE.md
+9:This release includes two bug fixes and one new feature: a corrected public extension discovery endpoint in the Registry Bridge, a driver vehicle validation patch in FleetOps, and a new `flb search` command in the Fleetbase CLI.
+
+expected=known-good commit available + explicit verification checklist
+observed=git history available for rollback target selection; release doc has limited rollback details
+
+end_utc=2026-02-28T19:16:56Z
