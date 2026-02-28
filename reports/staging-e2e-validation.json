@@ -7,9 +7,8 @@
       "path": ["checkout", "delivery.option.selected", "listing_created", "claim", "in_transit", "delivered"],
       "status": "blocked",
       "steps": [
-        {"name": "run_test_filter", "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s1-normal.log"}
-      ],
-      "rerun": {"attempted": true, "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s1-normal-rerun.log"}
+        {"name": "run_test_filter", "result": "blocked", "exit_code": 255, "log": "reports/logs/staging-s1-normal-rerun.log"}
+      ]
     },
     {
       "id": "S2-delayed-retry",
@@ -29,105 +28,13 @@
     }
   ],
   "commands": [
-    "PHPENV_VERSION=8.2snapshot composer --working-dir=api install --no-interaction --prefer-dist --ignore-platform-req=ext-sodium",
-    "PHPENV_VERSION=8.2snapshot composer --working-dir=api install --no-interaction --prefer-dist --ignore-platform-req=php --ignore-platform-req=ext-sodium",
-    "PHPENV_VERSION=8.2snapshot php api/artisan test --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency api/tests/Feature/StagingE2EValidationTest.php",
-    "PHPENV_VERSION=8.2snapshot php api/artisan test --filter=test_scenario_delayed_retry_dispatches_outbound_event_after_initial_failure api/tests/Feature/StagingE2EValidationTest.php",
-    "PHPENV_VERSION=8.2snapshot php api/artisan test --filter=test_scenario_cancellation_edge_cancels_in_transit_listing api/tests/Feature/StagingE2EValidationTest.php",
-    "PHPENV_VERSION=8.2snapshot php api/artisan test --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency api/tests/Feature/StagingE2EValidationTest.php"
+    "php api/artisan test --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency api/tests/Feature/StagingE2EValidationTest.php",
+    "php api/artisan test --filter=test_scenario_delayed_retry_dispatches_outbound_event_after_initial_failure api/tests/Feature/StagingE2EValidationTest.php",
+    "php api/artisan test --filter=test_scenario_cancellation_edge_cancels_in_transit_listing api/tests/Feature/StagingE2EValidationTest.php"
   ],
-  "evidence": {
-    "scenario_logs": [
-      "reports/logs/staging-s1-normal.log",
-      "reports/logs/staging-s2-delayed-retry.log",
-      "reports/logs/staging-s3-cancellation-edge.log",
-      "reports/logs/staging-s1-normal-rerun.log"
-    ],
-    "dependency_logs": [
-      "reports/logs/staging-composer-install-attempt.log",
-      "reports/logs/staging-composer-install-attempt-2.log"
-    ],
-    "test_definition": "api/tests/Feature/StagingE2EValidationTest.php"
-  },
   "blockers": [
     "api/vendor/autoload.php missing, preventing artisan test bootstrap",
-    "composer install blocked by GitHub network restriction (CONNECT tunnel failed, response 403)",
-    "php version in environment is outside repository upper-bound unless ignored"
-  ],
-  "minimal_patch_recommendations": [
-    "Relax/pin PHP compatibility for test runtime (api/composer.json constraint vs runner version)",
-    "Add Composer source/auth strategy for GitHub-restricted environments",
-    "Enforce preflight before staging E2E command execution"
-  "validation_plan": {
-    "system_under_test": "Blackstar + FreeBlackMarket integration",
-    "environment": "local CI container",
-    "timestamp_utc": "2026-02-28T00:00:00Z",
-    "scenarios": [
-      {
-        "id": "S1-normal-full-lifecycle",
-        "description": "checkout -> delivery.option.selected -> listing created -> claim -> in_transit -> delivered",
-        "status": "blocked",
-        "steps": [
-          {"name": "Post delivery.option.selected webhook", "status": "blocked"},
-          {"name": "Verify shipment listing created", "status": "blocked"},
-          {"name": "Claim listing with X-Correlation-ID", "status": "blocked"},
-          {"name": "Update listing status to in_transit", "status": "blocked"},
-          {"name": "Update listing status to delivered", "status": "blocked"},
-          {"name": "Correlate IDs across receipt/outbound/API responses", "status": "blocked"}
-        ],
-        "evidence": [
-          "reports/logs/scenario-normal-initial.log",
-          "reports/logs/scenario-normal-rerun-after-patch.log"
-        ]
-      },
-      {
-        "id": "S2-delayed-retry",
-        "description": "Outbound dispatch fails once then succeeds via retry endpoint",
-        "status": "blocked",
-        "steps": [
-          {"name": "Create listing via webhook", "status": "blocked"},
-          {"name": "Trigger claim event with initial HTTP 500", "status": "blocked"},
-          {"name": "Invoke /api/webhooks/freeblackmarket/retry", "status": "blocked"},
-          {"name": "Verify attempts increment and status becomes dispatched", "status": "blocked"}
-        ],
-        "evidence": [
-          "api/tests/Feature/StagingE2EValidationTest.php"
-        ]
-      },
-      {
-        "id": "S3-cancellation-edge",
-        "description": "Cancel in-transit listing from order.cancelled webhook",
-        "status": "blocked",
-        "steps": [
-          {"name": "Create listing and claim", "status": "blocked"},
-          {"name": "Set status in_transit", "status": "blocked"},
-          {"name": "Post order.cancelled webhook", "status": "blocked"},
-          {"name": "Verify listing cancelled and no delivered event emitted", "status": "blocked"}
-        ],
-        "evidence": [
-          "api/tests/Feature/StagingE2EValidationTest.php"
-        ]
-      }
-    ]
-  },
-  "execution": {
-    "commands": [
-      "cd /workspace/Blackstar/api && php artisan test --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency tests/Feature/StagingE2EValidationTest.php",
-      "cd /workspace/Blackstar/api && composer install --no-interaction --prefer-dist",
-      "cd /workspace/Blackstar/api && composer install --no-interaction --prefer-dist --ignore-platform-reqs",
-      "php -l /workspace/Blackstar/api/app/Http/Controllers/Api/ShipmentBoardListingController.php",
-      "php -l /workspace/Blackstar/api/tests/Feature/StagingE2EValidationTest.php"
-    ],
-    "blockers": [
-      "vendor dependencies unavailable in environment (no /api/vendor/autoload.php)",
-      "composer dependency fetch to github blocked by CONNECT tunnel 403"
-    ]
-  },
-  "patch_recommendations": [
-    {
-      "type": "implemented",
-      "summary": "Add correlation_id to claim and status API JSON responses for end-to-end traceability",
-      "files": ["api/app/Http/Controllers/Api/ShipmentBoardListingController.php"]
-    }
+    "php runtime in this container is 8.5.3-dev while project policy is >=8.0 <8.3",
+    "required extension ext-sodium missing in this runtime"
   ]
 }

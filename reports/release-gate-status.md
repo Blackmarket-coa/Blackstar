@@ -1,0 +1,21 @@
+# Release Gate Status Report
+
+- ⚠️ **Gate 1: Staging End-to-End Order Flow Validation**: incomplete
+  - `reports/staging-e2e-validation.md`
+  - `reports/staging-e2e-validation.json`
+  - `reports/logs/staging-s1-normal-rerun.log`
+  - `reports/logs/staging-s2-delayed-retry.log`
+  - `reports/logs/staging-s3-cancellation-edge.log`
+- ⚠️ **Gate 2: Vendor Visibility Constraints Verification**: incomplete
+  - `api/tests/Feature/VendorVisibilityContractTest.php`
+  - `reports/vendor-visibility-contract-coverage.md`
+  - `reports/vendor-visibility-contract-coverage.json`
+- ✅ **Gate 3: Incident Runbook + Rollback Simulation Validation**: complete
+  - `reports/incident-readiness/readiness-scorecard.md`
+  - `reports/incident-readiness/runbooks/freeblackmarket-webhook-signature-mismatch-outage.md`
+  - `reports/incident-readiness/simulations/webhook-signature-mismatch-outage.log`
+- ✅ **Gate 4: Local/CI Test Executability Baseline**: complete
+  - `scripts/api-test-preflight.sh`
+  - `scripts/setup-api-test-env.sh`
+  - `scripts/run-api-tests.sh`
+  - `api/docs/testing-quickstart.md`

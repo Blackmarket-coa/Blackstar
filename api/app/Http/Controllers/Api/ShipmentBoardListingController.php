@@ -21,10 +21,13 @@ class ShipmentBoardListingController extends Controller
         $listing = ShipmentBoardListing::create($request->validate([
             'source_order_ref' => ['required', 'string', 'max:255'],
             'claim_policy' => ['nullable', 'string', 'in:first_claim,bid'],
+            'origin' => ['nullable', 'string', 'max:255'],
+            'destination' => ['nullable', 'string', 'max:255'],
             'jurisdiction' => ['nullable', 'string', 'max:255'],
             'required_category' => ['nullable', 'string', 'max:255'],
             'required_subtype' => ['nullable', 'string', 'max:255'],
             'required_weight_limit' => ['nullable', 'numeric', 'min:0'],
+            'required_volume_limit' => ['nullable', 'numeric', 'min:0'],
             'required_range_limit' => ['nullable', 'numeric', 'min:0'],
             'requires_hazard_capability' => ['nullable', 'boolean'],
             'required_regulatory_class' => ['nullable', 'string', 'max:255'],
@@ -68,8 +71,10 @@ class ShipmentBoardListingController extends Controller
 
         abort_if($shipmentBoardListing->status !== ShipmentBoardListing::STATUS_OPEN, 422, 'Listing can only be claimed from open status.');
 
+        // FLP non-dispatch invariant: only explicit node claims can move a listing to claimed.
         $shipmentBoardListing->status = ShipmentBoardListing::STATUS_CLAIMED;
         $shipmentBoardListing->claimed_by_node_id = $node->id;
+        $shipmentBoardListing->current_node_id = $node->id;
         $shipmentBoardListing->claimed_at = now();
         $shipmentBoardListing->save();
 
@@ -120,6 +125,9 @@ class ShipmentBoardListingController extends Controller
         abort_if(!$node, 403, 'User is not assigned to a node.');
         abort_if($shipmentBoardListing->claimed_by_node_id !== $node->id, 403, 'Only claiming node can update status.');
 
+        // Keep mutable ownership state explicit to avoid hidden auto-assignment paths.
+        $shipmentBoardListing->current_node_id = $node->id;
+        $shipmentBoardListing->save();
         $shipmentBoardListing->transitionTo($status);
 
         $eventType = 'shipment.' . $shipmentBoardListing->status;
@@ -140,17 +148,21 @@ class ShipmentBoardListingController extends Controller
             'id' => $listing->id,
             'source_order_ref' => $listing->source_order_ref,
             'status' => $listing->status,
+            'origin' => $listing->origin,
+            'destination' => $listing->destination,
             'claim_policy' => $listing->claim_policy,
             'jurisdiction' => $listing->jurisdiction,
             'required_category' => $listing->required_category,
             'required_subtype' => $listing->required_subtype,
             'required_weight_limit' => $listing->required_weight_limit,
+            'required_volume_limit' => $listing->required_volume_limit,
             'required_range_limit' => $listing->required_range_limit,
             'requires_hazard_capability' => $listing->requires_hazard_capability,
             'required_regulatory_class' => $listing->required_regulatory_class,
             'insurance_required_flag' => $listing->insurance_required_flag,
             'required_transport_capabilities' => $listing->required_transport_capabilities,
             'claimed_by_node_id' => $listing->claimed_by_node_id,
+            'current_node_id' => $listing->current_node_id,
             'claimed_at' => $listing->claimed_at,
             'in_transit_at' => $listing->in_transit_at,
             'delivered_at' => $listing->delivered_at,

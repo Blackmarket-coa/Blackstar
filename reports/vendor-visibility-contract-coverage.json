@@ -1,19 +1,19 @@
 {
   "api_surfaces": [
     {"surface": "POST /api/webhooks/freeblackmarket", "type": "response", "covered": true},
-    {"surface": "POST /api/webhooks/freeblackmarket/retry", "type": "response", "covered": false},
+    {"surface": "POST /api/webhooks/freeblackmarket/retry", "type": "response", "covered": true},
     {"surface": "POST /api/shipment-board-listings", "type": "response", "covered": true},
     {"surface": "GET /api/shipment-board-listings/eligible", "type": "response", "covered": true},
     {"surface": "POST /api/shipment-board-listings/{id}/claim", "type": "response", "covered": true},
     {"surface": "POST /api/shipment-board-listings/{id}/status", "type": "response", "covered": true},
-    {"surface": "POST /api/shipment-board-listings/{id}/bids", "type": "response", "covered": false}
+    {"surface": "POST /api/shipment-board-listings/{id}/bids", "type": "response", "covered": true}
   ],
   "outbound_events": [
     {"event": "shipment.claimed", "covered": true},
     {"event": "shipment.in_transit", "covered": true},
     {"event": "shipment.delivered", "covered": true},
     {"event": "shipment.disputed", "covered": true},
-    {"event": "shipment.cancelled", "covered": false}
+    {"event": "shipment.cancelled", "covered": true}
   ],
   "denylist_categories": {
     "route_internals": ["route_plan", "route_polyline", "dispatch_internal_id", "private_coordination"],
