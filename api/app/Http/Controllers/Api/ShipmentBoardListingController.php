@@ -80,7 +80,10 @@ class ShipmentBoardListingController extends Controller
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
 
-        return response()->json($shipmentBoardListing->refresh());
+        return response()->json([
+            ...$shipmentBoardListing->refresh()->toArray(),
+            'correlation_id' => $correlationId,
+        ]);
     }
 
     public function submitBid(Request $request, ShipmentBoardListing $shipmentBoardListing): JsonResponse
@@ -130,6 +133,9 @@ class ShipmentBoardListingController extends Controller
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
 
-        return response()->json($shipmentBoardListing->refresh());
+        return response()->json([
+            ...$shipmentBoardListing->refresh()->toArray(),
+            'correlation_id' => $correlationId,
+        ]);
     }
 }
