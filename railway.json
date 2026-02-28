@@ -1,0 +1,14 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "docker/Dockerfile"
+  },
+  "deploy": {
+    "startCommand": "sh -lc 'php artisan octane:frankenphp --max-requests=1000 --port=${PORT:-8000} --host=0.0.0.0'",
+    "preDeployCommand": "sh -lc 'php deploy.sh'",
+    "healthcheckPath": "/",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}

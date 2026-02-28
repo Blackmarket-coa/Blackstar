@@ -148,6 +148,16 @@ Once successfully installed and running you can access the Blackstar operations 
 Blackstar Console: http://localhost:4200
 Blackstar API: http://localhost:8000
 
+
+### Railway deployment
+
+Railway-specific config templates are available in:
+
+- `railway.json` (API service)
+- `railway.worker.json` (queue worker)
+- `railway.scheduler.json` (scheduler)
+- `api/docs/railway-deployment.md` (setup and env var mapping)
+
 ### Additional Configurations
 
 **CORS:** If you're installing directly on a server you will need to configure the environment variables to the application container:
