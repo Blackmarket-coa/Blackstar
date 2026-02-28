@@ -2,9 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\Driver;
+use App\Models\Fleet;
+use App\Models\Node;
+use App\Models\Vehicle;
+use App\Policies\DriverPolicy;
+use App\Policies\FleetPolicy;
+use App\Policies\NodePolicy;
+use App\Policies\VehiclePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
-
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -13,7 +19,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Node::class => NodePolicy::class,
+        Fleet::class => FleetPolicy::class,
+        Vehicle::class => VehiclePolicy::class,
+        Driver::class => DriverPolicy::class,
     ];
 
     /**
@@ -25,6 +34,5 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
     }
 }
