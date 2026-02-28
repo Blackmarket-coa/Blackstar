@@ -86,6 +86,39 @@ class ShipmentBoardListingTest extends TestCase
             ->assertJsonPath('claimed_by_node_id', $eligibleNode->id);
     }
 
+
+    public function test_non_attested_node_cannot_claim_listing(): void
+    {
+        $node = Node::factory()->create([
+            'is_active' => false,
+            'transport_law_attestation_hash' => null,
+            'platform_indemnification_attestation_hash' => null,
+        ]);
+
+        $transportClass = TransportClass::factory()->create([
+            'category' => 'ground',
+            'subtype' => 'van',
+            'weight_limit' => 1000,
+            'range_limit' => 500,
+        ]);
+        $node->transportClasses()->attach($transportClass->id);
+
+        $user = User::factory()->create(['node_id' => $node->id]);
+        $creator = User::factory()->create();
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'jurisdiction' => $node->jurisdiction,
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/claim')
+            ->assertForbidden();
+    }
+
     public function test_lifecycle_transitions_are_enforced(): void
     {
         $node = Node::factory()->create(['jurisdiction' => 'US']);

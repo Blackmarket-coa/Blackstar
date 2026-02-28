@@ -17,6 +17,7 @@ Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController:
 
 Route::middleware('auth')->group(function () {
     Route::apiResource('nodes', NodeController::class);
+    Route::post('nodes/{node}/attest', [NodeController::class, 'attest']);
     Route::apiResource('fleets', FleetController::class);
     Route::apiResource('vehicles', VehicleController::class);
     Route::apiResource('drivers', DriverController::class);

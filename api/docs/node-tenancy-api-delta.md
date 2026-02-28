@@ -8,6 +8,7 @@ All endpoints are under `/api` and require authentication.
 - `POST /api/nodes`
 - `GET /api/nodes/{id}`
 - `PUT/PATCH /api/nodes/{id}`
+- `POST /api/nodes/{id}/attest`
 - `DELETE /api/nodes/{id}`
 
 - `GET /api/fleets`
@@ -37,12 +38,26 @@ All endpoints are under `/api` and require authentication.
 - `contact` (json)
 - `insurance_attestation_hash`
 - `license_attestation_hash`
+- `transport_law_attestation_hash`
+- `platform_indemnification_attestation_hash`
 - `transport_capabilities` (json)
 - `governance_room_id`
 - `reputation_score`
+- `is_active`
+- `activated_at`
 
 ## Authorization and scoping
 
 - Fleets, vehicles, and drivers are node-scoped by global model scope (`node_tenancy`).
 - Policies deny cross-node `view`, `update`, and `delete` operations.
 - Creation defaults to the authenticated user's `node_id` when omitted.
+
+## Node attestation activation workflow
+
+`POST /api/nodes/{id}/attest` requires acceptance of all activation terms before the node is activated:
+
+1. `transport_law_compliance`
+2. `license_and_insurance_responsibility`
+3. `platform_indemnification`
+
+The endpoint stores timestamped acceptance records in `node_attestation_acceptances` and persists signed hash artifacts on the node record.
