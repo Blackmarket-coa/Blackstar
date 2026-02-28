@@ -35,7 +35,7 @@ class ShipmentBoardListingController extends Controller
             'created_by_user_id' => auth()->id(),
         ]);
 
-        return response()->json($listing, 201);
+        return response()->json($this->vendorListingPayload($listing), 201);
     }
 
     public function eligibleListings(): JsonResponse
@@ -50,7 +50,8 @@ class ShipmentBoardListingController extends Controller
             ->where('status', ShipmentBoardListing::STATUS_OPEN)
             ->get()
             ->filter(fn (ShipmentBoardListing $listing) => $this->eligibility->isNodeEligibleForListing($node, $listing))
-            ->values();
+            ->values()
+            ->map(fn (ShipmentBoardListing $listing) => $this->vendorListingPayload($listing));
 
         return response()->json($listings);
     }
@@ -80,10 +81,7 @@ class ShipmentBoardListingController extends Controller
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
 
-        return response()->json([
-            ...$shipmentBoardListing->refresh()->toArray(),
-            'correlation_id' => $correlationId,
-        ]);
+        return response()->json($this->vendorListingPayload($shipmentBoardListing->refresh(), $correlationId));
     }
 
     public function submitBid(Request $request, ShipmentBoardListing $shipmentBoardListing): JsonResponse
@@ -133,9 +131,39 @@ class ShipmentBoardListingController extends Controller
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
 
-        return response()->json([
-            ...$shipmentBoardListing->refresh()->toArray(),
-            'correlation_id' => $correlationId,
-        ]);
+        return response()->json($this->vendorListingPayload($shipmentBoardListing->refresh(), $correlationId));
+    }
+
+    protected function vendorListingPayload(ShipmentBoardListing $listing, ?string $correlationId = null): array
+    {
+        $payload = [
+            'id' => $listing->id,
+            'source_order_ref' => $listing->source_order_ref,
+            'status' => $listing->status,
+            'claim_policy' => $listing->claim_policy,
+            'jurisdiction' => $listing->jurisdiction,
+            'required_category' => $listing->required_category,
+            'required_subtype' => $listing->required_subtype,
+            'required_weight_limit' => $listing->required_weight_limit,
+            'required_range_limit' => $listing->required_range_limit,
+            'requires_hazard_capability' => $listing->requires_hazard_capability,
+            'required_regulatory_class' => $listing->required_regulatory_class,
+            'insurance_required_flag' => $listing->insurance_required_flag,
+            'required_transport_capabilities' => $listing->required_transport_capabilities,
+            'claimed_by_node_id' => $listing->claimed_by_node_id,
+            'claimed_at' => $listing->claimed_at,
+            'in_transit_at' => $listing->in_transit_at,
+            'delivered_at' => $listing->delivered_at,
+            'disputed_at' => $listing->disputed_at,
+            'cancelled_at' => $listing->cancelled_at,
+            'created_at' => $listing->created_at,
+            'updated_at' => $listing->updated_at,
+        ];
+
+        if ($correlationId !== null) {
+            $payload['correlation_id'] = $correlationId;
+        }
+
+        return $payload;
     }
 }
