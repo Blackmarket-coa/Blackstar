@@ -35,5 +35,8 @@ php artisan route:cache
 # Initialize registry
 php artisan registry:init
 
+# Ensure FrankenPHP worker script exists for Octane runtime
+php artisan octane:install --server=frankenphp --no-interaction || true
+
 # Restart octane
 # php artisan octane:reload
