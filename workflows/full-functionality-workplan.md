@@ -151,3 +151,20 @@ All gates are complete only when each has:
 - Automated verification passing where applicable
 - Human-readable evidence artifacts committed under `workflows/` or `api/docs/`
 - Checklist updates recorded in `FEDERATED_LOGISTICS_COMPATIBILITY.md`
+
+
+## Current Execution Status (Updated)
+
+| Gate | Status | Evidence | Notes |
+|---|---|---|---|
+| Gate 1: Staging End-to-End Order Flow Validation | ⚠️ Partially complete (framework added, environment-blocked execution) | `api/tests/Feature/StagingE2EValidationTest.php`, `reports/staging-e2e-validation.md`, `reports/staging-e2e-validation.json` | Test scenarios and reporting artifacts exist; full execution blocked in this environment by missing vendor bootstrap/runtime dependencies. |
+| Gate 2: Vendor Visibility Constraints Verification | ⚠️ Partially complete (tests and coverage added, runtime execution pending) | `api/tests/Feature/VendorVisibilityContractTest.php`, `reports/vendor-visibility-contract-coverage.md`, `reports/vendor-visibility-contract-coverage.json` | Allowlist/denylist and outbound payload regression tests are implemented; full test run depends on environment bootstrap. |
+| Gate 3: Incident Runbook + Rollback Simulation Validation | ✅ Complete in staged tabletop/scripted form | `reports/incident-readiness/runbooks/`, `reports/incident-readiness/simulations/`, `reports/incident-readiness/readiness-scorecard.md`, `reports/incident-readiness/action-items-prioritized.md` | Runbooks and scenario simulations recorded with timelines/responders/commands/observed-vs-expected. |
+| Gate 4: Local/CI Test Executability Baseline | ✅ Implemented baseline with preflight/setup/CI critical suites | `scripts/api-test-preflight.sh`, `scripts/setup-api-test-env.sh`, `scripts/run-api-tests.sh`, `.github/workflows/ci.yml`, `api/docs/testing-quickstart.md` | Deterministic setup and CI wiring are in place; environment constraints still affect this specific container. |
+
+### Remaining Release-Blocking Work
+
+1. Execute Gate 1 + Gate 2 suites in a dependency-complete staging/CI runtime (supported PHP + extensions + successful Composer bootstrap).
+2. Close missing surfaces from vendor visibility coverage (`/webhooks/freeblackmarket/retry`, bids payload contract, `shipment.cancelled` outbound contract).
+3. Convert Gate 3 tabletop completion into at least one live operational drill using deployed staging services and dashboard-linked evidence.
+4. Reflect final gate sign-offs in `FEDERATED_LOGISTICS_COMPATIBILITY.md` once runtime validations pass.

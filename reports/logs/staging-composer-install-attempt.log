@@ -1,0 +1,7 @@
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Your lock file does not contain a compatible set of packages. Please run composer update.
+
+  Problem 1
+    - Root composer.json requires php >=8.0 <=8.2.30 but your php version (8.2.31-dev) does not satisfy that requirement.
+
