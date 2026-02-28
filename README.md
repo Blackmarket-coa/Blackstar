@@ -377,30 +377,6 @@ Get updates on Fleetbase's development and chat with the project maintainers and
 <p dir="auto">See the <a href="https://github.com/fleetbase/fleetbase/releases">Releases</a> section of our GitHub project for changelogs for each release version of Fleetbase.</p>
 <p>Release announcement posts on <a href="https://www.fleetbase.io/blog-2" rel="nofollow">the official Fleetbase blog</a> contain summaries of the most noteworthy changes made in each release.</p>
 
-## Creators
-
-<table style="border: none;">
-  <tr>
-    <td align="center" style="border: none;">
-      <img src="https://user-images.githubusercontent.com/58805033/230263021-212f2553-1269-473d-be94-313cb3eecfa5.png" alt="Ronald A. Richardson" width="120" height="120" style="border-radius: 50%;">
-      <br>
-      <strong>Ronald A. Richardson</strong>
-      <br>
-      Co-founder & CTO
-      <br>
-      <a href="https://github.com/orgs/fleetbase/people/roncodes">GitHub</a> | <a href="https://www.linkedin.com/in/ronald-a-richardson/">LinkedIn</a>
-    </td>
-    <td align="center" style="border: none;">
-      <img src="https://user-images.githubusercontent.com/58805033/230262598-1ce6d0cc-fb65-41f9-8384-5cf5cbf369c7.png" alt="Shiv Thakker" width="120" height="120" style="border-radius: 50%;">
-      <br>
-      <strong>Shiv Thakker</strong>
-      <br>
-      Co-founder & CEO
-      <br>
-      <a href="https://github.com/orgs/fleetbase/people/shivthakker">GitHub</a> | <a href="https://www.linkedin.com/in/shivthakker/">LinkedIn</a>
-    </td>
-  </tr>
-</table>
 
 
 # License & Copyright
