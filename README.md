@@ -306,6 +306,7 @@ Fleetbase has comprehensive documentation to help you get started and make the m
 - **API Reference**: [API Documentation](https://docs.fleetbase.io/api-reference)
 - **Extension Development**: [Building Extensions](https://docs.fleetbase.io/developers/building-an-extension)
 - **Deployment**: [Deployment Guides](https://docs.fleetbase.io/deployment)
+- **Federated Logistics Compatibility**: [FreeBlackMarket + Blackout blueprint](FEDERATED_LOGISTICS_COMPATIBILITY.md)
 
 ## 🤝 Contributing
 
