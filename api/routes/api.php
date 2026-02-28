@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FleetController;
 use App\Http\Controllers\Api\NodeController;
+use App\Http\Controllers\Api\NodeTrustScoreController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ShipmentPaymentReferenceController;
 use App\Http\Controllers\Api\ShipmentLegController;
@@ -19,6 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::apiResource('fleets', FleetController::class);
     Route::apiResource('vehicles', VehicleController::class);
     Route::apiResource('drivers', DriverController::class);
+
+    Route::get('vendor-dashboard/nodes/{node}/trust-score', [NodeTrustScoreController::class, 'show']);
+    Route::post('vendor-dashboard/nodes/{node}/trust-score/recompute', [NodeTrustScoreController::class, 'recompute']);
 
     Route::post('shipment-board-listings', [ShipmentBoardListingController::class, 'store']);
     Route::get('shipment-board-listings/eligible', [ShipmentBoardListingController::class, 'eligibleListings']);

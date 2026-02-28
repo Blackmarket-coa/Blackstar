@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Node extends Model
 {
@@ -52,5 +53,10 @@ class Node extends Model
     {
         return $this->belongsToMany(TransportClass::class, 'node_transport_classes')
             ->withTimestamps();
+    }
+
+    public function trustScore(): HasOne
+    {
+        return $this->hasOne(NodeTrustScore::class);
     }
 }
