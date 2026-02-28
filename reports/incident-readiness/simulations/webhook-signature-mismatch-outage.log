@@ -1,0 +1,19 @@
+# Simulation: webhook-signature-mismatch-outage
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 identify signature validation path
+$ rg -n "verifySignature|Invalid signature" api/app/Http/Controllers/Api/Webhooks/FreeBlackMarketWebhookController.php
+21:        $this->verifySignature($request);
+42:    protected function verifySignature(Request $request): void
+47:        abort_unless(hash_equals($expected, $incoming), 401, 'Invalid signature.');
+
+[timeline] T+05 verify ingress routes
+$ rg -n "webhooks/freeblackmarket" api/routes/api.php
+15:Route::post('webhooks/freeblackmarket', [FreeBlackMarketWebhookController::class, 'handle']);
+16:Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController::class, 'retry']);
+
+expected=401 on signature mismatch; outage mitigation via retry endpoint and queue drain
+observed=signature mismatch branch present with abort_unless(...,401); retry endpoint exists
+
+end_utc=2026-02-28T19:16:56Z

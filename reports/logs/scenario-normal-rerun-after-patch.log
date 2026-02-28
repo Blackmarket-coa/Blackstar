@@ -1,0 +1,7 @@
+PHP Warning:  require(/workspace/Blackstar/api/vendor/autoload.php): Failed to open stream: No such file or directory in /workspace/Blackstar/api/artisan on line 18
+PHP Stack trace:
+PHP   1. {main}() /workspace/Blackstar/api/artisan:0
+PHP Fatal error:  Uncaught Error: Failed opening required '/workspace/Blackstar/api/vendor/autoload.php' (include_path='.:') in /workspace/Blackstar/api/artisan:18
+Stack trace:
+#0 {main}
+  thrown in /workspace/Blackstar/api/artisan on line 18

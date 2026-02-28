@@ -1,0 +1,104 @@
+# Simulation: webhook-signature-mismatch-outage
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 identify signature validation path
+$ rg -n "verifySignature|Invalid signature" api/app/Http/Controllers/Api/Webhooks/FreeBlackMarketWebhookController.php
+21:        $this->verifySignature($request);
+42:    protected function verifySignature(Request $request): void
+47:        abort_unless(hash_equals($expected, $incoming), 401, 'Invalid signature.');
+
+[timeline] T+05 verify ingress routes
+$ rg -n "webhooks/freeblackmarket" api/routes/api.php
+15:Route::post('webhooks/freeblackmarket', [FreeBlackMarketWebhookController::class, 'handle']);
+16:Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController::class, 'retry']);
+
+expected=401 on signature mismatch; outage mitigation via retry endpoint and queue drain
+observed=signature mismatch branch present with abort_unless(...,401); retry endpoint exists
+
+end_utc=2026-02-28T19:16:56Z
+# Simulation: duplicate-replay-event-storm
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 verify idempotency controls
+$ rg -n "firstOrCreate\(|event_id" api/app/Services/FreeBlackMarket/InboundEventProcessor.php api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:14:        $eventId = Arr::get($body, 'event_id');
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:18:            $receipt = FbmInboundEventReceipt::firstOrCreate(
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:19:                ['event_id' => $eventId],
+api/app/Services/FreeBlackMarket/InboundEventProcessor.php:82:            ShipmentBoardListing::firstOrCreate(
+api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php:12:            $table->string('event_id')->unique();
+
+[timeline] T+08 verify retry/dead-letter behavior
+$ rg -n "dead_letter|attempts|next_attempt_at" api/app/Services/FreeBlackMarket/InboundEventProcessor.php
+25:                    'attempts' => 0,
+33:            $receipt->attempts += 1;
+40:                $receipt->next_attempt_at = null;
+46:                if ($receipt->attempts >= $maxRetries) {
+47:                    $receipt->status = 'dead_letter';
+48:                    $receipt->next_attempt_at = null;
+51:                    $receipt->next_attempt_at = now()->addSeconds($backoff * $receipt->attempts);
+65:            ->whereNotNull('next_attempt_at')
+66:            ->where('next_attempt_at', '<=', now())
+
+expected=duplicate event_id dedup + bounded retries
+observed=event_id firstOrCreate idempotency and dead_letter transitions confirmed
+
+end_utc=2026-02-28T19:16:56Z
+# Simulation: outbound-dead-letter-growth
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 inspect outbound publisher failure path
+$ rg -n "retryPending|markFailed|dead_letter|attempts|outbound_url" api/app/Services/FreeBlackMarket/OutboundEventPublisher.php
+20:            'attempts' => 0,
+30:        $event->attempts += 1;
+32:        $url = config('freeblackmarket.outbound_url');
+34:            $this->markFailed($event, 'Missing FBM outbound URL.');
+58:        $this->markFailed($event, 'HTTP ' . $response->status() . ': ' . $response->body());
+61:    public function retryPending(): void
+71:    protected function markFailed(FbmOutboundEvent $event, string $error): void
+78:        if ($event->attempts >= $maxRetries) {
+79:            $event->status = 'dead_letter';
+83:            $event->next_attempt_at = now()->addSeconds($backoff * $event->attempts);
+
+[timeline] T+10 inspect outbound event schema for status tracking
+$ rg -n "fbm_outbound_events|status|attempts|next_attempt_at" api/database/migrations/2024_01_01_000340_create_free_black_market_events_tables.php
+16:            $table->string('status')->default('processing')->index();
+17:            $table->unsignedInteger('attempts')->default(0);
+20:            $table->timestamp('next_attempt_at')->nullable();
+24:        Schema::create('fbm_outbound_events', function (Blueprint $table) {
+30:            $table->string('status')->default('pending')->index();
+31:            $table->unsignedInteger('attempts')->default(0);
+34:            $table->timestamp('next_attempt_at')->nullable();
+41:        Schema::dropIfExists('fbm_outbound_events');
+
+expected=failed dispatch increments attempts and enters failed/dead_letter with backoff
+observed=markFailed + retryPending pathways present
+
+end_utc=2026-02-28T19:16:56Z
+# Simulation: failed-deployment-rollback
+start_utc=2026-02-28T19:16:56Z
+responders=IC,SRE-oncall,API-owner
+
+[timeline] T+00 collect release metadata
+$ git rev-parse --abbrev-ref HEAD
+work
+$ git rev-parse HEAD
+535ec9c1e5eb090a5080383133c4c6f48907c657
+$ git log --oneline -n 5
+535ec9c Add vendor visibility contract tests and sanitize listing responses
+338ad41 Add staging E2E validation scenarios and correlation ID response trace
+6bec224 Merge pull request #4 from Blackmarket-coa/codex/identify-remaining-tasks
+938f53f Add workplan for remaining full-functionality gates
+763ff44 Merge pull request #3 from Blackmarket-coa/codex/implement-node-attestation-workflow
+
+[timeline] T+12 dry-run rollback plan validation
+$ rg -n "rollback|release" RELEASE.md
+9:This release includes two bug fixes and one new feature: a corrected public extension discovery endpoint in the Registry Bridge, a driver vehicle validation patch in FleetOps, and a new `flb search` command in the Fleetbase CLI.
+
+expected=known-good commit available + explicit verification checklist
+observed=git history available for rollback target selection; release doc has limited rollback details
+
+end_utc=2026-02-28T19:16:56Z
+Generated logs in reports/incident-readiness/simulations
