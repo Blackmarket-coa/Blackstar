@@ -105,6 +105,40 @@ class ShipmentLegRelayTest extends TestCase
         $this->assertGreaterThanOrEqual(1, FbmOutboundEvent::query()->where('event_type', 'shipment.delivered')->count());
     }
 
+
+    public function test_multi_leg_federated_logistics_flow_stress_path(): void
+    {
+        config()->set('freeblackmarket.outbound_url', 'https://fbm.example/events');
+        Http::fake(['https://fbm.example/events' => Http::response(['ok' => true], 200)]);
+
+        [$listing, $firstNode, $nodeB, $nodeC, $userA] = $this->makeClaimedListing();
+
+        $nodes = [$firstNode, $nodeB, $nodeC];
+        for ($i = 0; $i < 8; $i++) {
+            $nodes[] = Node::factory()->create(['jurisdiction' => 'US']);
+        }
+
+        $legs = [];
+        for ($sequence = 1; $sequence <= 10; $sequence++) {
+            $legs[] = ShipmentLeg::factory()->create([
+                'shipment_board_listing_id' => $listing->id,
+                'sequence' => $sequence,
+                'from_node_id' => $nodes[$sequence - 1]->id,
+                'to_node_id' => $nodes[$sequence]->id,
+            ]);
+        }
+
+        foreach ($legs as $index => $leg) {
+            $step = $index + 1;
+            $this->actingAs($userA)->patchJson("/api/shipment-board-listings/{$listing->id}/legs/{$leg->id}", ['status' => 'in_transit'])->assertOk();
+            $this->actingAs($userA)->patchJson("/api/shipment-board-listings/{$listing->id}/legs/{$leg->id}", ['status' => 'handed_off', 'proof_of_handoff_hash' => "proof-stress-{$step}"])->assertOk();
+            $this->actingAs($userA)->patchJson("/api/shipment-board-listings/{$listing->id}/legs/{$leg->id}", ['status' => 'completed', 'settlement_ref' => "settle-stress-{$step}"])->assertOk();
+        }
+
+        $this->assertSame(ShipmentBoardListing::STATUS_DELIVERED, $listing->fresh()->status);
+        $this->assertSame(10, ShipmentLeg::query()->where('shipment_board_listing_id', $listing->id)->where('status', 'completed')->count());
+    }
+
     public function test_failed_handoff_moves_listing_to_disputed_path(): void
     {
         config()->set('freeblackmarket.outbound_url', 'https://fbm.example/events');

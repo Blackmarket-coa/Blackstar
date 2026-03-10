@@ -14,6 +14,32 @@ class ShipmentBoardListingTest extends TestCase
 {
     use RefreshDatabase;
 
+
+    public function test_creator_can_create_bounty_job_with_work_order_and_qa(): void
+    {
+        $creator = User::factory()->create();
+
+        $response = $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings', [
+                'source_order_ref' => 'BNTY-001',
+                'claim_policy' => 'first_claim',
+                'job_type' => 'virtual',
+                'bounty_amount' => 350.75,
+                'bounty_currency' => 'USD',
+                'origin' => 'Remote',
+                'destination' => 'Remote',
+                'work_order' => 'Automate deployment pipeline and provide runbook.',
+                'creator_qa_checklist' => ['pipeline passes', 'rollback tested'],
+            ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('job_type', 'virtual')
+            ->assertJsonPath('bounty_amount', '350.75')
+            ->assertJsonPath('bounty_currency', 'USD')
+            ->assertJsonPath('work_order', 'Automate deployment pipeline and provide runbook.')
+            ->assertJsonPath('creator_qa_checklist.0', 'pipeline passes');
+    }
+
     public function test_no_global_dispatcher_force_assigns_listing(): void
     {
         $creator = User::factory()->create();

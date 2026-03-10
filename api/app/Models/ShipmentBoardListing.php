@@ -27,7 +27,12 @@ class ShipmentBoardListing extends Model
         'status',
         'origin',
         'destination',
+        'work_order',
+        'creator_qa_checklist',
         'claim_policy',
+        'job_type',
+        'bounty_amount',
+        'bounty_currency',
         'jurisdiction',
         'required_category',
         'required_subtype',
@@ -49,7 +54,9 @@ class ShipmentBoardListing extends Model
     ];
 
     protected $casts = [
+        'creator_qa_checklist' => 'array',
         'required_transport_capabilities' => 'array',
+        'bounty_amount' => 'decimal:2',
         'required_weight_limit' => 'decimal:2',
         'required_volume_limit' => 'decimal:2',
         'required_range_limit' => 'decimal:2',
