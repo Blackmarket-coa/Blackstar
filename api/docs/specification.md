@@ -74,6 +74,10 @@ Authoritative execution sequencing and gate evidence tracking are in [workflows/
 ## 18. QA and Release Checklist
 Release gating requires E2E staging evidence, contract conformance, incident readiness, and reproducible runtime/test bootstrap.
 
+## 19. Network Advantage Engine Profile
+Routing intelligence, mesh-vs-carrier ETA/cost estimation, batching economics, and sustainability metrics are defined in [Network Advantage Engine](./network-advantage-engine.md).
+Implementations MUST remain advisory and comply with the no-central-dispatch invariant.
+
 ---
 
 ### Cross-reference index to compatibility blueprint
