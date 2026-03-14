@@ -54,6 +54,22 @@ jobs:
         extensions: mbstring, xml, curl, json, sodium, pdo_sqlite
         coverage: none
 
+    - name: Configure restricted-network overrides
+      env:
+        COMPOSER_REPO_PACKAGIST: ${{ secrets.COMPOSER_REPO_PACKAGIST }}
+        COMPOSER_GITHUB_OAUTH_TOKEN: ${{ secrets.COMPOSER_GITHUB_OAUTH_TOKEN }}
+        COMPOSER_GITHUB_MIRROR: ${{ secrets.COMPOSER_GITHUB_MIRROR }}
+      run: |
+        if [[ -n "$COMPOSER_REPO_PACKAGIST" ]]; then
+          echo "COMPOSER_REPO_PACKAGIST=$COMPOSER_REPO_PACKAGIST" >> $GITHUB_ENV
+        fi
+        if [[ -n "$COMPOSER_GITHUB_OAUTH_TOKEN" ]]; then
+          echo "COMPOSER_GITHUB_OAUTH_TOKEN=$COMPOSER_GITHUB_OAUTH_TOKEN" >> $GITHUB_ENV
+        fi
+        if [[ -n "$COMPOSER_GITHUB_MIRROR" ]]; then
+          echo "COMPOSER_GITHUB_MIRROR=$COMPOSER_GITHUB_MIRROR" >> $GITHUB_ENV
+        fi
+
     - name: Setup Composer
       uses: ramsey/composer-install@v3
       with:
@@ -128,3 +144,20 @@ jobs:
           reports/staging-e2e-validation.md
           reports/logs/*.log
           reports/logs/*.exit
+
+
+  incident-readiness-controls:
+    name: Incident Readiness Controls Verification
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Verify rollback automation (dry-run)
+      run: ./scripts/verify-rollback-automation.sh
+
+    - name: Verify dead-letter alert policy
+      run: ./scripts/verify-dead-letter-alert-policy.sh

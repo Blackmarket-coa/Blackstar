@@ -72,3 +72,8 @@ PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
 ```
 
 This is the canonical sequence used by CI to run Gate 1 scenarios and Gate 2 vendor visibility suite, regenerate gate status, and fail the pipeline unless both gates are complete.
+
+## Release entry criteria
+
+- Treat **Gate 1** and **Gate 2** as mandatory release-entry checks.
+- Release packaging/deployment should not proceed unless `./scripts/assert-gates-1-2-complete.sh` exits `0`.
