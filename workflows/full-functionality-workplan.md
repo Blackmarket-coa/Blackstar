@@ -6,6 +6,50 @@ This work document tracks the remaining gating items needed to move from "implem
 
 Validate and operationalize the system so all release-blocker checklist items have objective evidence of completion.
 
+## Strategic Design Inputs (from cross-project tradecraft review)
+
+The following patterns were identified as high-value for Blackstar and should inform gate execution, backlog prioritization, and release hardening:
+
+### High-priority integrations for Blackstar
+
+1. **Cell-structured routing (logistics onion model)**
+   - Treat each logistics node as a "cell" that only knows immediate upstream/downstream peers, not full shipment paths.
+   - Aligns with existing federated routing + micro-depot relay architecture and reduces blast radius if a node is compromised.
+   - Implications for this plan: extend Gate 2 visibility checks to ensure route internals are never exposed to vendors/couriers beyond need-to-know scope.
+
+2. **Dead-drop style dispatch signaling**
+   - Prefer bulletin-board/feed-based pickup signaling over direct push where possible to reduce direct metadata trails.
+   - Reverse-auction bid announcements should remain anonymous until acceptance.
+   - Implications for this plan: include metadata-minimization assertions in Gate 1 evidence and Gate 3 runbooks (privacy incident scenarios).
+
+3. **Settlement/audit anchoring via blockchain hashes**
+   - Anchor order confirmations, proof-of-delivery, and dispute artifacts as transaction hashes for tamper-evident audit trails.
+   - Pairs with hawala-style local settlement while preserving global verification.
+   - Implications for this plan: add validation checkpoints in Gate 1 for hash generation/verification on delivery lifecycle milestones.
+
+4. **Burst transmission for intermittent mesh connectivity**
+   - For LoRa/intermittent links, batch and burst-transmit order updates during connectivity windows.
+   - Complements existing Order Cycle batching at transport layer.
+   - Implications for this plan: include delayed-network burst scenarios in Gate 1 (currently "delayed retry") and Gate 3 outage/replay simulations.
+
+### Cross-cutting design guidance to apply in this workplan
+
+- **Publicly observable transport, privately decryptable meaning** (numbers-station model): assume traffic visibility; protect content + sensitive relationship metadata.
+- **Covert-channel awareness in standard API traffic**: inspect headers/timing/request patterns between systems and constrain unintended metadata leakage through the API gateway layer.
+- **Traffic-analysis resistance**: where feasible, batch or jitter non-urgent notifications/events to reduce activity pattern leakage.
+
+### Deprioritized for current software release gates
+
+- Acoustic/optical/satellite burst techniques (hardware-specific beyond current release scope).
+- Analog-only concealment methods (e.g., invisible ink/hollow coin metaphors) except as conceptual guidance for data minimization.
+
+## One-Shot Prompt: Complete This Build End-to-End
+
+Use the reusable prompt template at:
+- `workflows/prompts/complete-build-one-shot.prompt.md`
+
+This keeps the workplan focused on gates and evidence while preserving a copy/paste-ready operator prompt.
+
 ## Gating Items
 
 ### Gate 1: Staging End-to-End Order Flow Validation
