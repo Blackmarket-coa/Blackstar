@@ -8,8 +8,11 @@ use App\Models\Node;
 use App\Models\ShipmentBoardListing;
 use App\Models\TransportClass;
 use App\Models\User;
+use App\Services\FreeBlackMarket\InboundEventProcessor;
+use App\Services\FreeBlackMarket\OutboundEventPublisher;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Mockery;
 use Tests\TestCase;
 
 class FreeBlackMarketInteropTest extends TestCase
@@ -95,5 +98,23 @@ class FreeBlackMarketInteropTest extends TestCase
                 && $request->hasHeader('X-Correlation-ID', 'corr-claim-001')
                 && $request['event_type'] === 'shipment.claimed';
         });
+    }
+
+    public function test_retry_endpoint_invokes_retry_processors_and_returns_allowlisted_response(): void
+    {
+        $processor = Mockery::mock(InboundEventProcessor::class);
+        $processor->shouldReceive('retryFailed')->once();
+        $this->app->instance(InboundEventProcessor::class, $processor);
+
+        $publisher = Mockery::mock(OutboundEventPublisher::class);
+        $publisher->shouldReceive('retryPending')->once();
+        $this->app->instance(OutboundEventPublisher::class, $publisher);
+
+        $response = $this->postJson('/api/webhooks/freeblackmarket/retry', [
+            'unexpected' => 'input',
+            'private_coordination' => 'do-not-echo',
+        ])->assertOk()->json();
+
+        $this->assertSame(['status' => 'ok'], $response);
     }
 }

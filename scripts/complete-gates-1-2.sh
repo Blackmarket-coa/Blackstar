@@ -21,6 +21,7 @@ run_capture() {
   else
     echo $? >"$exitf"
   fi
+
   if [[ -f "$log" ]]; then
     local lines
     lines=$(wc -l <"$log" || echo 0)
@@ -28,12 +29,15 @@ run_capture() {
       tail -n 250 "$log" >"${log}.tmp" && mv "${log}.tmp" "$log"
     fi
   fi
+
   echo "[DONE] $name exit=$(cat "$exitf") log=$log"
 }
 
 run_capture preflight-g12 "$PHP_BIN" -v
 run_capture preflight-g12-check bash -lc "PATH=$PHP_DIR:\$PATH ./scripts/api-test-preflight.sh"
-run_capture composer-install-g12 bash -lc "PATH=$PHP_DIR:\$PATH composer --working-dir=api install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-sodium"
+
+# Deterministic bootstrap honoring composer mirror/auth overrides and sodium requirement.
+run_capture setup-api-test-env-g12 bash -lc "PATH=$PHP_DIR:\$PATH ./scripts/setup-api-test-env.sh"
 
 run_capture staging-s1-normal-rerun bash -lc "PATH=$PHP_DIR:\$PATH php api/artisan test --env=testing --filter=test_scenario_normal_full_lifecycle_with_correlation_consistency api/tests/Feature/StagingE2EValidationTest.php"
 run_capture staging-s2-delayed-retry bash -lc "PATH=$PHP_DIR:\$PATH php api/artisan test --env=testing --filter=test_scenario_delayed_retry_dispatches_outbound_event_after_initial_failure api/tests/Feature/StagingE2EValidationTest.php"

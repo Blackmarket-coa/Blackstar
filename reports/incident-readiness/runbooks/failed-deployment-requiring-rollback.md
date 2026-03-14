@@ -18,15 +18,15 @@ Rollback if any of the following persist >10 minutes after hotfix attempt:
 
 ## Rollback procedure
 1. Identify last known good commit/tag.
-2. Re-deploy previous artifact/config set.
-3. Re-run smoke checks and integration probes.
+2. Run one-command rollback automation (`scripts/rollback-release.sh`) against previous artifact tag.
+3. Re-run smoke checks and integration probes (`scripts/verify-rollback-health.sh`).
 4. Freeze further deploys until incident review.
 
 ## Commands
 - `git rev-parse --abbrev-ref HEAD`
 - `git rev-parse HEAD`
 - `git log --oneline -n 5`
-- (deployment system specific) rollback command for prior artifact
+- `CLUSTER=<cluster> API_SERVICE=<api> SCHEDULER_SERVICE=<scheduler> EVENTS_SERVICE=<events> ROLLBACK_VERSION=<prev-tag> DRY_RUN=0 ./scripts/rollback-release.sh`
 
 ## Post-rollback verification checks
 - API health and auth checks pass.

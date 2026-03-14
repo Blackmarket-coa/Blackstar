@@ -1,0 +1,20 @@
+policy_name: fbm-outbound-dead-letter-growth
+service: blackstar-api
+owner: sre-oncall
+pager_channel: pagerduty-blackstar-critical
+metrics:
+  dead_letter_total:
+    source: fbm_outbound_events
+    filter: "status in ('failed','dead_letter')"
+thresholds:
+  absolute_count:
+    value: 100
+    window: 15m
+  slope_per_5m:
+    value: 25
+    lookback: 15m
+severity: sev2
+runbook: reports/incident-readiness/runbooks/outbound-event-dispatch-dead-letter-growth.md
+notes:
+  - Page when either threshold is breached for 2 consecutive evaluation windows.
+  - Auto-resolve when both thresholds return below 60% of trigger for 3 windows.
