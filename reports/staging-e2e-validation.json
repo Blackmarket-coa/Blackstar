@@ -1,13 +1,13 @@
 {
   "system": "Blackstar + FreeBlackMarket integration",
-  "execution_timestamp_utc": "2026-02-28T00:00:00Z",
+  "execution_timestamp_utc": "2026-03-16T00:00:00Z",
   "runtime": {
     "php_binary": "/root/.phpenv/versions/8.2snapshot/bin/php",
     "php_version": "8.2.31-dev",
-    "composer_install": {
-      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (composer step)",
-      "exit_code": 1,
-      "log": "reports/logs/composer-install-g12.log"
+    "setup": {
+      "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (setup step)",
+      "exit_code": 2,
+      "log": "reports/logs/setup-api-test-env-g12.log"
     },
     "preflight": {
       "command": "PHP_BIN=/root/.phpenv/versions/8.2snapshot/bin/php ./scripts/complete-gates-1-2.sh (preflight step)",
@@ -27,7 +27,7 @@
           "log": "reports/logs/staging-s1-normal-rerun.log"
         }
       ],
-      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
+      "blocker": "api/vendor/autoload.php missing after setup failure; Laravel bootstrap cannot start."
     },
     {
       "id": "S2-delayed-retry",
@@ -40,7 +40,7 @@
           "log": "reports/logs/staging-s2-delayed-retry.log"
         }
       ],
-      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
+      "blocker": "api/vendor/autoload.php missing after setup failure; Laravel bootstrap cannot start."
     },
     {
       "id": "S3-cancellation-edge",
@@ -53,7 +53,7 @@
           "log": "reports/logs/staging-s3-cancellation-edge.log"
         }
       ],
-      "blocker": "Incomplete vendor bootstrap from Composer network restrictions; Laravel bootstrap class unavailable."
+      "blocker": "api/vendor/autoload.php missing after setup failure; Laravel bootstrap cannot start."
     }
   ],
   "vendor_visibility_suite": {
@@ -62,8 +62,8 @@
     "log": "reports/logs/VendorVisibilityContractTest.log"
   },
   "blockers": [
-    "GitHub access blocked in this environment (CONNECT tunnel failed, response 403) during composer install",
     "ext-sodium unavailable for php 8.2snapshot in this container",
-    "Laravel bootstrap cannot complete after partial vendor install"
+    "Packagist and GitHub API are unreachable in this environment without mirror/auth overrides",
+    "Laravel bootstrap cannot complete without api/vendor/autoload.php"
   ]
 }
