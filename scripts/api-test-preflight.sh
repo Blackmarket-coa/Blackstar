@@ -22,6 +22,27 @@ else
   fi
 fi
 
+
+proxy_endpoint="${HTTPS_PROXY:-${https_proxy:-${HTTP_PROXY:-${http_proxy:-}}}}"
+if [[ -n "$proxy_endpoint" ]]; then
+  ok "Proxy detected for outbound dependency bootstrap: $proxy_endpoint"
+else
+  warns+=("No HTTP(S)_PROXY detected; restricted networks may block dependency bootstrap.")
+fi
+
+if command -v curl >/dev/null 2>&1; then
+  if curl -fsSLI --max-time 10 https://repo.packagist.org >/dev/null 2>&1; then
+    ok "Packagist endpoint reachable."
+  else
+    warns+=("Packagist endpoint not reachable from current environment (may require proxy/mirror).")
+  fi
+
+  if curl -fsSLI --max-time 10 https://api.github.com >/dev/null 2>&1; then
+    ok "GitHub API endpoint reachable."
+  else
+    warns+=("GitHub API endpoint not reachable from current environment (set COMPOSER_GITHUB_MIRROR and/or auth overrides).")
+  fi
+fi
 if ! command -v composer >/dev/null 2>&1; then
   errors+=("Composer binary not found. Install Composer 2.x.")
 else

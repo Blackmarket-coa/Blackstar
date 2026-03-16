@@ -22,6 +22,22 @@ cd Blackstar
 
 If preflight fails, it prints actionable steps and exits non-zero.
 
+
+## Restricted-network bootstrap overrides
+
+If your runtime is behind a proxy, export overrides before setup:
+
+```bash
+export HTTPS_PROXY=http://<proxy-host>:<port>
+export HTTP_PROXY=http://<proxy-host>:<port>
+export COMPOSER_REPO_PACKAGIST=https://<internal-packagist-mirror>
+export COMPOSER_GITHUB_MIRROR=https://<internal-github-mirror>/
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"<token>"}}'
+# or: export COMPOSER_GITHUB_OAUTH_TOKEN=<token>
+```
+
+`./scripts/setup-api-test-env.sh` applies these values to Composer/git before dependency install.
+
 ## Critical feature suites run by `run-api-tests.sh`
 - `tests/Feature/FreeBlackMarketInteropTest.php`
 - `tests/Feature/ShipmentBoardListingTest.php`

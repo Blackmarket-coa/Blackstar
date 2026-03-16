@@ -2,7 +2,7 @@
 
 ## Runtime used for this rerun
 - PHP binary: `/root/.phpenv/versions/8.2snapshot/bin/php` (8.2.31-dev)
-- Composer install attempt: `reports/logs/composer-install-g12.log` (exit 1)
+- Setup/bootstrap attempt: `reports/logs/setup-api-test-env-g12.log` (exit 2)
 - Preflight attempt: `reports/logs/preflight-g12-check.log` (exit 1)
 
 ## Validation matrix
@@ -19,9 +19,9 @@
 - Evidence: `reports/logs/VendorVisibilityContractTest.log`, `reports/logs/VendorVisibilityContractTest.exit`
 
 ## Current blockers
-1. Composer dependency fetches to GitHub are blocked (`CONNECT tunnel failed, response 403`) while installing locked dependencies.
-2. `ext-sodium` is unavailable in the local 8.2 runtime.
-3. Partial vendor tree causes bootstrap failure (`Illuminate\Foundation\Application` class missing), preventing test execution.
+1. `ext-sodium` is unavailable in the local 8.2 runtime, so Composer cannot install the locked dependency set (`lcobucci/jwt` requires `ext-sodium`).
+2. Packagist and GitHub API endpoints are unreachable from this environment without configured mirrors/auth overrides (`COMPOSER_REPO_PACKAGIST`, `COMPOSER_GITHUB_MIRROR`, `COMPOSER_AUTH`).
+3. Because setup cannot complete, `api/vendor/autoload.php` is missing and Laravel bootstrap fails for Gate 1 + Gate 2 suites.
 
 ## Status
-Gate 1 and Gate 2 remain incomplete in this environment because scenario and contract suites cannot execute to completion until dependency bootstrap succeeds.
+Gate 1 and Gate 2 remain incomplete in this environment. Next execution should run in CI/staging with PHP 8.2 + `ext-sodium` enabled and restricted-network Composer overrides configured.
