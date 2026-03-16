@@ -3,6 +3,18 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 API_DIR="$ROOT_DIR/api"
+PHP_BIN="${PHP_BIN:-php}"
+COMPOSER_BIN="${COMPOSER_BIN:-composer}"
+
+if ! command -v "$PHP_BIN" >/dev/null 2>&1; then
+  echo "PHP binary '$PHP_BIN' not found on PATH." >&2
+  exit 1
+fi
+
+if ! command -v "$COMPOSER_BIN" >/dev/null 2>&1; then
+  echo "Composer binary '$COMPOSER_BIN' not found on PATH." >&2
+  exit 1
+fi
 
 cd "$API_DIR"
 
@@ -41,15 +53,28 @@ mkdir -p database
 
 
 if [[ -n "${COMPOSER_REPO_PACKAGIST:-}" ]]; then
-  composer config -g repo.packagist composer "$COMPOSER_REPO_PACKAGIST"
+  "$PHP_BIN" "$(command -v "$COMPOSER_BIN")" config -g repo.packagist composer "$COMPOSER_REPO_PACKAGIST"
 fi
 
 if [[ -n "${COMPOSER_GITHUB_OAUTH_TOKEN:-}" ]]; then
-  composer config -g github-oauth.github.com "$COMPOSER_GITHUB_OAUTH_TOKEN"
+  "$PHP_BIN" "$(command -v "$COMPOSER_BIN")" config -g github-oauth.github.com "$COMPOSER_GITHUB_OAUTH_TOKEN"
 fi
 
 if [[ -n "${COMPOSER_AUTH:-}" ]]; then
   export COMPOSER_AUTH
+fi
+
+# Respect proxy-constrained environments for Composer and git HTTP fallback.
+if [[ -n "${HTTPS_PROXY:-${https_proxy:-}}" ]]; then
+  export HTTPS_PROXY="${HTTPS_PROXY:-${https_proxy}}"
+fi
+if [[ -n "${HTTP_PROXY:-${http_proxy:-}}" ]]; then
+  export HTTP_PROXY="${HTTP_PROXY:-${http_proxy}}"
+fi
+
+if [[ -n "${HTTPS_PROXY:-}" || -n "${HTTP_PROXY:-}" ]]; then
+  git config --global http.proxy "${HTTPS_PROXY:-${HTTP_PROXY}}"
+  git config --global https.proxy "${HTTPS_PROXY:-${HTTP_PROXY}}"
 fi
 
 
@@ -58,11 +83,20 @@ if [[ -n "${COMPOSER_GITHUB_MIRROR:-}" ]]; then
   git config --global url."${COMPOSER_GITHUB_MIRROR}".insteadOf git@github.com:
 fi
 
-composer install --no-interaction --prefer-dist --optimize-autoloader
+if ! "$PHP_BIN" -m | awk '{print tolower($0)}' | grep -qx "sodium"; then
+  cat >&2 <<'EOF'
+Missing required PHP extension 'sodium'.
+Install/enable ext-sodium in the active PHP runtime before running Gate 1/2 suites.
+EOF
+  exit 2
+fi
 
-php artisan key:generate --env=testing --force
-php artisan config:clear
-php artisan cache:clear
-php artisan migrate --env=testing --force
+export COMPOSER_ALLOW_SUPERUSER=1
+"$PHP_BIN" "$(command -v "$COMPOSER_BIN")" install --no-interaction --prefer-dist --optimize-autoloader
+
+"$PHP_BIN" artisan key:generate --env=testing --force
+"$PHP_BIN" artisan config:clear
+"$PHP_BIN" artisan cache:clear
+"$PHP_BIN" artisan migrate --env=testing --force
 
 echo "API test environment initialized."

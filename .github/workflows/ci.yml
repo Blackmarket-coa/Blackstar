@@ -59,6 +59,7 @@ jobs:
         COMPOSER_REPO_PACKAGIST: ${{ secrets.COMPOSER_REPO_PACKAGIST }}
         COMPOSER_GITHUB_OAUTH_TOKEN: ${{ secrets.COMPOSER_GITHUB_OAUTH_TOKEN }}
         COMPOSER_GITHUB_MIRROR: ${{ secrets.COMPOSER_GITHUB_MIRROR }}
+        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       run: |
         if [[ -n "$COMPOSER_REPO_PACKAGIST" ]]; then
           echo "COMPOSER_REPO_PACKAGIST=$COMPOSER_REPO_PACKAGIST" >> $GITHUB_ENV
@@ -69,12 +70,12 @@ jobs:
         if [[ -n "$COMPOSER_GITHUB_MIRROR" ]]; then
           echo "COMPOSER_GITHUB_MIRROR=$COMPOSER_GITHUB_MIRROR" >> $GITHUB_ENV
         fi
+        if [[ -n "$COMPOSER_AUTH" ]]; then
+          echo "COMPOSER_AUTH=$COMPOSER_AUTH" >> $GITHUB_ENV
+        fi
 
-    - name: Setup Composer
-      uses: ramsey/composer-install@v3
-      with:
-        working-directory: api
-        composer-options: --no-interaction --prefer-dist --optimize-autoloader
+    - name: Validate gate runtime provisioning
+      run: STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
 
     - name: Initialize deterministic API test env
       run: ./scripts/setup-api-test-env.sh
@@ -115,6 +116,7 @@ jobs:
         COMPOSER_REPO_PACKAGIST: ${{ secrets.COMPOSER_REPO_PACKAGIST }}
         COMPOSER_GITHUB_OAUTH_TOKEN: ${{ secrets.COMPOSER_GITHUB_OAUTH_TOKEN }}
         COMPOSER_GITHUB_MIRROR: ${{ secrets.COMPOSER_GITHUB_MIRROR }}
+        COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       run: |
         if [[ -n "$COMPOSER_REPO_PACKAGIST" ]]; then
           echo "COMPOSER_REPO_PACKAGIST=$COMPOSER_REPO_PACKAGIST" >> $GITHUB_ENV
@@ -125,6 +127,12 @@ jobs:
         if [[ -n "$COMPOSER_GITHUB_MIRROR" ]]; then
           echo "COMPOSER_GITHUB_MIRROR=$COMPOSER_GITHUB_MIRROR" >> $GITHUB_ENV
         fi
+        if [[ -n "$COMPOSER_AUTH" ]]; then
+          echo "COMPOSER_AUTH=$COMPOSER_AUTH" >> $GITHUB_ENV
+        fi
+
+    - name: Validate gate runtime provisioning
+      run: STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
 
     - name: Execute Gate 1/2 runner
       run: PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
