@@ -22,6 +22,22 @@ cd Blackstar
 
 If preflight fails, it prints actionable steps and exits non-zero.
 
+
+## Restricted-network bootstrap overrides
+
+If your runtime is behind a proxy, export overrides before setup:
+
+```bash
+export HTTPS_PROXY=http://<proxy-host>:<port>
+export HTTP_PROXY=http://<proxy-host>:<port>
+export COMPOSER_REPO_PACKAGIST=https://<internal-packagist-mirror>
+export COMPOSER_GITHUB_MIRROR=https://<internal-github-mirror>/
+export COMPOSER_AUTH='{"github-oauth":{"github.com":"<token>"}}'
+# or: export COMPOSER_GITHUB_OAUTH_TOKEN=<token>
+```
+
+`./scripts/setup-api-test-env.sh` applies these values to Composer/git before dependency install.
+
 ## Critical feature suites run by `run-api-tests.sh`
 - `tests/Feature/FreeBlackMarketInteropTest.php`
 - `tests/Feature/ShipmentBoardListingTest.php`
@@ -39,6 +55,19 @@ The CI workflow includes an `API Critical Feature Suites` job that:
 5. runs critical feature suites,
 6. uploads `reports/logs/*.log` as artifact.
 
+
+## CI secret + runtime checklist (required for Gate 1/2)
+
+In GitHub Actions, configure at least one dependency source path:
+
+1. `COMPOSER_REPO_PACKAGIST` (internal Packagist mirror), **or**
+2. both `COMPOSER_GITHUB_MIRROR` and one auth secret (`COMPOSER_AUTH` or `COMPOSER_GITHUB_OAUTH_TOKEN`).
+
+Runtime must use PHP `8.2.x` with `sodium` enabled. CI now enforces this with:
+
+```bash
+STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
+```
 
 ## Restricted-network Composer bootstrap
 
