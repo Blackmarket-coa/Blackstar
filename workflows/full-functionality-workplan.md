@@ -224,3 +224,4 @@ All gates are complete only when each has:
 ### Deferred Scope
 
 - Contribution Credits remains a documented deferment (non-goal) until post-gate stabilization.
+- Application delivery track planning for `apps/blackstar-console` and `apps/blackstar-nav` is captured in `workflows/blackstar-console-nav-workplan.md`.
