@@ -208,9 +208,11 @@ All gates are complete only when each has:
 
 ### Remaining Release-Blocking Work
 
-1. Execute Gate 1 suite in a dependency-complete staging/CI runtime (supported PHP + extensions + successful Composer bootstrap).
-2. Convert Gate 3 tabletop completion into at least one live operational drill using deployed staging services and dashboard-linked evidence.
-3. Reflect final gate sign-offs in `FEDERATED_LOGISTICS_COMPATIBILITY.md` once runtime validations pass.
+1. In CI/staging, pass runtime provisioning checks via `STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh` (PHP 8.2 + `ext-sodium`, plus configured Composer mirror/auth source path).
+2. Execute Gate 1 suite in that dependency-complete runtime and capture passing scenario evidence (`reports/staging-e2e-validation.*`, `reports/logs/staging-s*.log`).
+3. Execute Gate 2 vendor visibility suite in the same runtime and verify exit artifacts show success (`reports/logs/VendorVisibilityContractTest.exit` = 0).
+4. Convert Gate 3 tabletop completion into at least one live operational drill using deployed staging services and dashboard-linked evidence.
+5. Reflect final gate sign-offs in `FEDERATED_LOGISTICS_COMPATIBILITY.md` once Gate 1/2 runtime validations pass.
 
 ### Gate Evidence Automation
 

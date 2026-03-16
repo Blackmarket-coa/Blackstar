@@ -56,6 +56,19 @@ The CI workflow includes an `API Critical Feature Suites` job that:
 6. uploads `reports/logs/*.log` as artifact.
 
 
+## CI secret + runtime checklist (required for Gate 1/2)
+
+In GitHub Actions, configure at least one dependency source path:
+
+1. `COMPOSER_REPO_PACKAGIST` (internal Packagist mirror), **or**
+2. both `COMPOSER_GITHUB_MIRROR` and one auth secret (`COMPOSER_AUTH` or `COMPOSER_GITHUB_OAUTH_TOKEN`).
+
+Runtime must use PHP `8.2.x` with `sodium` enabled. CI now enforces this with:
+
+```bash
+STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
+```
+
 ## Restricted-network Composer bootstrap
 
 If your runtime cannot access default Packagist/GitHub endpoints directly, set one or more of:

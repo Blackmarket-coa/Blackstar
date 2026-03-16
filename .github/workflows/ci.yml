@@ -74,6 +74,9 @@ jobs:
           echo "COMPOSER_AUTH=$COMPOSER_AUTH" >> $GITHUB_ENV
         fi
 
+    - name: Validate gate runtime provisioning
+      run: STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
+
     - name: Initialize deterministic API test env
       run: ./scripts/setup-api-test-env.sh
 
@@ -127,6 +130,9 @@ jobs:
         if [[ -n "$COMPOSER_AUTH" ]]; then
           echo "COMPOSER_AUTH=$COMPOSER_AUTH" >> $GITHUB_ENV
         fi
+
+    - name: Validate gate runtime provisioning
+      run: STRICT_NETWORK=1 PHP_BIN=$(which php) ./scripts/validate-gate-runtime.sh
 
     - name: Execute Gate 1/2 runner
       run: PHP_BIN=$(which php) ./scripts/complete-gates-1-2.sh
