@@ -41,7 +41,7 @@ This plan operationalizes the requested backlog for:
 
 | Track | Task | Description | Dependencies | Priority | Status | AI Prompt | Est. Hours |
 |---|---|---|---|---|---|---|---:|
-| Console | Copy `console` into `apps/blackstar-console/` | Ember.js admin dashboard for node operators; update API endpoint configs | Monorepo restructure | P0 | NOT STARTED | No | 1 |
+| Console | Copy `console` into `apps/blackstar-console/` | Ember.js admin dashboard for node operators; update API endpoint configs | Monorepo restructure | P0 | COMPLETE | No | 1 |
 | Console | Node registration UI | Register new logistics node with map polygon + vehicle + availability | Nodes API | P0 | NOT STARTED | Yes | 4 |
 | Console | Dispatch dashboard | Real-time active orders/bids/assigned drivers with map + filters | Dispatch API | P0 | NOT STARTED | Yes | 6 |
 | Console | Route visualization | Optimized batch routes, color-coded by driver, stop sequence + ETA | Route optimization API | P1 | NOT STARTED | Yes | 4 |
@@ -50,7 +50,7 @@ This plan operationalizes the requested backlog for:
 | Console | Relay point management | CRUD micro-depots with map picker, capacity/hours/status | Micro-depot API | P2 | NOT STARTED | Yes | 3 |
 | Console | Federation map | Node/service-area polygons + relay points + coverage gaps | Inter-node discovery API | P2 | NOT STARTED | Yes | 4 |
 | Console | Analytics dashboard | Deliveries/day, cost/delivery, delivery time, utilization, node comparison | Analytics API | P2 | NOT STARTED | Yes | 4 |
-| Nav | Copy `blackstar_nav` into `apps/blackstar-nav/` | Fleetbase Navigator fork React Native app with tracking/orders/navigation | Monorepo restructure | P0 | NOT STARTED | No | 1 |
+| Nav | Copy `blackstar_nav` into `apps/blackstar-nav/` | Fleetbase Navigator fork React Native app with tracking/orders/navigation | Monorepo restructure | P0 | BLOCKED (network 403 to upstream repo; scaffold created) | No | 1 |
 | Nav | Update API connections to blackstar-api | Point SDK calls to `BLACKSTAR_API_URL`, validate auth/login/order listing | blackstar-api standalone | P0 | NOT STARTED | Yes | 3 |
 | Nav | Bid on delivery requests | Show nearby requests + details, submit bid (price + ETA) | Dispatch claims API | P0 | NOT STARTED | Yes | 4 |
 | Nav | Batch route view | Multi-stop assignment map, stop-by-stop navigation, photo proof | Route optimization | P1 | NOT STARTED | Yes | 6 |
@@ -83,3 +83,11 @@ Deliver end-to-end skeleton across both apps with one complete dispatch loop.
 - Mapping stack consistency (Ember map libs vs RN map libs) should be decided before polygon + route features.
 - Real-time contracts (SocketCluster events) should be versioned to avoid breaking current API consumers.
 - Offline mode should reuse a single queue/retry policy shared with delivery confirmation to avoid duplicate logic.
+
+
+## 5) Phase A progress update
+
+- ✅ `apps/blackstar-console` created by copying `console/` baseline.
+- ⚠️ `apps/blackstar-nav` upstream baseline clone is blocked in this environment (`CONNECT tunnel failed, response 403`); scaffold directory created as placeholder.
+- ✅ Workspace env/auth conventions added at `apps/ENV_CONVENTIONS.md` with `BLACKSTAR_API_URL` and shared token storage key contract.
+- ✅ Smoke test script added: `scripts/smoke-test-blackstar-apps.sh`.

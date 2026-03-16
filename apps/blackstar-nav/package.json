@@ -1,0 +1,9 @@
+{
+  "name": "@blackstar/nav",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Blackstar Nav scaffold",
+  "scripts": {
+    "smoke": "node scripts/smoke.js"
+  }
+}
