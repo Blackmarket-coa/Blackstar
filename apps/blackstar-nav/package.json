@@ -2,8 +2,9 @@
   "name": "@blackstar/nav",
   "private": true,
   "version": "0.1.0",
-  "description": "Blackstar Nav scaffold",
+  "description": "Blackstar Nav baseline",
   "scripts": {
-    "smoke": "node scripts/smoke.js"
+    "smoke": "node scripts/smoke.js",
+    "bid:smoke": "BLACKSTAR_DRY_RUN=1 node scripts/smoke.js"
   }
 }

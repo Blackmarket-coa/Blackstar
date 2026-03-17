@@ -1,0 +1,47 @@
+{{page-title "Dispatch Dashboard"}}
+<Layout::Section::Header @title="Dispatch dashboard" />
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto max-w-6xl py-6 space-y-6">
+        <div class="flex items-center gap-3">
+            <label class="text-sm font-semibold">Filter status</label>
+            <select class="form-select" {{on "change" this.setStatusFilter}}>
+                {{#each this.statuses as |statusOption|}}
+                    <option value={{statusOption}} selected={{eq statusOption this.status}}>{{statusOption}}</option>
+                {{/each}}
+            </select>
+        </div>
+
+        <ContentPanel @title="Active dispatch orders" @open={{true}} @wrapperClass="bordered-classic">
+            <table class="table table-auto w-full text-sm">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Status</th>
+                        <th>Pickup</th>
+                        <th>Dropoff</th>
+                        <th>Bids</th>
+                        <th>Driver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.filteredOrders as |order|}}
+                        <tr>
+                            <td>{{order.id}}</td>
+                            <td>{{order.status}}</td>
+                            <td>{{order.pickup}}</td>
+                            <td>{{order.dropoff}}</td>
+                            <td>{{order.bids}}</td>
+                            <td>{{if order.driver order.driver "—"}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </ContentPanel>
+
+        <ContentPanel @title="Map view (placeholder)" @open={{true}} @wrapperClass="bordered-classic">
+            <div class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                Real-time map visualization hook for active deliveries and driver markers.
+            </div>
+        </ContentPanel>
+    </div>
+</Layout::Section::Body>

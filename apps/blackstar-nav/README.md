@@ -1,13 +1,24 @@
-# Blackstar Nav (Scaffold)
+# Blackstar Nav (Baseline)
 
-This directory is reserved for the React Native driver app baseline (`blackstar_nav` / Navigator fork).
+React Native driver app baseline adapters for Blackstar API connectivity and bid submission flow.
 
-## Current status
-- A direct upstream baseline sync was attempted from `https://github.com/fleetbase/navigator-app.git` but is blocked in this environment due to outbound proxy restrictions (`CONNECT tunnel failed, response 403`).
-- To keep monorepo structure unblocked, this scaffold includes shared env/auth conventions and smoke-test hooks.
+## What is included
+- `src/config.js` for `BLACKSTAR_API_URL` and shared token key.
+- `src/auth-store.js` for shared token handling contract.
+- `src/api-client.js` with API connection helpers (`login`, request listing, bid submit).
+- `src/bid-flow.js` orchestration for request-list + bid submission path.
+- `scripts/smoke.js` dry-run smoke test for API wiring and bid flow.
 
-## Required env contract
-- `BLACKSTAR_API_URL`
+## Env
+- `BLACKSTAR_API_URL` (required)
 - `BLACKSTAR_AUTH_TOKEN_STORAGE_KEY` (default `blackstar.auth.token`)
+- `BLACKSTAR_DRY_RUN=1` (default in smoke script)
 
-See `../ENV_CONVENTIONS.md`.
+## Commands
+```bash
+npm run smoke
+npm run bid:smoke
+```
+
+## Note
+Upstream Navigator fork fetch remains blocked in this environment (`CONNECT tunnel failed, response 403`), so this baseline provides a working local implementation layer until mirror/source access is available.

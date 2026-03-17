@@ -42,17 +42,17 @@ This plan operationalizes the requested backlog for:
 | Track | Task | Description | Dependencies | Priority | Status | AI Prompt | Est. Hours |
 |---|---|---|---|---|---|---|---:|
 | Console | Copy `console` into `apps/blackstar-console/` | Ember.js admin dashboard for node operators; update API endpoint configs | Monorepo restructure | P0 | COMPLETE | No | 1 |
-| Console | Node registration UI | Register new logistics node with map polygon + vehicle + availability | Nodes API | P0 | NOT STARTED | Yes | 4 |
-| Console | Dispatch dashboard | Real-time active orders/bids/assigned drivers with map + filters | Dispatch API | P0 | NOT STARTED | Yes | 6 |
+| Console | Node registration UI | Register new logistics node with map polygon + vehicle + availability | Nodes API | P0 | COMPLETE (initial form + payload preview scaffold) | Yes | 4 |
+| Console | Dispatch dashboard | Real-time active orders/bids/assigned drivers with map + filters | Dispatch API | P0 | COMPLETE (initial table/filter/map placeholder scaffold) | Yes | 6 |
 | Console | Route visualization | Optimized batch routes, color-coded by driver, stop sequence + ETA | Route optimization API | P1 | NOT STARTED | Yes | 4 |
 | Console | Driver management | Driver list/status, route assignment, performance stats | Driver API | P1 | NOT STARTED | Yes | 4 |
 | Console | Settlement dashboard | Per-delivery payouts, date filters, CSV export, fee/pay/revenue split | Settlement API | P1 | NOT STARTED | Yes | 3 |
 | Console | Relay point management | CRUD micro-depots with map picker, capacity/hours/status | Micro-depot API | P2 | NOT STARTED | Yes | 3 |
 | Console | Federation map | Node/service-area polygons + relay points + coverage gaps | Inter-node discovery API | P2 | NOT STARTED | Yes | 4 |
 | Console | Analytics dashboard | Deliveries/day, cost/delivery, delivery time, utilization, node comparison | Analytics API | P2 | NOT STARTED | Yes | 4 |
-| Nav | Copy `blackstar_nav` into `apps/blackstar-nav/` | Fleetbase Navigator fork React Native app with tracking/orders/navigation | Monorepo restructure | P0 | BLOCKED (network 403 to upstream repo; scaffold created) | No | 1 |
-| Nav | Update API connections to blackstar-api | Point SDK calls to `BLACKSTAR_API_URL`, validate auth/login/order listing | blackstar-api standalone | P0 | NOT STARTED | Yes | 3 |
-| Nav | Bid on delivery requests | Show nearby requests + details, submit bid (price + ETA) | Dispatch claims API | P0 | NOT STARTED | Yes | 4 |
+| Nav | Copy `blackstar_nav` into `apps/blackstar-nav/` | Fleetbase Navigator fork React Native app with tracking/orders/navigation | Monorepo restructure | P0 | COMPLETE (local baseline created; upstream sync still blocked by network) | No | 1 |
+| Nav | Update API connections to blackstar-api | Point SDK calls to `BLACKSTAR_API_URL`, validate auth/login/order listing | blackstar-api standalone | P0 | COMPLETE (baseline API client wired to `BLACKSTAR_API_URL`) | Yes | 3 |
+| Nav | Bid on delivery requests | Show nearby requests + details, submit bid (price + ETA) | Dispatch claims API | P0 | COMPLETE (dry-run bid flow scaffold implemented) | Yes | 4 |
 | Nav | Batch route view | Multi-stop assignment map, stop-by-stop navigation, photo proof | Route optimization | P1 | NOT STARTED | Yes | 6 |
 | Nav | Real-time location broadcasting | SocketCluster location every 5s with battery-aware background tracking | Driver assignment | P0 | NOT STARTED | No | 3 |
 | Nav | Delivery confirmation flow | QR/code verify, photo POD, mark delivered, auto-advance | Delivery confirmation API | P1 | NOT STARTED | Yes | 3 |
@@ -88,6 +88,6 @@ Deliver end-to-end skeleton across both apps with one complete dispatch loop.
 ## 5) Phase A progress update
 
 - ✅ `apps/blackstar-console` created by copying `console/` baseline.
-- ⚠️ `apps/blackstar-nav` upstream baseline clone is blocked in this environment (`CONNECT tunnel failed, response 403`); scaffold directory created as placeholder.
+- ⚠️ Upstream `blackstar_nav` sync remains blocked in this environment (`CONNECT tunnel failed, response 403`); local baseline implementation is now in place under `apps/blackstar-nav/src` and `apps/blackstar-nav/scripts`.
 - ✅ Workspace env/auth conventions added at `apps/ENV_CONVENTIONS.md` with `BLACKSTAR_API_URL` and shared token storage key contract.
 - ✅ Smoke test script added: `scripts/smoke-test-blackstar-apps.sh`.

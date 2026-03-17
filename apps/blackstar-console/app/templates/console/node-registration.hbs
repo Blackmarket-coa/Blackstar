@@ -1,0 +1,25 @@
+{{page-title "Node Registration"}}
+<Layout::Section::Header @title="Node registration" />
+<Layout::Section::Body class="overflow-y-scroll h-full">
+    <div class="container mx-auto max-w-4xl py-6 space-y-6">
+        <p class="text-sm text-gray-500">Register a logistics node with service area polygon, vehicle types, and availability windows.</p>
+
+        <form class="space-y-4" {{on "submit" this.submitNodeRegistration}}>
+            <InputGroup @name="Node name" @value={{this.nodeName}} @placeholder="Downtown Logistics Cell" />
+
+            <InputGroup @name="Vehicle types (comma separated)" @value={{this.vehicleTypes}} @placeholder="bike,van,truck" />
+
+            <InputGroup @name="Availability windows" @value={{this.availabilityWindows}} @placeholder="mon-fri:08:00-18:00" />
+
+            <InputGroup @name="Service area polygon (lat,lng pairs)" @value={{this.polygon}} @placeholder="[[40.7128,-74.0060],[40.7306,-73.9866]]" />
+
+            <Button @type="primary" @text="Submit node registration" @icon="location-dot" @buttonType="submit" />
+        </form>
+
+        {{#if this.submission}}
+            <ContentPanel @title="Registration payload preview" @open={{true}} @wrapperClass="bordered-classic">
+                <pre class="text-xs">{{json-pretty-print this.submission}}</pre>
+            </ContentPanel>
+        {{/if}}
+    </div>
+</Layout::Section::Body>
