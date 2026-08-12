@@ -19,6 +19,16 @@ class FreeBlackMarketInteropTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function signedHeaders(string $json, string $secret, ?int $timestamp = null): array
+    {
+        $ts = (string) ($timestamp ?? now()->getTimestamp());
+
+        return [
+            'X-FBM-Timestamp' => $ts,
+            'X-FBM-Signature' => hash_hmac('sha256', $ts . '.' . $json, $secret),
+        ];
+    }
+
     public function test_delivery_option_webhook_is_idempotent_and_creates_listing(): void
     {
         config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
@@ -28,13 +38,13 @@ class FreeBlackMarketInteropTest extends TestCase
         $payload['payload']['created_by_user_id'] = $creator->id;
 
         $json = json_encode($payload);
-        $sig = hash_hmac('sha256', $json, 'test-webhook-secret');
+        $headers = $this->signedHeaders($json, 'test-webhook-secret');
 
-        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => $sig])
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $headers)
             ->assertStatus(202)
             ->assertJsonPath('status', 'processed');
 
-        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => $sig])
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $headers)
             ->assertStatus(202);
 
         $this->assertDatabaseCount('fbm_inbound_event_receipts', 1);
@@ -51,14 +61,62 @@ class FreeBlackMarketInteropTest extends TestCase
 
         $payload = json_decode(file_get_contents(base_path('tests/Fixtures/freeblackmarket/unsupported-event.json')), true);
         $json = json_encode($payload);
-        $sig = hash_hmac('sha256', $json, 'test-webhook-secret');
+        $headers = $this->signedHeaders($json, 'test-webhook-secret');
 
-        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => $sig])->assertStatus(202);
-        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => $sig])->assertStatus(202);
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $headers)->assertStatus(202);
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $headers)->assertStatus(202);
 
         $receipt = FbmInboundEventReceipt::query()->first();
         $this->assertSame('dead_letter', $receipt->status);
         $this->assertSame(2, $receipt->attempts);
+    }
+
+    public function test_webhook_returns_503_when_secret_is_not_configured(): void
+    {
+        config()->set('freeblackmarket.webhook_secret', null);
+
+        $payload = ['event_id' => 'evt-unconfigured', 'event_type' => 'order.created', 'payload' => []];
+        $json = json_encode($payload);
+
+        // Signed with the literal default that used to ship in config — the
+        // exact credential this change revokes.
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $this->signedHeaders($json, 'fbm_webhook_secret'))
+            ->assertStatus(503);
+
+        $this->assertDatabaseCount('fbm_inbound_event_receipts', 0);
+    }
+
+    public function test_webhook_rejects_bad_signature(): void
+    {
+        config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
+
+        $payload = ['event_id' => 'evt-bad-sig', 'event_type' => 'order.created', 'payload' => []];
+        $json = json_encode($payload);
+
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $this->signedHeaders($json, 'wrong-secret'))
+            ->assertStatus(401);
+
+        $this->assertDatabaseCount('fbm_inbound_event_receipts', 0);
+    }
+
+    public function test_webhook_rejects_stale_timestamp_as_replay(): void
+    {
+        config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
+        config()->set('freeblackmarket.signature_tolerance_seconds', 300);
+
+        $payload = ['event_id' => 'evt-replay', 'event_type' => 'order.created', 'payload' => []];
+        $json = json_encode($payload);
+        $staleHeaders = $this->signedHeaders($json, 'test-webhook-secret', now()->getTimestamp() - 301);
+
+        // Correctly signed, but outside the tolerance window: a captured
+        // request replayed later must not authenticate.
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $staleHeaders)
+            ->assertStatus(401);
+
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => hash_hmac('sha256', $json, 'test-webhook-secret')])
+            ->assertStatus(401);
+
+        $this->assertDatabaseCount('fbm_inbound_event_receipts', 0);
     }
 
     public function test_emits_signed_outbound_lifecycle_event_with_correlation_id(): void
@@ -94,10 +152,37 @@ class FreeBlackMarketInteropTest extends TestCase
         $this->assertSame('dispatched', $outbound->status);
 
         Http::assertSent(function ($request) {
-            return $request->hasHeader('X-FBM-Signature')
+            $timestamp = $request->header('X-FBM-Timestamp')[0] ?? '';
+            $signature = $request->header('X-FBM-Signature')[0] ?? '';
+
+            // The signature must cover the exact bytes on the wire — the full
+            // envelope, not just the payload member.
+            return $timestamp !== ''
+                && hash_equals(hash_hmac('sha256', $timestamp . '.' . $request->body(), 'test-outbound-secret'), $signature)
                 && $request->hasHeader('X-Correlation-ID', 'corr-claim-001')
                 && $request['event_type'] === 'shipment.claimed';
         });
+    }
+
+    public function test_outbound_dispatch_fails_closed_without_a_secret(): void
+    {
+        config()->set('freeblackmarket.outbound_secret', null);
+        config()->set('freeblackmarket.outbound_url', 'https://fbm.example/events');
+        config()->set('freeblackmarket.max_retries', 1);
+
+        Http::fake();
+
+        $publisher = app(OutboundEventPublisher::class);
+        $event = $publisher->queueAndDispatch('shipment.claimed', ['source_order_ref' => 'ref-1'], 'corr-x');
+
+        $this->assertSame('dead_letter', $event->status);
+        $this->assertSame('Missing FBM outbound secret.', $event->last_error);
+        Http::assertNothingSent();
+    }
+
+    public function test_retry_endpoint_requires_authentication(): void
+    {
+        $this->postJson('/api/webhooks/freeblackmarket/retry')->assertStatus(401);
     }
 
     public function test_retry_endpoint_invokes_retry_processors_and_returns_allowlisted_response(): void
@@ -110,10 +195,11 @@ class FreeBlackMarketInteropTest extends TestCase
         $publisher->shouldReceive('retryPending')->once();
         $this->app->instance(OutboundEventPublisher::class, $publisher);
 
-        $response = $this->postJson('/api/webhooks/freeblackmarket/retry', [
-            'unexpected' => 'input',
-            'private_coordination' => 'do-not-echo',
-        ])->assertOk()->json();
+        $response = $this->actingAs(User::factory()->create())
+            ->postJson('/api/webhooks/freeblackmarket/retry', [
+                'unexpected' => 'input',
+                'private_coordination' => 'do-not-echo',
+            ])->assertOk()->json();
 
         $this->assertSame(['status' => 'ok'], $response);
     }

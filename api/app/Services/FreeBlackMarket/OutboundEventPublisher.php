@@ -9,13 +9,13 @@ class OutboundEventPublisher
 {
     public function queueAndDispatch(string $eventType, array $payload, ?string $correlationId = null): FbmOutboundEvent
     {
-        $signature = $this->signPayload($payload);
-
         $event = FbmOutboundEvent::create([
             'event_type' => $eventType,
             'correlation_id' => $correlationId,
             'payload' => $payload,
-            'signature' => $signature,
+            // Signed per dispatch attempt: a timestamped signature computed at
+            // queue time would already be stale by the time a retry fires.
+            'signature' => null,
             'status' => 'pending',
             'attempts' => 0,
         ]);
@@ -36,15 +36,29 @@ class OutboundEventPublisher
             return;
         }
 
-        $response = Http::withHeaders([
-            'X-FBM-Signature' => $event->signature,
-            'X-Correlation-ID' => $event->correlation_id ?? '',
-            'Content-Type' => 'application/json',
-        ])->post($url, [
+        $secret = (string) config('freeblackmarket.outbound_secret');
+        if ($secret === '') {
+            $this->markFailed($event, 'Missing FBM outbound secret.');
+
+            return;
+        }
+
+        // Sign the exact bytes that go on the wire, not just the payload
+        // member: an unsigned event_type or correlation_id is tamperable.
+        $body = (string) json_encode([
             'event_type' => $event->event_type,
             'payload' => $event->payload,
             'correlation_id' => $event->correlation_id,
         ]);
+        $timestamp = (string) now()->getTimestamp();
+        $signature = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
+        $event->signature = $signature;
+
+        $response = Http::withHeaders([
+            'X-FBM-Signature' => $signature,
+            'X-FBM-Timestamp' => $timestamp,
+            'X-Correlation-ID' => $event->correlation_id ?? '',
+        ])->withBody($body, 'application/json')->post($url);
 
         if ($response->successful()) {
             $event->status = 'dispatched';
@@ -84,10 +98,5 @@ class OutboundEventPublisher
         }
 
         $event->save();
-    }
-
-    protected function signPayload(array $payload): string
-    {
-        return hash_hmac('sha256', json_encode($payload), config('freeblackmarket.outbound_secret'));
     }
 }

@@ -13,9 +13,13 @@ use App\Http\Controllers\Api\Webhooks\FreeBlackMarketWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('webhooks/freeblackmarket', [FreeBlackMarketWebhookController::class, 'handle']);
-Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController::class, 'retry']);
 
 Route::middleware('auth')->group(function () {
+    // Operator action, not a webhook: it triggers reprocessing of failed
+    // inbound events and redelivery of pending outbound events, so it must
+    // not be reachable anonymously.
+    Route::post('webhooks/freeblackmarket/retry', [FreeBlackMarketWebhookController::class, 'retry']);
+
     Route::apiResource('nodes', NodeController::class);
     Route::post('nodes/{node}/attest', [NodeController::class, 'attest']);
     Route::apiResource('fleets', FleetController::class);

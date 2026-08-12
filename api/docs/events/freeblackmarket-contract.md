@@ -17,8 +17,14 @@ Envelope:
 
 Headers:
 
-- `X-FBM-Signature`: `HMAC_SHA256(raw_request_body, FBM_WEBHOOK_SECRET)`
+- `X-FBM-Timestamp`: unix seconds at signing time. Requests older or newer
+  than `FBM_SIGNATURE_TOLERANCE_SECONDS` (default 300) are rejected with 401 —
+  this is the replay defense the QA plan requires.
+- `X-FBM-Signature`: `HMAC_SHA256("{X-FBM-Timestamp}.{raw_request_body}", FBM_WEBHOOK_SECRET)`
 - `X-Correlation-ID` (optional): used for tracing and propagated downstream
+
+If `FBM_WEBHOOK_SECRET` is unset the endpoint returns 503: an unconfigured
+secret disables the integration instead of authenticating against a default.
 
 ### `order.created`
 - idempotent pre-validation hook (no listing creation by itself).
@@ -54,8 +60,16 @@ Envelope:
 
 Headers:
 
-- `X-FBM-Signature`: `HMAC_SHA256(json_encode(payload), FBM_OUTBOUND_SECRET)`
+- `X-FBM-Timestamp`: unix seconds, computed fresh per delivery attempt.
+- `X-FBM-Signature`: `HMAC_SHA256("{X-FBM-Timestamp}.{raw_request_body}", FBM_OUTBOUND_SECRET)` —
+  the signature covers the exact serialized envelope (`event_type`, `payload`,
+  `correlation_id`), not just the payload member, so no envelope field is
+  tamperable.
 - `X-Correlation-ID`: correlation ID from inbound/request context
+
+Receivers should verify with a constant-time compare and enforce the same
+timestamp tolerance as the inbound direction. If `FBM_OUTBOUND_SECRET` is
+unset, dispatch fails closed (`failed` → `dead_letter`), never unsigned.
 
 ## Idempotency
 
