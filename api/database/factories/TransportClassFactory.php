@@ -15,6 +15,7 @@ class TransportClassFactory extends Factory
             'category' => 'ground',
             'subtype' => 'van',
             'weight_limit' => 1000,
+            'volume_limit' => 30,
             'range_limit' => 400,
             'hazard_capability' => false,
             'regulatory_class' => 'STD',

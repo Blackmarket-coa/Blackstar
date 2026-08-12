@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('category');
             $table->string('subtype');
             $table->decimal('weight_limit', 12, 2)->nullable();
+            $table->decimal('volume_limit', 12, 2)->nullable();
             $table->decimal('range_limit', 12, 2)->nullable();
             $table->boolean('hazard_capability')->default(false);
             $table->string('regulatory_class')->nullable();
@@ -22,7 +23,9 @@ return new class extends Migration {
         });
 
         Schema::create('node_transport_classes', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            // Auto-increment, not uuid: rows are written by belongsToMany
+            // attach(), which never fills a non-incrementing primary key.
+            $table->id();
             $table->foreignUuid('node_id')->constrained('nodes')->cascadeOnDelete();
             $table->foreignUuid('transport_class_id')->constrained('transport_classes')->cascadeOnDelete();
             $table->timestamps();
