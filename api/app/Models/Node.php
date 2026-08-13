@@ -71,6 +71,11 @@ class Node extends Model
         return $this->hasMany(NodeAttestationAcceptance::class);
     }
 
+    public function credentials(): HasMany
+    {
+        return $this->hasMany(NodeCredential::class);
+    }
+
     public function hasCompletedAttestation(): bool
     {
         return !empty($this->transport_law_attestation_hash)
