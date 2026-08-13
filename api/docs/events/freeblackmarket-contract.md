@@ -2,6 +2,10 @@
 
 > Note: In this repository layout, `docs/` is a git submodule in some environments. If unavailable, mirror this file under `api/docs/events/`.
 
+This file is the wire-format source of truth. The FBM-side operational view
+(secret pairing matrix, emit sites, delivery guarantees, open items) lives in
+the `free-black-market` repo at `docs/integrations/federated-logistics.md`.
+
 ## Inbound events (FreeBlackMarket -> Logistics Protocol)
 
 Envelope:
@@ -31,6 +35,10 @@ secret disables the integration instead of authenticating against a default.
 
 ### `delivery.option.selected`
 - when `payload.delivery_option === federated_delivery_network`, creates shipment board listing idempotently keyed by `source_order_ref`.
+- `payload.created_by_user_id` is optional: FBM has no Blackstar user identity
+  and omits it, so the listing creator defaults to the `FBM_SYSTEM_USER_ID`
+  service account. If neither is available the event fails (and dead-letters)
+  with an actionable error — no ownerless listings, no invented owners.
 
 ### `order.cancelled`
 - cancels matching shipment listing when current status is `open|claimed|in_transit`.
@@ -47,6 +55,7 @@ Envelope:
 
 ```json
 {
+  "event_id": "uuid (outbound event id, stable across retries)",
   "event_type": "shipment.claimed",
   "correlation_id": "string",
   "payload": {
@@ -57,6 +66,10 @@ Envelope:
   }
 }
 ```
+
+`event_id` is the outbound event record's uuid. Retries of the same event
+re-sign with a fresh timestamp but keep the same `event_id`, so receivers can
+deduplicate at the receipt level exactly as this side does for inbound events.
 
 Headers:
 

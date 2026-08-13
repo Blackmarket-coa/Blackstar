@@ -45,7 +45,10 @@ class OutboundEventPublisher
 
         // Sign the exact bytes that go on the wire, not just the payload
         // member: an unsigned event_type or correlation_id is tamperable.
+        // event_id is the outbound row's uuid — stable across retries of the
+        // same event, so receivers can deduplicate at the receipt level.
         $body = (string) json_encode([
+            'event_id' => $event->id,
             'event_type' => $event->event_type,
             'payload' => $event->payload,
             'correlation_id' => $event->correlation_id,
@@ -54,11 +57,21 @@ class OutboundEventPublisher
         $signature = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
         $event->signature = $signature;
 
-        $response = Http::withHeaders([
-            'X-FBM-Signature' => $signature,
-            'X-FBM-Timestamp' => $timestamp,
-            'X-Correlation-ID' => $event->correlation_id ?? '',
-        ])->withBody($body, 'application/json')->post($url);
+        // A transport-level failure (DNS, refused connection, dead proxy) must
+        // land in the same retry/dead-letter lane as an HTTP error — never
+        // escape to the caller, where it would fail the user-facing action
+        // (e.g. a claim) that triggered the event.
+        try {
+            $response = Http::withHeaders([
+                'X-FBM-Signature' => $signature,
+                'X-FBM-Timestamp' => $timestamp,
+                'X-Correlation-ID' => $event->correlation_id ?? '',
+            ])->withBody($body, 'application/json')->post($url);
+        } catch (\Throwable $e) {
+            $this->markFailed($event, 'Connection error: ' . $e->getMessage());
+
+            return;
+        }
 
         if ($response->successful()) {
             $event->status = 'dispatched';

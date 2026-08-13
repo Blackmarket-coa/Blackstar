@@ -101,7 +101,7 @@ class InboundEventProcessor
                     'required_regulatory_class' => $payload['required_regulatory_class'] ?? null,
                     'insurance_required_flag' => (bool) ($payload['insurance_required_flag'] ?? false),
                     'required_transport_capabilities' => $payload['required_transport_capabilities'] ?? [],
-                    'created_by_user_id' => $payload['created_by_user_id'],
+                    'created_by_user_id' => $payload['created_by_user_id'] ?? $this->federatedListingCreatorId(),
                 ]
             );
 
@@ -121,5 +121,27 @@ class InboundEventProcessor
         }
 
         throw new \RuntimeException('Unsupported event_type: ' . $eventType);
+    }
+
+    /**
+     * FBM omits created_by_user_id by contract — it has no Blackstar user
+     * identity to send. Listings it originates are owned by the configured
+     * service account; without one the event fails (and dead-letters) with an
+     * error an operator can act on, rather than dying on a foreign-key
+     * violation or inventing an owner.
+     */
+    protected function federatedListingCreatorId(): string
+    {
+        $userId = (string) config('freeblackmarket.system_user_id');
+
+        if ($userId === '') {
+            throw new \RuntimeException(
+                'delivery.option.selected carries no created_by_user_id and no '
+                . 'FBM_SYSTEM_USER_ID service account is configured; refusing to '
+                . 'create an ownerless shipment listing.'
+            );
+        }
+
+        return $userId;
     }
 }
