@@ -56,7 +56,7 @@ class StagingE2EValidationTest extends TestCase
         $deliveryWebhookResponse = $this->postJson(
             '/api/webhooks/freeblackmarket',
             $deliveryWebhookPayload,
-            ['X-FBM-Signature' => $this->signWebhook($deliveryWebhookPayload)]
+            $this->signWebhook($deliveryWebhookPayload)
         )
             ->assertStatus(202)
             ->assertJsonPath('status', 'processed')
@@ -138,7 +138,7 @@ class StagingE2EValidationTest extends TestCase
             ],
         ];
 
-        $this->postJson('/api/webhooks/freeblackmarket', $payload, ['X-FBM-Signature' => $this->signWebhook($payload)])
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $this->signWebhook($payload))
             ->assertStatus(202);
 
         $listing = ShipmentBoardListing::query()->where('source_order_ref', 'order-stg-retry-001')->firstOrFail();
@@ -181,7 +181,7 @@ class StagingE2EValidationTest extends TestCase
             ],
         ];
 
-        $this->postJson('/api/webhooks/freeblackmarket', $deliveryPayload, ['X-FBM-Signature' => $this->signWebhook($deliveryPayload)])
+        $this->postJson('/api/webhooks/freeblackmarket', $deliveryPayload, $this->signWebhook($deliveryPayload))
             ->assertStatus(202);
 
         $listing = ShipmentBoardListing::query()->where('source_order_ref', 'order-stg-cancel-001')->firstOrFail();
@@ -204,7 +204,7 @@ class StagingE2EValidationTest extends TestCase
             ],
         ];
 
-        $this->postJson('/api/webhooks/freeblackmarket', $cancelPayload, ['X-FBM-Signature' => $this->signWebhook($cancelPayload)])
+        $this->postJson('/api/webhooks/freeblackmarket', $cancelPayload, $this->signWebhook($cancelPayload))
             ->assertStatus(202)
             ->assertJsonPath('status', 'processed')
             ->assertJsonPath('correlation_id', 'corr-stg-cancel-order-cancelled-001');
@@ -228,8 +228,13 @@ class StagingE2EValidationTest extends TestCase
         return [$node, $user];
     }
 
-    protected function signWebhook(array $payload): string
+    protected function signWebhook(array $payload): array
     {
-        return hash_hmac('sha256', json_encode($payload), 'test-webhook-secret');
+        $ts = (string) now()->getTimestamp();
+
+        return [
+            'X-FBM-Timestamp' => $ts,
+            'X-FBM-Signature' => hash_hmac('sha256', $ts . '.' . json_encode($payload), 'test-webhook-secret'),
+        ];
     }
 }

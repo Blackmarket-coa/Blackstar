@@ -19,7 +19,12 @@ class ShipmentLegRelayTest extends TestCase
     protected function makeNodeWithUser(string $jurisdiction = 'US'): array
     {
         $node = Node::factory()->create(['jurisdiction' => $jurisdiction]);
-        $tc = TransportClass::factory()->create(['category' => 'ground', 'subtype' => 'van']);
+        // A transport class is a shared taxonomy row (unique on
+        // category+subtype) — reuse it across nodes instead of colliding.
+        $tc = TransportClass::query()->firstOrCreate(
+            ['category' => 'ground', 'subtype' => 'van'],
+            TransportClass::factory()->raw(['category' => 'ground', 'subtype' => 'van'])
+        );
         $node->transportClasses()->attach($tc->id);
         $user = User::factory()->create(['node_id' => $node->id]);
 

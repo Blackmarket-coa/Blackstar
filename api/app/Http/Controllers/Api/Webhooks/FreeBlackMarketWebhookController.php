@@ -41,8 +41,17 @@ class FreeBlackMarketWebhookController extends Controller
 
     protected function verifySignature(Request $request): void
     {
-        $incoming = $request->header('X-FBM-Signature', '');
-        $expected = hash_hmac('sha256', $request->getContent(), config('freeblackmarket.webhook_secret'));
+        $secret = (string) config('freeblackmarket.webhook_secret');
+        abort_if($secret === '', 503, 'FreeBlackMarket integration is not configured.');
+
+        $timestamp = (string) $request->header('X-FBM-Timestamp', '');
+        abort_unless(ctype_digit($timestamp), 401, 'Missing or malformed timestamp.');
+
+        $tolerance = (int) config('freeblackmarket.signature_tolerance_seconds', 300);
+        abort_if(abs(now()->getTimestamp() - (int) $timestamp) > $tolerance, 401, 'Stale signature.');
+
+        $incoming = (string) $request->header('X-FBM-Signature', '');
+        $expected = hash_hmac('sha256', $timestamp . '.' . $request->getContent(), $secret);
 
         abort_unless(hash_equals($expected, $incoming), 401, 'Invalid signature.');
     }

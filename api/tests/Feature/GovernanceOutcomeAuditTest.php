@@ -17,7 +17,12 @@ class GovernanceOutcomeAuditTest extends TestCase
     protected function createNodeUser(string $jurisdiction = 'US'): array
     {
         $node = Node::factory()->create(['jurisdiction' => $jurisdiction]);
-        $tc = TransportClass::factory()->create(['category' => 'ground', 'subtype' => 'van']);
+        // A transport class is a shared taxonomy row (unique on
+        // category+subtype) — reuse it across nodes instead of colliding.
+        $tc = TransportClass::query()->firstOrCreate(
+            ['category' => 'ground', 'subtype' => 'van'],
+            TransportClass::factory()->raw(['category' => 'ground', 'subtype' => 'van'])
+        );
         $node->transportClasses()->attach($tc->id);
         $user = User::factory()->create(['node_id' => $node->id]);
 
@@ -79,17 +84,32 @@ class GovernanceOutcomeAuditTest extends TestCase
     {
         [, $user] = $this->createNodeUser();
 
-        $this->actingAs($user)
-            ->postJson('/api/governance/proposals', ['title' => 'Should not exist'])
-            ->assertNotFound();
+        // 404 (no route) and 405 (URI exists for another verb, execution verb
+        // absent) both satisfy "forbidden or absent" — what must not exist is
+        // a POST execution endpoint.
+        $this->assertContains(
+            $this->actingAs($user)
+                ->postJson('/api/governance/proposals', ['title' => 'Should not exist'])
+                ->getStatusCode(),
+            [404, 405],
+            'Governance proposal execution endpoint must not exist in core.'
+        );
 
-        $this->actingAs($user)
-            ->postJson('/api/governance/votes', ['proposal_id' => 'p-1', 'vote' => 'yes'])
-            ->assertNotFound();
+        $this->assertContains(
+            $this->actingAs($user)
+                ->postJson('/api/governance/votes', ['proposal_id' => 'p-1', 'vote' => 'yes'])
+                ->getStatusCode(),
+            [404, 405],
+            'Governance vote execution endpoint must not exist in core.'
+        );
 
-        $this->actingAs($user)
-            ->postJson('/api/governance/outcomes/execute', ['decision_ref' => 'blackout#123'])
-            ->assertNotFound();
+        $this->assertContains(
+            $this->actingAs($user)
+                ->postJson('/api/governance/outcomes/execute', ['decision_ref' => 'blackout#123'])
+                ->getStatusCode(),
+            [404, 405],
+            'Governance outcome execution endpoint must not exist in core.'
+        );
     }
 
     public function test_governance_decisions_are_immutable_once_logged(): void

@@ -41,11 +41,11 @@ QUEUE_CONNECTION=sync
 SESSION_DRIVER=array
 MAIL_MAILER=array
 
-FREEBLACKMARKET_WEBHOOK_SECRET=test-webhook-secret
-FREEBLACKMARKET_OUTBOUND_SECRET=test-outbound-secret
-FREEBLACKMARKET_OUTBOUND_URL=https://fbm.example/events
-FREEBLACKMARKET_MAX_RETRIES=3
-FREEBLACKMARKET_RETRY_BACKOFF_SECONDS=1
+FBM_WEBHOOK_SECRET=test-webhook-secret
+FBM_OUTBOUND_SECRET=test-outbound-secret
+FBM_OUTBOUND_URL=https://fbm.example/events
+FBM_MAX_RETRIES=3
+FBM_RETRY_BACKOFF_SECONDS=1
 EOF
 
 mkdir -p database
@@ -97,6 +97,9 @@ export COMPOSER_ALLOW_SUPERUSER=1
 "$PHP_BIN" artisan key:generate --env=testing --force
 "$PHP_BIN" artisan config:clear
 "$PHP_BIN" artisan cache:clear
-"$PHP_BIN" artisan migrate --env=testing --force
+# Scope to the app's own migrations: the installed Fleetbase engine packages
+# register vendor migration paths whose migrations need MySQL spatial indexes,
+# which the sqlite test database refuses — and no test touches their tables.
+"$PHP_BIN" artisan migrate --env=testing --force --path=database/migrations
 
 echo "API test environment initialized."

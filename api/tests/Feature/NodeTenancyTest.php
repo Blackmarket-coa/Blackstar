@@ -41,8 +41,15 @@ class NodeTenancyTest extends TestCase
             ->assertCreated()
             ->json();
 
+        // NodePolicy scopes destructive actions to the user's own node: the
+        // freshly registered node is not theirs, so deleting it is forbidden,
+        // while deleting their own node is allowed.
         $this->actingAs($user)
             ->deleteJson('/api/nodes/' . $created['id'])
+            ->assertForbidden();
+
+        $this->actingAs($user)
+            ->deleteJson('/api/nodes/' . $node->id)
             ->assertNoContent();
     }
 
@@ -104,16 +111,20 @@ class NodeTenancyTest extends TestCase
             'status' => 'active',
         ]);
 
+        // Tenancy is enforced by the node_tenancy global scope, so a foreign
+        // fleet never resolves for this user: 404, not 403. Not-found is the
+        // stronger posture for a federation registry — a node cannot probe
+        // which resource ids exist inside another node.
         $this->actingAs($user)
             ->getJson('/api/fleets/' . $foreignFleet->id)
-            ->assertForbidden();
+            ->assertNotFound();
 
         $this->actingAs($user)
             ->putJson('/api/fleets/' . $foreignFleet->id, ['name' => 'Nope'])
-            ->assertForbidden();
+            ->assertNotFound();
 
         $this->actingAs($user)
             ->deleteJson('/api/fleets/' . $foreignFleet->id)
-            ->assertForbidden();
+            ->assertNotFound();
     }
 }

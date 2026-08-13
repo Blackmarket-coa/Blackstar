@@ -40,6 +40,14 @@ class VendorVisibilityContractTest extends TestCase
         'cancelled_at',
         'created_at',
         'updated_at',
+        // Bounty job metadata (2026-03): vendor-visible by design — the work
+        // order, QA checklist, amount, currency and job type are what a node
+        // evaluates before claiming or bidding.
+        'job_type',
+        'work_order',
+        'creator_qa_checklist',
+        'bounty_amount',
+        'bounty_currency',
     ];
 
     private const VENDOR_LISTING_FIELDS_WITH_CORRELATION = [
@@ -80,6 +88,10 @@ class VendorVisibilityContractTest extends TestCase
 
     public function test_vendor_api_responses_use_allowlisted_fields_and_deny_internal_keys(): void
     {
+        // The claim/status steps dispatch outbound FBM events; without a fake
+        // the publisher would attempt a real HTTP call to the configured URL.
+        Http::fake();
+
         $creator = User::factory()->create();
         [$node, $user] = $this->makeEligibleNodeUser();
 
@@ -141,9 +153,7 @@ class VendorVisibilityContractTest extends TestCase
             ],
         ];
 
-        $response = $this->postJson('/api/webhooks/freeblackmarket', $body, [
-            'X-FBM-Signature' => $this->signWebhook($body),
-        ])
+        $response = $this->postJson('/api/webhooks/freeblackmarket', $body, $this->signWebhook($body))
             ->assertStatus(202)
             ->json();
 
@@ -224,7 +234,8 @@ class VendorVisibilityContractTest extends TestCase
 
     public function test_webhook_retry_response_is_allowlisted(): void
     {
-        $response = $this->postJson('/api/webhooks/freeblackmarket/retry')
+        $response = $this->actingAs(User::factory()->create())
+            ->postJson('/api/webhooks/freeblackmarket/retry')
             ->assertOk()
             ->json();
 
@@ -268,9 +279,14 @@ class VendorVisibilityContractTest extends TestCase
         return [$node, User::factory()->create(['node_id' => $node->id])];
     }
 
-    private function signWebhook(array $body): string
+    private function signWebhook(array $body): array
     {
-        return hash_hmac('sha256', json_encode($body), 'test-webhook-secret');
+        $ts = (string) now()->getTimestamp();
+
+        return [
+            'X-FBM-Timestamp' => $ts,
+            'X-FBM-Signature' => hash_hmac('sha256', $ts . '.' . json_encode($body), 'test-webhook-secret'),
+        ];
     }
 
     private function assertExactKeys(array $payload, array $approvedKeys): void
