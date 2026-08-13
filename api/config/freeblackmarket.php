@@ -18,4 +18,14 @@ return [
     // stays disabled (events dead-letter with an actionable error) instead of
     // inventing an owner.
     'system_user_id' => env('FBM_SYSTEM_USER_ID'),
+    // Per-partner machine credentials (node_credentials table, issued via
+    // `php artisan fbm:credential issue`). While false, requests without an
+    // X-FBM-Key-ID header may still verify against the global webhook_secret
+    // above (migration path). Flip to true once every sender carries a key id
+    // — the global inbound secret is then never consulted again.
+    'require_key_id' => (bool) env('FBM_REQUIRE_KEY_ID', false),
+    // Key id this deployment announces on outbound events (X-FBM-Key-ID), so
+    // FBM can verify with the matching per-partner credential instead of a
+    // global secret. Optional until the FBM side requires it.
+    'outbound_key_id' => env('FBM_OUTBOUND_KEY_ID'),
 ];
