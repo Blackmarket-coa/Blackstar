@@ -54,6 +54,49 @@ class FreeBlackMarketInteropTest extends TestCase
         $this->assertSame('processed', $receipt->status);
     }
 
+    public function test_delivery_option_without_creator_is_owned_by_the_service_account(): void
+    {
+        config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
+
+        $serviceAccount = User::factory()->create();
+        config()->set('freeblackmarket.system_user_id', $serviceAccount->id);
+
+        // FBM omits created_by_user_id by contract — it has no Blackstar user
+        // identity to send.
+        $payload = json_decode(file_get_contents(base_path('tests/Fixtures/freeblackmarket/delivery-option-selected.json')), true);
+        unset($payload['payload']['created_by_user_id']);
+        $payload['event_id'] = 'evt-delivery-no-creator-001';
+
+        $json = json_encode($payload);
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $this->signedHeaders($json, 'test-webhook-secret'))
+            ->assertStatus(202)
+            ->assertJsonPath('status', 'processed');
+
+        $listing = ShipmentBoardListing::query()->where('source_order_ref', 'ORD-2001')->first();
+        $this->assertNotNull($listing);
+        $this->assertSame($serviceAccount->id, $listing->created_by_user_id);
+    }
+
+    public function test_delivery_option_without_creator_or_service_account_dead_letters_actionably(): void
+    {
+        config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
+        config()->set('freeblackmarket.system_user_id', null);
+        config()->set('freeblackmarket.max_retries', 1);
+
+        $payload = json_decode(file_get_contents(base_path('tests/Fixtures/freeblackmarket/delivery-option-selected.json')), true);
+        unset($payload['payload']['created_by_user_id']);
+        $payload['event_id'] = 'evt-delivery-no-creator-002';
+
+        $json = json_encode($payload);
+        $this->postJson('/api/webhooks/freeblackmarket', $payload, $this->signedHeaders($json, 'test-webhook-secret'))
+            ->assertStatus(202);
+
+        $receipt = FbmInboundEventReceipt::query()->where('event_id', 'evt-delivery-no-creator-002')->first();
+        $this->assertSame('dead_letter', $receipt->status);
+        $this->assertStringContainsString('FBM_SYSTEM_USER_ID', $receipt->last_error);
+        $this->assertDatabaseCount('shipment_board_listings', 0);
+    }
+
     public function test_failed_webhook_goes_to_dead_letter_after_retries(): void
     {
         config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');
@@ -151,17 +194,40 @@ class FreeBlackMarketInteropTest extends TestCase
         $this->assertSame('corr-claim-001', $outbound->correlation_id);
         $this->assertSame('dispatched', $outbound->status);
 
-        Http::assertSent(function ($request) {
+        Http::assertSent(function ($request) use ($outbound) {
             $timestamp = $request->header('X-FBM-Timestamp')[0] ?? '';
             $signature = $request->header('X-FBM-Signature')[0] ?? '';
 
             // The signature must cover the exact bytes on the wire — the full
-            // envelope, not just the payload member.
+            // envelope, not just the payload member. event_id rides inside the
+            // signed body and matches the outbound row, so receivers get a
+            // retry-stable dedupe key.
             return $timestamp !== ''
                 && hash_equals(hash_hmac('sha256', $timestamp . '.' . $request->body(), 'test-outbound-secret'), $signature)
                 && $request->hasHeader('X-Correlation-ID', 'corr-claim-001')
-                && $request['event_type'] === 'shipment.claimed';
+                && $request['event_type'] === 'shipment.claimed'
+                && $request['event_id'] === $outbound->id;
         });
+    }
+
+    public function test_outbound_connection_failure_is_absorbed_into_retry_not_thrown(): void
+    {
+        config()->set('freeblackmarket.outbound_secret', 'test-outbound-secret');
+        config()->set('freeblackmarket.outbound_url', 'https://fbm.example/events');
+        config()->set('freeblackmarket.max_retries', 3);
+
+        Http::fake(function () {
+            throw new \Illuminate\Http\Client\ConnectionException('CONNECT tunnel failed');
+        });
+
+        $publisher = app(OutboundEventPublisher::class);
+        $event = $publisher->queueAndDispatch('shipment.claimed', ['source_order_ref' => 'ref-net'], 'corr-net');
+
+        // The user-facing action that triggered the event must not blow up;
+        // the delivery lands in the retry lane instead.
+        $this->assertSame('failed', $event->status);
+        $this->assertStringContainsString('Connection error', $event->last_error);
+        $this->assertNotNull($event->next_attempt_at);
     }
 
     public function test_outbound_dispatch_fails_closed_without_a_secret(): void

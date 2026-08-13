@@ -55,7 +55,7 @@ class VendorVisibilityContractTest extends TestCase
         'correlation_id',
     ];
 
-    private const OUTBOUND_EVENT_ENVELOPE_FIELDS = ['event_type', 'payload', 'correlation_id'];
+    private const OUTBOUND_EVENT_ENVELOPE_FIELDS = ['event_id', 'event_type', 'payload', 'correlation_id'];
     private const OUTBOUND_EVENT_PAYLOAD_FIELDS = ['shipment_listing_id', 'source_order_ref', 'claimed_by_node_id', 'status'];
     private const BID_RESPONSE_FIELDS = ['id', 'shipment_board_listing_id', 'node_id', 'amount', 'currency', 'note', 'created_at', 'updated_at'];
 
