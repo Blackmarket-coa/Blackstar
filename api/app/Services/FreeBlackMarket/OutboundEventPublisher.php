@@ -57,16 +57,22 @@ class OutboundEventPublisher
         $signature = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
         $event->signature = $signature;
 
+        $headers = [
+            'X-FBM-Signature' => $signature,
+            'X-FBM-Timestamp' => $timestamp,
+            'X-Correlation-ID' => $event->correlation_id ?? '',
+        ];
+        $outboundKeyId = (string) config('freeblackmarket.outbound_key_id');
+        if ($outboundKeyId !== '') {
+            $headers['X-FBM-Key-ID'] = $outboundKeyId;
+        }
+
         // A transport-level failure (DNS, refused connection, dead proxy) must
         // land in the same retry/dead-letter lane as an HTTP error — never
         // escape to the caller, where it would fail the user-facing action
         // (e.g. a claim) that triggered the event.
         try {
-            $response = Http::withHeaders([
-                'X-FBM-Signature' => $signature,
-                'X-FBM-Timestamp' => $timestamp,
-                'X-Correlation-ID' => $event->correlation_id ?? '',
-            ])->withBody($body, 'application/json')->post($url);
+            $response = Http::withHeaders($headers)->withBody($body, 'application/json')->post($url);
         } catch (\Throwable $e) {
             $this->markFailed($event, 'Connection error: ' . $e->getMessage());
 

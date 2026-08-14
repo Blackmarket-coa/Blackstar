@@ -84,6 +84,24 @@ Receivers should verify with a constant-time compare and enforce the same
 timestamp tolerance as the inbound direction. If `FBM_OUTBOUND_SECRET` is
 unset, dispatch fails closed (`failed` → `dead_letter`), never unsigned.
 
+## Credentials & key rotation
+
+Both directions support per-partner machine credentials in place of the
+deployment-global secrets:
+
+- `X-FBM-Key-ID` (optional in contract v1): names the credential that signed
+  the request. The receiver verifies with that credential's secret. Inbound
+  credentials live in `node_credentials` (issue / rotate / revoke / list via
+  `php artisan fbm:credential`); secrets are encrypted at rest and printed
+  exactly once at issue time. An unknown or revoked key id answers exactly
+  like a bad signature.
+- Rotation is overlap-based: `rotate` issues a new credential while the old
+  one keeps verifying until explicitly revoked — no flag day.
+- Migration path: requests without a key id fall back to the global secret
+  until `FBM_REQUIRE_KEY_ID=true`, which retires the global inbound secret
+  without a code change. Outbound, `FBM_OUTBOUND_KEY_ID` announces this
+  deployment's credential to FBM.
+
 ## Idempotency
 
 - Inbound receipts are persisted in `fbm_inbound_event_receipts` keyed by unique `event_id`.
