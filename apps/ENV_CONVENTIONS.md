@@ -1,6 +1,7 @@
 # Blackstar Workspace Environment + Auth Contract
 
-This workspace-level contract applies to both `apps/blackstar-console` and `apps/blackstar-nav`.
+This workspace-level contract applies to the Ember console (`console/`, which carries the
+Blackstar dispatch and node-registration pages) and `apps/blackstar-nav`.
 
 ## Required environment variables
 

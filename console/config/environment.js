@@ -4,8 +4,25 @@ const getenv = require('./utils/getenv');
 const fixApiHost = require('./utils/fix-api-host');
 const asArray = require('./utils/as-array');
 const { version } = require('../package');
+const { URL } = require('url');
+
+function parseBlackstarApiUrl(raw) {
+    if (!raw) return {};
+
+    try {
+        const parsed = new URL(raw);
+        return {
+            host: parsed.origin,
+            secure: parsed.protocol === 'https:',
+        };
+    } catch (_error) {
+        return {};
+    }
+}
 
 module.exports = function (environment) {
+    const blackstarApi = parseBlackstarApiUrl(getenv('BLACKSTAR_API_URL'));
+
     const ENV = {
         modulePrefix: '@fleetbase/console',
         version,
@@ -27,7 +44,7 @@ module.exports = function (environment) {
         },
 
         API: {
-            host: fixApiHost(getenv('API_HOST'), toBoolean(getenv('API_SECURE'))),
+            host: fixApiHost(getenv('API_HOST', blackstarApi.host), toBoolean(getenv('API_SECURE', blackstarApi.secure))),
             namespace: getenv('API_NAMESPACE', 'int/v1'),
         },
 
@@ -68,7 +85,7 @@ module.exports = function (environment) {
         },
 
         'ember-local-storage': {
-            namespace: '@fleetbase',
+            namespace: getenv('BLACKSTAR_AUTH_TOKEN_STORAGE_KEY', '@fleetbase'),
             keyDelimiter: '/',
             includeEmberDataSupport: true,
         },
