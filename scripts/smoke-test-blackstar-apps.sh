@@ -9,7 +9,7 @@ export BLACKSTAR_API_URL
 export BLACKSTAR_AUTH_TOKEN_STORAGE_KEY
 
 node - <<'NODE'
-const cfgFactory = require('./apps/blackstar-console/config/environment');
+const cfgFactory = require('./console/config/environment');
 const cfg = cfgFactory('development');
 if (!cfg.API.host || !cfg.API.host.startsWith('http')) {
   console.error('console config failed to derive API host');
