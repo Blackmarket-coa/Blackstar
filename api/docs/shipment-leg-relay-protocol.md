@@ -32,6 +32,11 @@ On leg updates and handoff proof logging, outbound events are emitted:
 - `shipment.leg.handoff_proof`
 - final listing updates where applicable (`shipment.in_transit`, `shipment.delivered`, `shipment.disputed`).
 
+Both leg events carry `source_order_ref` alongside `shipment_listing_id`, so a
+receiver can attribute them to the originating order. They report leg progress
+only — a receiver must not read a listing status out of them. See
+`api/docs/events/freeblackmarket-contract.md` for the envelope.
+
 ## APIs
 
 Authenticated endpoints:
