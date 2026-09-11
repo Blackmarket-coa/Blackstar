@@ -29,9 +29,18 @@ class ShipmentLegProgressionService
 
         $leg->transitionTo($status);
 
+        // `source_order_ref` is what makes an event attributable on the FBM
+        // side: its receiver keys every inbound event on it, and an event
+        // without one cannot be matched to an order no matter what else it
+        // carries. The three listing-level events below all send it; these
+        // two were the only emitters in this service that did not, so the
+        // relay's own progress was the one thing FBM could not place. That
+        // was an omission, not a decision — the value is on the listing
+        // already.
         if (in_array($status, [ShipmentLeg::STATUS_IN_TRANSIT, ShipmentLeg::STATUS_HANDED_OFF, ShipmentLeg::STATUS_COMPLETED], true)) {
             $this->publisher->queueAndDispatch('shipment.leg.updated', [
                 'shipment_listing_id' => $listing->id,
+                'source_order_ref' => $listing->source_order_ref,
                 'shipment_leg_id' => $leg->id,
                 'sequence' => $leg->sequence,
                 'status' => $leg->status,
@@ -43,6 +52,7 @@ class ShipmentLegProgressionService
         if (!empty($leg->proof_of_handoff_hash)) {
             $this->publisher->queueAndDispatch('shipment.leg.handoff_proof', [
                 'shipment_listing_id' => $listing->id,
+                'source_order_ref' => $listing->source_order_ref,
                 'shipment_leg_id' => $leg->id,
                 'sequence' => $leg->sequence,
                 'proof_of_handoff_hash' => $leg->proof_of_handoff_hash,

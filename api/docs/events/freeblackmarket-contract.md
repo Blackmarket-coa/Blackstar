@@ -45,11 +45,30 @@ secret disables the integration instead of authenticating against a default.
 
 ## Outbound events (Logistics Protocol -> FreeBlackMarket)
 
+Listing-level lifecycle:
+
 - `shipment.claimed`
 - `shipment.in_transit`
 - `shipment.delivered`
 - `shipment.disputed`
 - `shipment.cancelled`
+
+Relay progress (added to this contract 2026-09-10; emitted since the leg relay
+shipped):
+
+- `shipment.leg.updated`
+- `shipment.leg.handoff_proof`
+
+These two were emitted by `ShipmentLegProgressionService` without ever being
+written down here, and FBM implemented the five it could see — so both were
+signed, delivered, verified and answered `202 {"status":"ignored"}` at the far
+end. They also omitted `source_order_ref`, the field FBM's receiver keys every
+inbound event on, which made them unattributable even in principle. Both now
+carry it, like every other event this side emits.
+
+They report **leg** progress, not listing status: a receiver must not derive a
+shipment status from them. The listing-level events above remain the only
+statements about where a shipment as a whole has got to.
 
 Envelope:
 
@@ -66,6 +85,30 @@ Envelope:
   }
 }
 ```
+
+Relay-event payloads:
+
+```json
+{
+  "event_id": "uuid (outbound event id, stable across retries)",
+  "event_type": "shipment.leg.updated",
+  "correlation_id": "string",
+  "payload": {
+    "shipment_listing_id": "uuid",
+    "source_order_ref": "string",
+    "shipment_leg_id": "uuid",
+    "sequence": 1,
+    "status": "in_transit|handed_off|completed",
+    "from_node_id": "uuid|null",
+    "to_node_id": "uuid|null"
+  }
+}
+```
+
+`shipment.leg.handoff_proof` carries `shipment_listing_id`, `source_order_ref`,
+`shipment_leg_id`, `sequence` and `proof_of_handoff_hash`. It is emitted
+whenever a leg update records a proof hash, so it can accompany a
+`shipment.leg.updated` for the same leg.
 
 `event_id` is the outbound event record's uuid. Retries of the same event
 re-sign with a fresh timestamp but keep the same `event_id`, so receivers can

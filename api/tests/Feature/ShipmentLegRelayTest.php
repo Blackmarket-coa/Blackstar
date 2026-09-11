@@ -83,6 +83,23 @@ class ShipmentLegRelayTest extends TestCase
         $this->assertDatabaseHas('fbm_outbound_events', ['event_type' => 'shipment.leg.updated']);
         $this->assertDatabaseHas('fbm_outbound_events', ['event_type' => 'shipment.leg.handoff_proof']);
         $this->assertDatabaseHas('fbm_outbound_events', ['event_type' => 'shipment.delivered']);
+
+        // Both leg events must carry source_order_ref. FBM's receiver keys
+        // every inbound event on it, so a leg event without one is delivered,
+        // signed, verified and then unattributable to any order — which is
+        // exactly what happened until this assertion existed. Asserting the
+        // event_type alone, as the three lines above do, could not see it.
+        foreach (['shipment.leg.updated', 'shipment.leg.handoff_proof'] as $type) {
+            $events = FbmOutboundEvent::query()->where('event_type', $type)->get();
+            $this->assertNotEmpty($events, "expected at least one {$type} event");
+            foreach ($events as $event) {
+                $this->assertSame(
+                    $listing->source_order_ref,
+                    $event->payload['source_order_ref'] ?? null,
+                    "{$type} must carry the listing's source_order_ref"
+                );
+            }
+        }
     }
 
     public function test_three_leg_shipment_sequence_rules_and_completion(): void

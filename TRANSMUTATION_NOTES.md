@@ -36,10 +36,34 @@ as design docs only", and the code agrees. Re-verified feature by feature:
   `ShipmentLeg`'s `to_node_id` therefore points at a table that cannot say
   where anything is. This is the blocker for any depot work, not the depot
   model itself.
-- **FBM cannot see the relay.** Blackstar emits seven event types; FBM's
-  `verify-blackstar-signature.ts` maps five. The two leg events — precisely the
-  ones a depot handoff would ride — are signed, delivered and answered with
+- ~~**FBM cannot see the relay.**~~ **Half fixed here 2026-09-10; the other
+  half is an FBM change.** Blackstar emitted seven event types and FBM's
+  `verify-blackstar-signature.ts` mapped five, so the two leg events — the
+  ones a depot handoff would ride — were signed, delivered and answered with
   202 `{"status":"ignored"}`.
+
+  Tracing it showed FBM was not at fault: `api/docs/events/freeblackmarket-contract.md`
+  documented only the five, and FBM's map carries the comment "the five
+  outbound events Blackstar's contract documents, nothing else". It
+  implemented the contract faithfully. **The contract was incomplete**, and had
+  been since the leg relay shipped.
+
+  Worse, the two leg payloads omitted `source_order_ref` — the field FBM's
+  receiver keys every inbound event on — while the three listing-level events
+  emitted from the *same service* all included it. So even a receiver that
+  wanted to act on a leg event could not attribute it to an order. That was an
+  omission rather than a decision: `$listing->source_order_ref` was in scope on
+  both lines.
+
+  Fixed on this side: both leg events now carry `source_order_ref`, both are
+  documented in the FBM contract with their payload shapes and an explicit
+  warning that they report **leg** progress and no receiver may derive a
+  listing status from them, and `ShipmentLegRelayTest` now asserts the payload
+  contents rather than only that an event of each type exists — the assertion
+  shape that let this pass unnoticed.
+
+  Still open on the FBM side: recording these events instead of discarding
+  them. That is tracked there, not here.
 
 Note that mesh routing is not merely unbuilt but excluded by the current
 architecture: `GlobalDispatchService::autoAssign()` returns null
