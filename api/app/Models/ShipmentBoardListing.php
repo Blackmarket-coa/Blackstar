@@ -26,6 +26,8 @@ class ShipmentBoardListing extends Model
         'source_order_ref',
         'status',
         'origin',
+        'origin_latitude',
+        'origin_longitude',
         'destination',
         'work_order',
         'creator_qa_checklist',
@@ -45,6 +47,8 @@ class ShipmentBoardListing extends Model
         'required_transport_capabilities',
         'created_by_user_id',
         'claimed_by_node_id',
+        'awarded_shipment_bid_id',
+        'awarded_at',
         'current_node_id',
         'claimed_at',
         'in_transit_at',
@@ -62,7 +66,10 @@ class ShipmentBoardListing extends Model
         'required_range_limit' => 'decimal:2',
         'requires_hazard_capability' => 'boolean',
         'insurance_required_flag' => 'boolean',
+        'origin_latitude' => 'decimal:7',
+        'origin_longitude' => 'decimal:7',
         'claimed_at' => 'datetime',
+        'awarded_at' => 'datetime',
         'in_transit_at' => 'datetime',
         'delivered_at' => 'datetime',
         'disputed_at' => 'datetime',
@@ -77,6 +84,15 @@ class ShipmentBoardListing extends Model
     public function claimedByNode(): BelongsTo
     {
         return $this->belongsTo(Node::class, 'claimed_by_node_id');
+    }
+
+    /**
+     * The bid this listing was awarded to, when `claim_policy` is `bid`.
+     * Null on a `first_claim` listing, and on a bid listing not yet awarded.
+     */
+    public function awardedBid(): BelongsTo
+    {
+        return $this->belongsTo(ShipmentBid::class, 'awarded_shipment_bid_id');
     }
 
 

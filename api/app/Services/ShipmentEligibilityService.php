@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Node;
 use App\Models\ShipmentBoardListing;
 use App\Models\TransportClass;
+use App\Support\Geo;
 
 class ShipmentEligibilityService
 {
@@ -22,6 +23,10 @@ class ShipmentEligibilityService
             return false;
         }
 
+        if (!$this->isWithinServiceRadius($node, $listing)) {
+            return false;
+        }
+
         $transportClasses = $node->transportClasses()->get();
 
         if ($transportClasses->isEmpty()) {
@@ -35,6 +40,53 @@ class ShipmentEligibilityService
         }
 
         return false;
+    }
+
+    /**
+     * Is the listing's origin inside the node's service radius?
+     *
+     * `nodes.service_radius` existed from the first migration and was read by
+     * nothing, because neither a node nor a listing carried a coordinate. The
+     * only geography was `jurisdiction` compared as an exact string, so a node
+     * in California was eligible for a listing in New York whenever both said
+     * "US", and the board offered it to them. Operators were asked for a
+     * service radius on every node and the answer was discarded.
+     *
+     * **Applies only when the question can be answered.** Three ways it cannot,
+     * each returning true so the jurisdiction and transport checks still decide
+     * as they did before:
+     *
+     *   - the node has no coordinates — pre-existing rows, until backfilled;
+     *   - the listing has no origin coordinates — the same, and FBM only began
+     *     sending them alongside this change;
+     *   - the radius is zero, which is the column's default and therefore means
+     *     "unset" far more often than "serves nowhere". Treating the default as
+     *     a refusal would make every node on the platform ineligible for
+     *     everything the moment this shipped.
+     *
+     * So this narrows eligibility only for a node that has said where it is and
+     * how far it travels, against a listing that has said where it starts.
+     * Everything else behaves exactly as before.
+     */
+    protected function isWithinServiceRadius(Node $node, ShipmentBoardListing $listing): bool
+    {
+        $radius = (float) ($node->service_radius ?? 0);
+        if ($radius <= 0) {
+            return true;
+        }
+
+        $distance = Geo::distanceMiles(
+            $node->latitude,
+            $node->longitude,
+            $listing->origin_latitude,
+            $listing->origin_longitude
+        );
+
+        if ($distance === null) {
+            return true;
+        }
+
+        return $distance <= $radius;
     }
 
     protected function matchesTransportConstraints(TransportClass $transportClass, ShipmentBoardListing $listing): bool

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Node;
+use App\Models\ShipmentBid;
 use App\Models\ShipmentBoardListing;
 use App\Models\TransportClass;
 use App\Models\User;
@@ -253,5 +254,199 @@ class ShipmentBoardListingTest extends TestCase
             ])
             ->assertCreated()
             ->assertJsonPath('node_id', $node->id);
+    }
+
+    /**
+     * Build an eligible node with a user, plus a bid-policy listing it can bid
+     * on. Mirrors `test_bid_submission_for_bid_policy_listing`.
+     */
+    private function bidScenario(): array
+    {
+        $node = Node::factory()->create(['jurisdiction' => 'US']);
+        $transportClass = TransportClass::factory()->create([
+            'category' => 'ground',
+            'subtype' => 'van',
+        ]);
+        $node->transportClasses()->attach($transportClass->id);
+
+        $user = User::factory()->create(['node_id' => $node->id]);
+        $creator = User::factory()->create();
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'claim_policy' => 'bid',
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'required_weight_limit' => 100,
+            'required_range_limit' => 50,
+        ]);
+
+        return [$node, $user, $creator, $listing];
+    }
+
+    public function test_bid_policy_listing_cannot_be_claimed_directly(): void
+    {
+        // Without this the claim_policy column was decorative: any eligible
+        // node could take a bid listing outright and every bid was moot.
+        [, $user, , $listing] = $this->bidScenario();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/claim')
+            ->assertStatus(422);
+
+        $listing->refresh();
+        $this->assertSame(ShipmentBoardListing::STATUS_OPEN, $listing->status);
+        $this->assertNull($listing->claimed_by_node_id);
+    }
+
+    public function test_first_claim_listing_is_unaffected_by_the_policy_gate(): void
+    {
+        [$node, $user, $creator] = $this->bidScenario();
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'claim_policy' => 'first_claim',
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'required_weight_limit' => 100,
+            'required_range_limit' => 50,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/claim')
+            ->assertOk()
+            ->assertJsonPath('claimed_by_node_id', $node->id);
+    }
+
+    public function test_poster_can_award_a_bid_and_it_becomes_the_claim(): void
+    {
+        [$node, $user, $creator, $listing] = $this->bidScenario();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/bids', [
+                'amount' => 120.50,
+                'currency' => 'USD',
+            ])
+            ->assertCreated();
+
+        $bid = ShipmentBid::query()->where('shipment_board_listing_id', $listing->id)->firstOrFail();
+
+        $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', [
+                'bid_id' => $bid->id,
+            ])
+            ->assertOk()
+            ->assertJsonPath('status', ShipmentBoardListing::STATUS_CLAIMED)
+            ->assertJsonPath('claimed_by_node_id', $node->id);
+
+        $listing->refresh();
+        $this->assertSame($bid->id, $listing->awarded_shipment_bid_id);
+        $this->assertNotNull($listing->awarded_at);
+        // Ownership state is explicit, as on the direct-claim path.
+        $this->assertSame($node->id, $listing->current_node_id);
+    }
+
+    public function test_only_the_poster_can_award(): void
+    {
+        // Awarding is choosing between bids. A bidder awarding themselves would
+        // be a direct claim wearing a different name.
+        [, $user, , $listing] = $this->bidScenario();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/bids', ['amount' => 10])
+            ->assertCreated();
+        $bid = ShipmentBid::query()->where('shipment_board_listing_id', $listing->id)->firstOrFail();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', ['bid_id' => $bid->id])
+            ->assertStatus(403);
+
+        $this->assertSame(ShipmentBoardListing::STATUS_OPEN, $listing->refresh()->status);
+    }
+
+    public function test_award_refuses_a_bid_from_another_listing(): void
+    {
+        // Scoped lookup: a bid id from elsewhere must read as "no such bid"
+        // rather than award work across listings.
+        [, $user, $creator, $listing] = $this->bidScenario();
+
+        $other = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'claim_policy' => 'bid',
+            'jurisdiction' => 'US',
+            'required_category' => 'ground',
+            'required_subtype' => 'van',
+            'required_weight_limit' => 100,
+            'required_range_limit' => 50,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $other->id . '/bids', ['amount' => 10])
+            ->assertCreated();
+        $foreignBid = ShipmentBid::query()->where('shipment_board_listing_id', $other->id)->firstOrFail();
+
+        $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', [
+                'bid_id' => $foreignBid->id,
+            ])
+            ->assertStatus(404);
+    }
+
+    public function test_award_refuses_a_first_claim_listing(): void
+    {
+        [, , $creator] = $this->bidScenario();
+
+        $listing = ShipmentBoardListing::factory()->create([
+            'created_by_user_id' => $creator->id,
+            'status' => ShipmentBoardListing::STATUS_OPEN,
+            'claim_policy' => 'first_claim',
+        ]);
+
+        $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', [
+                'bid_id' => 'whatever',
+            ])
+            ->assertStatus(422);
+    }
+
+    public function test_award_refuses_a_listing_that_is_no_longer_open(): void
+    {
+        [, $user, $creator, $listing] = $this->bidScenario();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/bids', ['amount' => 10])
+            ->assertCreated();
+        $bid = ShipmentBid::query()->where('shipment_board_listing_id', $listing->id)->firstOrFail();
+
+        $listing->update(['status' => ShipmentBoardListing::STATUS_CANCELLED]);
+
+        $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', ['bid_id' => $bid->id])
+            ->assertStatus(422);
+    }
+
+    public function test_award_rechecks_eligibility_rather_than_trusting_the_bid(): void
+    {
+        // A node's capabilities can change between bidding and awarding, and
+        // awarding assigns real work. The bid is a price, not a warrant.
+        [$node, $user, $creator, $listing] = $this->bidScenario();
+
+        $this->actingAs($user)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/bids', ['amount' => 10])
+            ->assertCreated();
+        $bid = ShipmentBid::query()->where('shipment_board_listing_id', $listing->id)->firstOrFail();
+
+        $node->transportClasses()->detach();
+
+        $this->actingAs($creator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', ['bid_id' => $bid->id])
+            ->assertStatus(422);
+
+        $this->assertSame(ShipmentBoardListing::STATUS_OPEN, $listing->refresh()->status);
     }
 }
