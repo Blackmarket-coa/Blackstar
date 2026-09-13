@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::get('shipment-board-listings/eligible', [ShipmentBoardListingController::class, 'eligibleListings']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/claim', [ShipmentBoardListingController::class, 'claim']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/bids', [ShipmentBoardListingController::class, 'submitBid']);
+    Route::post('shipment-board-listings/{shipmentBoardListing}/award', [ShipmentBoardListingController::class, 'award']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/status', [ShipmentBoardListingController::class, 'updateStatus']);
     Route::get('shipment-board-listings/{shipmentBoardListing}/legs', [ShipmentLegController::class, 'index']);
     Route::post('shipment-board-listings/{shipmentBoardListing}/legs', [ShipmentLegController::class, 'store']);
