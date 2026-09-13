@@ -26,6 +26,11 @@ class NodeController extends Controller
             'legal_entity_name' => ['required', 'string', 'max:255'],
             'jurisdiction' => ['required', 'string', 'max:255'],
             'service_radius' => ['required', 'numeric'],
+            // The centre `service_radius` is measured from. Nullable because
+            // existing nodes have none; without them the radius is not applied
+            // and eligibility falls back to jurisdiction matching.
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'contact' => ['nullable', 'array'],
             'insurance_attestation_hash' => ['nullable', 'string', 'max:255'],
             'license_attestation_hash' => ['nullable', 'string', 'max:255'],
@@ -54,6 +59,8 @@ class NodeController extends Controller
             'legal_entity_name' => ['sometimes', 'string', 'max:255'],
             'jurisdiction' => ['sometimes', 'string', 'max:255'],
             'service_radius' => ['sometimes', 'numeric'],
+            'latitude' => ['sometimes', 'nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['sometimes', 'nullable', 'numeric', 'between:-180,180'],
             'contact' => ['nullable', 'array'],
             'insurance_attestation_hash' => ['nullable', 'string', 'max:255'],
             'license_attestation_hash' => ['nullable', 'string', 'max:255'],

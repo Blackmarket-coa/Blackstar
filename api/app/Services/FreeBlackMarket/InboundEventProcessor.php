@@ -88,6 +88,12 @@ class InboundEventProcessor
                     'bounty_amount' => $payload['bounty_amount'] ?? null,
                     'bounty_currency' => $payload['bounty_currency'] ?? null,
                     'origin' => $payload['origin'] ?? null,
+                    // The origin's coordinates, when FBM sends them. Nodes with
+                    // a service radius and a location are matched on distance
+                    // rather than only on a jurisdiction string; absent these,
+                    // the radius is not applied and behaviour is unchanged.
+                    'origin_latitude' => $payload['origin_latitude'] ?? null,
+                    'origin_longitude' => $payload['origin_longitude'] ?? null,
                     'destination' => $payload['destination'] ?? null,
                     'work_order' => $payload['work_order'] ?? null,
                     'creator_qa_checklist' => $payload['creator_qa_checklist'] ?? [],
