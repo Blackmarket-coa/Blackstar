@@ -80,6 +80,48 @@ class Node extends Model
         return $this->hasMany(NodeCredential::class);
     }
 
+    public function coalitionMemberships(): HasMany
+    {
+        return $this->hasMany(NodeCoalitionMembership::class);
+    }
+
+    /**
+     * Does this node belong to the given Blackout coalition?
+     *
+     * Reads the loaded relation when it is already loaded, so the board's
+     * eligibility sweep over many listings does not issue a query per listing
+     * for the same node.
+     */
+    public function belongsToCoalition(string $coalitionRef): bool
+    {
+        return $this->coalitionMembershipFor($coalitionRef) !== null;
+    }
+
+    /** Is this node the coalition's coordinator — the one who awards its work? */
+    public function coordinatesCoalition(string $coalitionRef): bool
+    {
+        return $this->coalitionMembershipFor($coalitionRef)?->role
+            === NodeCoalitionMembership::ROLE_COORDINATOR;
+    }
+
+    protected function coalitionMembershipFor(string $coalitionRef): ?NodeCoalitionMembership
+    {
+        if ($coalitionRef === '') {
+            return null;
+        }
+
+        if ($this->relationLoaded('coalitionMemberships')) {
+            return $this->coalitionMemberships
+                ->firstWhere(fn (NodeCoalitionMembership $m) => $m->is_active
+                    && $m->coalition_ref === $coalitionRef);
+        }
+
+        return $this->coalitionMemberships()
+            ->where('coalition_ref', $coalitionRef)
+            ->where('is_active', true)
+            ->first();
+    }
+
     public function hasCompletedAttestation(): bool
     {
         return !empty($this->transport_law_attestation_hash)
