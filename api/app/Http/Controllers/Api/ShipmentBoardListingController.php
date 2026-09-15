@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ShipmentBid;
 use App\Models\ShipmentBoardListing;
+use App\Models\User;
 use App\Services\ShipmentEligibilityService;
 use App\Services\FreeBlackMarket\OutboundEventPublisher;
 use Illuminate\Http\JsonResponse;
@@ -132,6 +133,42 @@ class ShipmentBoardListingController extends Controller
     }
 
     /**
+     * Who may award this listing's bids.
+     *
+     * The poster, as before — plus, for a coalition drive, that coalition's
+     * coordinator. The widening is not a convenience: a drive that arrives
+     * from FBM is owned by the FBM service account, which is not a person and
+     * will never log in, so on a bid-policy listing its bids could be placed
+     * and never awarded. The reverse auction would collect prices and stall.
+     *
+     * Deliberately narrow. Coordination authority extends only to listings
+     * carrying that coalition's `coalition_ref`, only to a node whose
+     * membership is active and marked coordinator, and it grants awarding
+     * alone — the same act the poster already had. It is not a general right
+     * over other people's listings.
+     */
+    protected function mayAward(?User $user, ShipmentBoardListing $listing): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        if ($listing->created_by_user_id === $user->id) {
+            return true;
+        }
+
+        $coalitionRef = (string) ($listing->coalition_ref ?? '');
+
+        if ($coalitionRef === '') {
+            return false;
+        }
+
+        $node = $user->node;
+
+        return $node !== null && $node->coordinatesCoalition($coalitionRef);
+    }
+
+    /**
      * Award a bid-policy listing to one of its bids.
      *
      * The counterpart `claim()` refuses to provide, and the reason `claim()`
@@ -169,9 +206,9 @@ class ShipmentBoardListingController extends Controller
         $user = auth()->user();
 
         abort_if(
-            $shipmentBoardListing->created_by_user_id !== $user->id,
+            !$this->mayAward($user, $shipmentBoardListing),
             403,
-            'Only the node that posted this listing can award it.'
+            'Only the node that posted this listing, or its coalition coordinator, can award it.'
         );
 
         abort_if(

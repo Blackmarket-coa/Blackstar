@@ -83,6 +83,11 @@ class InboundEventProcessor
                 ['source_order_ref' => $payload['source_order_ref']],
                 [
                     'status' => ShipmentBoardListing::STATUS_OPEN,
+                    // Present only for a coalition goods drive. When set, the
+                    // board narrows this listing to that coalition's own nodes
+                    // (see ShipmentEligibilityService); absent, nothing changes.
+                    'coalition_ref' => $payload['coalition_ref'] ?? null,
+                    'drive_ref' => $payload['drive_ref'] ?? null,
                     'claim_policy' => $payload['claim_policy'] ?? 'first_claim',
                     'job_type' => $payload['job_type'] ?? 'delivery',
                     'bounty_amount' => $payload['bounty_amount'] ?? null,

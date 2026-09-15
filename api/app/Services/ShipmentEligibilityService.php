@@ -23,6 +23,10 @@ class ShipmentEligibilityService
             return false;
         }
 
+        if (!$this->servesListingCoalition($node, $listing)) {
+            return false;
+        }
+
         if (!$this->isWithinServiceRadius($node, $listing)) {
             return false;
         }
@@ -68,6 +72,30 @@ class ShipmentEligibilityService
      * how far it travels, against a listing that has said where it starts.
      * Everything else behaves exactly as before.
      */
+    /**
+     * A coalition's freight is offered to that coalition's own nodes.
+     *
+     * The point of handing a coalition's physical drive to the board is that
+     * the coalition's members haul it — the reverse auction is meant to run
+     * *among coalition members*, not to open their drive to the whole network.
+     * So a listing carrying a `coalition_ref` narrows to nodes holding an
+     * active membership of it.
+     *
+     * A listing with no `coalition_ref` — every ordinary delivery — is
+     * unaffected, which is why this reads as "no coalition, no restriction"
+     * rather than gating the board on membership generally.
+     */
+    protected function servesListingCoalition(Node $node, ShipmentBoardListing $listing): bool
+    {
+        $coalitionRef = (string) ($listing->coalition_ref ?? '');
+
+        if ($coalitionRef === '') {
+            return true;
+        }
+
+        return $node->belongsToCoalition($coalitionRef);
+    }
+
     protected function isWithinServiceRadius(Node $node, ShipmentBoardListing $listing): bool
     {
         $radius = (float) ($node->service_radius ?? 0);
