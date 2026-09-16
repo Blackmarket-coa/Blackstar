@@ -3,7 +3,10 @@
 namespace App\Services\FreeBlackMarket;
 
 use App\Models\FbmInboundEventReceipt;
+use App\Models\Node;
+use App\Models\NodeCredential;
 use App\Models\ShipmentBoardListing;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -131,7 +134,95 @@ class InboundEventProcessor
             return;
         }
 
+        if ($eventType === 'node.operator.approved') {
+            $this->provisionNodeOperator($payload);
+
+            return;
+        }
+
         throw new \RuntimeException('Unsupported event_type: ' . $eventType);
+    }
+
+    /**
+     * Stand up a node operator for a seller FBM has approved as a carrier.
+     *
+     * This is the only path by which a Blackstar user is created. Nothing else
+     * in the app writes `users.node_id` — before this, a node operator could
+     * only be made with a direct database write, which is why NodePolicy's
+     * "you must already belong to a node to create one" was unreachable in
+     * practice rather than merely strict.
+     *
+     * Idempotent on `external_ref` (FBM's seller id). The bridge is documented
+     * at-least-once, so a redelivery must find the existing node rather than
+     * mint a second one for the same seller — duplicate operator accounts, each
+     * with live credentials, is the failure this guards.
+     *
+     * The node is created INACTIVE. Attestation (`POST /api/nodes/{node}/attest`)
+     * is what activates it, and `ShipmentEligibilityService` requires active, so
+     * an operator provisioned this way can sign in and see their node but cannot
+     * claim work until they have accepted the legal attestations. FBM approving
+     * a storefront is not the same as a carrier accepting transport liability.
+     */
+    protected function provisionNodeOperator(array $payload): void
+    {
+        $externalRef = $payload['external_ref'] ?? $payload['seller_id'] ?? null;
+        if (empty($externalRef)) {
+            throw new \RuntimeException('node.operator.approved requires external_ref');
+        }
+
+        $email = $payload['member_email'] ?? null;
+        if (empty($email)) {
+            throw new \RuntimeException('node.operator.approved requires member_email');
+        }
+
+        $credential = $payload['credential'] ?? [];
+        $keyId = $credential['key_id'] ?? null;
+        $secret = $credential['secret'] ?? null;
+        if (empty($keyId) || empty($secret)) {
+            throw new \RuntimeException('node.operator.approved requires credential.key_id and credential.secret');
+        }
+
+        $node = Node::firstOrCreate(
+            ['node_id' => 'fbm:' . $externalRef],
+            [
+                'legal_entity_name' => $payload['seller_name'] ?? (string) $externalRef,
+                'jurisdiction' => $payload['jurisdiction'] ?? config('freeblackmarket.default_jurisdiction', 'US'),
+                'service_radius' => $payload['service_radius'] ?? 0,
+                // Inactive until the operator accepts the attestations.
+                'is_active' => false,
+            ]
+        );
+
+        // Bind the member to the node. `firstOrCreate` on email so a redelivery,
+        // or a seller who already had an account, does not duplicate the user.
+        $user = User::firstOrCreate(
+            ['email' => $email],
+            [
+                'name' => $payload['member_name'] ?? ($payload['seller_name'] ?? 'Node operator'),
+                // No password: this account is reached through the bridge and
+                // its credential, not through a Blackstar login (there is none).
+                'password' => bcrypt(bin2hex(random_bytes(32))),
+                'node_id' => $node->id,
+            ]
+        );
+
+        if (empty($user->node_id)) {
+            $user->node_id = $node->id;
+            $user->save();
+        }
+
+        // The credential FBM minted, so the node's future bridge calls verify.
+        // Keyed on key_id: a redelivery re-affirms the same row rather than
+        // stacking active secrets for one node.
+        NodeCredential::updateOrCreate(
+            ['key_id' => $keyId],
+            [
+                'node_id' => $node->id,
+                'label' => 'FBM provisioning (' . $externalRef . ')',
+                'secret' => $secret,
+                'status' => 'active',
+            ]
+        );
     }
 
     /**
