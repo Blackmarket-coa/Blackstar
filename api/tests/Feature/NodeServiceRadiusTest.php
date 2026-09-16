@@ -179,7 +179,11 @@ class NodeServiceRadiusTest extends TestCase
 
     public function test_coordinates_can_be_set_through_the_node_api(): void
     {
-        $user = User::factory()->create();
+        // NodePolicy::create gates on the actor already belonging to a node —
+        // node registration is node-scoped, not open to any authenticated user.
+        // Every other Feature test builds its actor this way; these two were the
+        // outliers and were asserting 201/422 against a 403 they never reached.
+        $user = User::factory()->create(['node_id' => Node::factory()->create()->id]);
 
         $this->actingAs($user)
             ->postJson('/api/nodes', [
@@ -199,7 +203,7 @@ class NodeServiceRadiusTest extends TestCase
 
     public function test_the_node_api_rejects_impossible_coordinates(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['node_id' => Node::factory()->create()->id]);
 
         $this->actingAs($user)
             ->postJson('/api/nodes', [
