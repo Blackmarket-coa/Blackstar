@@ -19,6 +19,12 @@ class NodeCoalitionMembership extends Model
     use HasUuids;
 
     public const ROLE_MEMBER = 'member';
+    /**
+     * Recorded, but it confers NO authority in Blackstar today. Awarding a bid
+     * is the poster's act alone (see ShipmentBoardListingController::mayAward);
+     * a coordinator here is a coalition's own designation, kept so the mapping
+     * survives the decision about who may grant it and how it is revoked.
+     */
     public const ROLE_COORDINATOR = 'coordinator';
 
     protected $fillable = [

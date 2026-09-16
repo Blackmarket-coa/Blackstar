@@ -97,13 +97,6 @@ class Node extends Model
         return $this->coalitionMembershipFor($coalitionRef) !== null;
     }
 
-    /** Is this node the coalition's coordinator — the one who awards its work? */
-    public function coordinatesCoalition(string $coalitionRef): bool
-    {
-        return $this->coalitionMembershipFor($coalitionRef)?->role
-            === NodeCoalitionMembership::ROLE_COORDINATOR;
-    }
-
     protected function coalitionMembershipFor(string $coalitionRef): ?NodeCoalitionMembership
     {
         if ($coalitionRef === '') {

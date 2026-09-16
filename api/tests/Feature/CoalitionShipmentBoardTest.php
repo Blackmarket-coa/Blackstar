@@ -132,10 +132,12 @@ class CoalitionShipmentBoardTest extends TestCase
         $this->assertTrue($this->eligible($outsider, $listing));
     }
 
-    public function test_coalition_coordinator_can_award_a_drive_posted_by_the_fbm_service_account(): void
+    public function test_coalition_role_confers_no_award_authority(): void
     {
-        // The case that made the widening necessary: FBM posts the listing, so
-        // the poster is a service account that will never log in to award it.
+        // A coordinator is a coalition's own designation and grants nothing on
+        // the board. Awarding stays the poster's act, so a coordinator cannot
+        // award a listing they did not post — which also means they cannot
+        // award their own coalition's freight to a node of their choosing.
         $serviceAccount = User::factory()->create();
 
         $coordinatorNode = $this->capableNode();
@@ -159,6 +161,36 @@ class CoalitionShipmentBoardTest extends TestCase
         ]);
 
         $this->actingAs($coordinator)
+            ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', ['bid_id' => $bid->id])
+            ->assertForbidden();
+
+        $listing->refresh();
+        $this->assertSame(ShipmentBoardListing::STATUS_OPEN, $listing->status);
+    }
+
+    public function test_the_poster_can_still_award_a_coalition_drive(): void
+    {
+        // The narrowing must not break the ordinary path: whoever posted the
+        // listing awards it, coalition ref or not.
+        $poster = User::factory()->create();
+
+        $bidderNode = $this->capableNode();
+        $this->joinCoalition($bidderNode);
+
+        $listing = $this->listing([
+            'created_by_user_id' => $poster->id,
+            'claim_policy' => 'bid',
+            'coalition_ref' => self::COALITION,
+            'drive_ref' => 'camp_1',
+        ]);
+        $bid = ShipmentBid::create([
+            'shipment_board_listing_id' => $listing->id,
+            'node_id' => $bidderNode->id,
+            'amount' => 120.00,
+            'currency' => 'USD',
+        ]);
+
+        $this->actingAs($poster)
             ->postJson('/api/shipment-board-listings/' . $listing->id . '/award', ['bid_id' => $bid->id])
             ->assertOk();
 
@@ -193,7 +225,7 @@ class CoalitionShipmentBoardTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_coordinator_authority_does_not_reach_other_peoples_listings(): void
+    public function test_a_coalition_member_cannot_award_other_peoples_listings(): void
     {
         $poster = User::factory()->create();
 

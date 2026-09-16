@@ -133,39 +133,29 @@ class ShipmentBoardListingController extends Controller
     }
 
     /**
-     * Who may award this listing's bids.
+     * Who may award this listing's bids: the poster, and only the poster.
      *
-     * The poster, as before — plus, for a coalition drive, that coalition's
-     * coordinator. The widening is not a convenience: a drive that arrives
-     * from FBM is owned by the FBM service account, which is not a person and
-     * will never log in, so on a bid-policy listing its bids could be placed
-     * and never awarded. The reverse auction would collect prices and stall.
+     * An earlier revision also admitted a coalition's coordinator, to solve a
+     * real problem — an FBM-originated drive is owned by a service account that
+     * will never log in, so its bids could be placed and never awarded. That
+     * widening came out for two reasons.
      *
-     * Deliberately narrow. Coordination authority extends only to listings
-     * carrying that coalition's `coalition_ref`, only to a node whose
-     * membership is active and marked coordinator, and it grants awarding
-     * alone — the same act the poster already had. It is not a general right
-     * over other people's listings.
+     * It could not fire: nothing writes `node_coalition_memberships`, nothing
+     * sets `coalition_ref` on a listing, and FBM posts `first_claim`, which
+     * `award()` refuses. And it carried a hole — `award()` never compares the
+     * winning bid's node to the awarding user's, so the first coordinator ever
+     * provisioned could bid on their own coalition's freight and award it to
+     * themselves.
+     *
+     * The service-account problem is real and still open; it needs a decision
+     * about who may grant coordinator status and how it is revoked, which this
+     * codebase has no role model for. Until then, poster-only is the honest
+     * state. The coalition-scoped ELIGIBILITY narrowing is unaffected — it
+     * reads membership, never a role.
      */
     protected function mayAward(?User $user, ShipmentBoardListing $listing): bool
     {
-        if (!$user) {
-            return false;
-        }
-
-        if ($listing->created_by_user_id === $user->id) {
-            return true;
-        }
-
-        $coalitionRef = (string) ($listing->coalition_ref ?? '');
-
-        if ($coalitionRef === '') {
-            return false;
-        }
-
-        $node = $user->node;
-
-        return $node !== null && $node->coordinatesCoalition($coalitionRef);
+        return $user !== null && $listing->created_by_user_id === $user->id;
     }
 
     /**
@@ -208,7 +198,7 @@ class ShipmentBoardListingController extends Controller
         abort_if(
             !$this->mayAward($user, $shipmentBoardListing),
             403,
-            'Only the node that posted this listing, or its coalition coordinator, can award it.'
+            'Only the node that posted this listing can award it.'
         );
 
         abort_if(
