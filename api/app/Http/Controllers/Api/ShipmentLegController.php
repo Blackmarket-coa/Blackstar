@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Concerns\AuthorizesShipmentParties;
 use App\Http\Controllers\Controller;
 use App\Models\ShipmentBoardListing;
 use App\Models\ShipmentLeg;
@@ -11,17 +12,23 @@ use Illuminate\Http\Request;
 
 class ShipmentLegController extends Controller
 {
+    use AuthorizesShipmentParties;
+
     public function __construct(protected ShipmentLegProgressionService $progression)
     {
     }
 
     public function index(ShipmentBoardListing $shipmentBoardListing): JsonResponse
     {
+        $this->authorizeShipmentParty($shipmentBoardListing);
+
         return response()->json($shipmentBoardListing->legs()->get());
     }
 
     public function store(Request $request, ShipmentBoardListing $shipmentBoardListing): JsonResponse
     {
+        $this->authorizeShipmentParty($shipmentBoardListing);
+
         $validated = $request->validate([
             'sequence' => ['required', 'integer', 'min:1'],
             'from_node_id' => ['nullable', 'uuid', 'exists:nodes,id'],
@@ -42,6 +49,7 @@ class ShipmentLegController extends Controller
     public function update(Request $request, ShipmentBoardListing $shipmentBoardListing, ShipmentLeg $shipmentLeg): JsonResponse
     {
         abort_if($shipmentLeg->shipment_board_listing_id !== $shipmentBoardListing->id, 404);
+        $this->authorizeShipmentParty($shipmentBoardListing);
 
         $validated = $request->validate([
             'status' => ['required', 'in:in_transit,handed_off,completed,failed,disputed'],
