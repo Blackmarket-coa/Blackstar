@@ -31,13 +31,26 @@ return [
     | users are actually retrieved out of your database or other storage
     | mechanisms used by this application to persist your user's data.
     |
-    | Supported: "session"
+    | Supported: "session", "sanctum"
     |
     */
 
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        // Bearer-token guard for node operators calling the Blackstar API
+        // (tokens issued by POST /api/auth/token). Sanctum driver, but kept
+        // separate from the `sanctum` guard the Fleetbase engines register
+        // with no provider: pinning `users` here means only tokens whose
+        // owner is an App\Models\User authenticate on Blackstar routes, and
+        // the Fleetbase guard's behaviour is left exactly as it was.
+        // Requests already authenticated on `web` (config/sanctum.php
+        // `guard`) pass through first, which is what actingAs() relies on.
+        'operator' => [
+            'driver' => 'sanctum',
             'provider' => 'users',
         ],
     ],

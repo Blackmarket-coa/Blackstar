@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Api\AuthTokenController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\FleetController;
 use App\Http\Controllers\Api\NodeController;
+use App\Http\Controllers\Api\NodeTransportClassController;
 use App\Http\Controllers\Api\NodeTrustScoreController;
+use App\Http\Controllers\Api\TransportClassController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ShipmentPaymentReferenceController;
 use App\Http\Controllers\Api\ShipmentLegController;
@@ -14,7 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('webhooks/freeblackmarket', [FreeBlackMarketWebhookController::class, 'handle']);
 
-Route::middleware('auth')->group(function () {
+// Node operator sign-in: exchanges email + password for a bearer token.
+// Throttled per client IP (5/min) against password guessing.
+Route::post('auth/token', [AuthTokenController::class, 'store'])->middleware('throttle:5,1');
+
+// `operator` is a Sanctum guard (config/auth.php): it accepts a bearer token
+// from auth/token, or a request already authenticated on the `web` guard.
+Route::middleware('auth:operator')->group(function () {
+    Route::post('auth/token/revoke', [AuthTokenController::class, 'destroy']);
+
     // Operator action, not a webhook: it triggers reprocessing of failed
     // inbound events and redelivery of pending outbound events, so it must
     // not be reachable anonymously.
@@ -22,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::apiResource('nodes', NodeController::class);
     Route::post('nodes/{node}/attest', [NodeController::class, 'attest']);
+    Route::put('nodes/{node}/transport-classes', [NodeTransportClassController::class, 'update']);
+    Route::get('transport-classes', [TransportClassController::class, 'index']);
     Route::apiResource('fleets', FleetController::class);
     Route::apiResource('vehicles', VehicleController::class);
     Route::apiResource('drivers', DriverController::class);
