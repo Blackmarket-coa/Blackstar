@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Blackstar Nav baseline",
   "scripts": {
+    "test": "node --test",
     "smoke": "node scripts/smoke.js",
     "bid:smoke": "BLACKSTAR_DRY_RUN=1 node scripts/smoke.js"
   }

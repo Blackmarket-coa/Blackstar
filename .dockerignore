@@ -25,3 +25,5 @@ docker-compose.yml
 $virtualenv.tar.gz
 $node_modules.tar.gz
 docker-compose.override.yml
+api/vendor
+api/.env

@@ -2,45 +2,77 @@
 <Layout::Section::Header @title="Dispatch dashboard" />
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto max-w-6xl py-6 space-y-6">
-        <div class="flex items-center gap-3">
-            <label class="text-sm font-semibold">Filter status</label>
-            <select class="form-select" {{on "change" this.setStatusFilter}}>
-                {{#each this.statuses as |statusOption|}}
-                    <option value={{statusOption}} selected={{eq statusOption this.status}}>{{statusOption}}</option>
-                {{/each}}
-            </select>
-        </div>
-
-        <ContentPanel @title="Active dispatch orders" @open={{true}} @wrapperClass="bordered-classic">
-            <table class="table table-auto w-full text-sm">
-                <thead>
-                    <tr>
-                        <th>Order</th>
-                        <th>Status</th>
-                        <th>Pickup</th>
-                        <th>Dropoff</th>
-                        <th>Bids</th>
-                        <th>Driver</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each this.filteredOrders as |order|}}
-                        <tr>
-                            <td>{{order.id}}</td>
-                            <td>{{order.status}}</td>
-                            <td>{{order.pickup}}</td>
-                            <td>{{order.dropoff}}</td>
-                            <td>{{order.bids}}</td>
-                            <td>{{if order.driver order.driver "—"}}</td>
-                        </tr>
+        {{#if this.operatorToken}}
+            <div class="flex items-center gap-3">
+                <label class="text-sm font-semibold">Claim policy</label>
+                <select class="form-select" {{on "change" this.setClaimPolicyFilter}}>
+                    {{#each this.claimPolicies as |policyOption|}}
+                        <option value={{policyOption}} selected={{eq policyOption this.claimPolicy}}>{{policyOption}}</option>
                     {{/each}}
-                </tbody>
-            </table>
-        </ContentPanel>
+                </select>
+                <Button @text="Refresh" @icon="arrows-rotate" @onClick={{this.loadListings}} @isLoading={{this.isLoading}} @disabled={{this.isLoading}} />
+                <Button @text="Sign out" @size="xs" @onClick={{this.signOut}} />
+            </div>
 
-        <ContentPanel @title="Map view (placeholder)" @open={{true}} @wrapperClass="bordered-classic">
+            <ContentPanel @title="Eligible open listings" @open={{true}} @wrapperClass="bordered-classic">
+                <p class="mb-3 text-xs text-gray-500">From
+                    <code>GET {{this.endpoint}}</code>: open shipment-board listings your node is eligible for. Empty when your account is not assigned to a node.</p>
+
+                {{#if this.errorMessage}}
+                    <p class="text-sm text-red-600">{{this.errorMessage}}</p>
+                {{/if}}
+
+                <table class="table table-auto w-full text-sm">
+                    <thead>
+                        <tr>
+                            <th>Order ref</th>
+                            <th>Claim policy</th>
+                            <th>Job type</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Bounty</th>
+                            <th>Jurisdiction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each this.filteredListings as |listing|}}
+                            <tr>
+                                <td>{{listing.source_order_ref}}</td>
+                                <td>{{if listing.claim_policy listing.claim_policy "first_claim"}}</td>
+                                <td>{{if listing.job_type listing.job_type "—"}}</td>
+                                <td>{{if listing.origin listing.origin "—"}}</td>
+                                <td>{{if listing.destination listing.destination "—"}}</td>
+                                <td>{{if listing.bounty_amount (concat listing.bounty_amount " " listing.bounty_currency) "—"}}</td>
+                                <td>{{if listing.jurisdiction listing.jurisdiction "—"}}</td>
+                            </tr>
+                        {{else}}
+                            <tr>
+                                <td colspan="7" class="text-center text-gray-500">
+                                    {{#if this.isLoading}}Loading…{{else if this.hasLoaded}}No eligible open listings.{{/if}}
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </ContentPanel>
+        {{else}}
+            <ContentPanel @title="Sign in to the Blackstar API" @open={{true}} @wrapperClass="bordered-classic">
+                <p class="mb-3 text-xs text-gray-500">Node operator credentials for
+                    <code>POST /api/auth/token</code>. Your console login is a separate account and is not accepted by these routes.</p>
+                <form class="space-y-4" {{on "submit" this.signIn}}>
+                    <InputGroup @name="Email" @value={{this.signInEmail}} @type="email" />
+                    <InputGroup @name="Password" @value={{this.signInPassword}} @type="password" />
+                    <Button @type="primary" @text="Sign in" @buttonType="submit" @isLoading={{this.isSigningIn}} @disabled={{this.isSigningIn}} />
+                </form>
+                {{#if this.signInError}}
+                    <p class="mt-2 text-sm text-red-600">{{this.signInError}}</p>
+                {{/if}}
+            </ContentPanel>
+        {{/if}}
+
+        <ContentPanel @title="Map view — not implemented" @open={{true}} @wrapperClass="bordered-classic">
             <div class="rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-500">
-                Real-time map visualization hook for active deliveries and driver markers.
+                No map is implemented for this page. The listing payload carries origin and destination as text only, and there is no driver location feed.
             </div>
         </ContentPanel>
     </div>

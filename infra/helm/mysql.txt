@@ -1,1 +1,4 @@
-Oyster-Upstart-Acronym6
+# Placeholder. The MySQL root password must come from a secret store, not this
+# file. The value previously committed here (upstream-inherited) is in git
+# history and should be treated as compromised.
+CHANGE_ME

@@ -9,13 +9,13 @@ async function main() {
 
   process.env.BLACKSTAR_DRY_RUN = process.env.BLACKSTAR_DRY_RUN || '1';
 
-  const ping = await request('/int/v1/dispatch/requests');
+  const ping = await request('/api/shipment-board-listings/eligible');
   console.log('api connection check:', JSON.stringify(ping));
 
   const bid = await runBidSubmission({
-    requestId: process.env.BLACKSTAR_SAMPLE_REQUEST_ID || 'req_demo_1001',
-    price: Number(process.env.BLACKSTAR_SAMPLE_BID_PRICE || 12.5),
-    etaMinutes: Number(process.env.BLACKSTAR_SAMPLE_BID_ETA || 25),
+    listingId: process.env.BLACKSTAR_SAMPLE_LISTING_ID || 'listing_demo_1001',
+    amount: Number(process.env.BLACKSTAR_SAMPLE_BID_AMOUNT || 12.5),
+    currency: process.env.BLACKSTAR_SAMPLE_BID_CURRENCY || 'USD',
   });
 
   console.log('bid flow check:', JSON.stringify(bid));
