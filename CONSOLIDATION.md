@@ -26,12 +26,20 @@ standalone node software only when a real external logistics node (an independen
 running its own instance) actually exists.
 
 Context from the audit: the custom work here is 3,066 lines of Laravel (board/claim/bid, shipment
-legs, node attestation/trust, the FBM event bridge — all tested); the 13 Fleetbase submodules are
-empty, so the surrounding fork cannot build the Fleetbase product as checked out; the headline
+legs, node attestation/trust, the FBM event bridge — all with tests written, see note below);
+the 13 Fleetbase submodules are empty, so the surrounding fork cannot build the Fleetbase product as checked out; the headline
 "Network Advantage Engine" features (mesh routing, batch aggregation, micro-depots, reverse-auction
 mechanics) exist as design docs only. The `workflows/*.md` workplans describing the old
 `apps/blackstar-console` as complete are historical — that duplicate app was folded into
 `console/` on this branch.
+
+> **Test status, 2026-09-25.** "Tests written" is not "tests passing". The repository has
+> never run a GitHub Actions workflow: the Actions API reports 0 runs in its history, so
+> `ci.yml` and the rest have never executed these suites. The staging E2E scenarios in
+> `reports/staging-e2e-validation.md` (S1 normal, S2 delayed retry, S3 cancellation) and the
+> vendor-visibility suite run are all recorded as **BLOCKED** (exit 255 — dependencies could not be
+> installed), not passed. Any test result for this repo should be treated as unverified until a CI
+> run exists.
 
 ## Salvage inventory (worth carrying into FBM, per the canonical review)
 

@@ -38,8 +38,18 @@ services:
       # For production, use: SOCKETCLUSTER_OPTIONS: '{"origins":"https://yourdomain.com:*"}'
       # For development, use: SOCKETCLUSTER_OPTIONS: '{"origins":"http://localhost:*"}'
 
+  # application, queue and scheduler are built from this checkout's
+  # docker/Dockerfile (which copies ./api into the image), so `docker compose up`
+  # runs Blackstar's own api/ code. The upstream fleetbase/fleetbase-api image
+  # does not contain it. Targets match docker-bake.hcl: `app-release` is the
+  # `fleetbase-api` release target; `scheduler-dev` / `events-dev` are the
+  # scheduler / events stages without the AWS SSM (ssm-parent) entrypoint that
+  # the bake `scheduler` / `events` targets use for cloud deploys.
   scheduler:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: scheduler-dev
     command: ["go-crond", "--verbose", "root:./crontab"]
     restart: unless-stopped
     environment:
@@ -54,7 +64,10 @@ services:
       - cache
 
   queue:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: events-dev
     command: ["php", "artisan", "queue:work"]
     restart: unless-stopped
     healthcheck:
@@ -85,7 +98,10 @@ services:
       - ./console/fleetbase.config.json:/usr/share/nginx/html/fleetbase.config.json
 
   application:
-    image: fleetbase/fleetbase-api:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: app-release
     volumes:
       - ./api/.env:/fleetbase/api/.env
     environment:

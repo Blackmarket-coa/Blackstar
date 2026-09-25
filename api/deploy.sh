@@ -9,6 +9,10 @@ php artisan mysql:createdb
 # Run migrations
 php artisan migrate --force
 
+# Canonical transport classes (idempotent firstOrCreate). Without them every
+# node is ineligible for every shipment-board listing.
+php artisan db:seed --class=TransportClassSeeder --force
+
 # Run migrations for sandbox too
 php artisan sandbox:migrate --force
 

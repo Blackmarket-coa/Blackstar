@@ -11,6 +11,13 @@ return [
     'signature_tolerance_seconds' => (int) env('FBM_SIGNATURE_TOLERANCE_SECONDS', 300),
     'max_retries' => (int) env('FBM_MAX_RETRIES', 3),
     'retry_backoff_seconds' => (int) env('FBM_RETRY_BACKOFF_SECONDS', 30),
+    // Upper bound on inbound receipts and on outbound events each run of the
+    // scheduled `fbm:retry` command re-attempts, so a large backlog drains
+    // over several runs instead of one unbounded pass.
+    'retry_batch_size' => (int) env('FBM_RETRY_BATCH_SIZE', 100),
+    // Jurisdiction given to a node provisioned from node.operator.approved
+    // when the payload carries none.
+    'default_jurisdiction' => env('FBM_DEFAULT_JURISDICTION', 'US'),
     // Service account that owns shipment listings created from federated
     // delivery.option.selected events: FBM has no Blackstar user identity to
     // send, so the listing creator defaults to this user. Same fail-closed

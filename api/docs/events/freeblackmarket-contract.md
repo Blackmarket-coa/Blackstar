@@ -31,7 +31,7 @@ If `FBM_WEBHOOK_SECRET` is unset the endpoint returns 503: an unconfigured
 secret disables the integration instead of authenticating against a default.
 
 ### `order.created`
-- idempotent pre-validation hook (no listing creation by itself).
+- recorded idempotently as a receipt and otherwise a no-op (no listing creation, no validation).
 
 ### `delivery.option.selected`
 - when `payload.delivery_option === federated_delivery_network`, creates shipment board listing idempotently keyed by `source_order_ref`.

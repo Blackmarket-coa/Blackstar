@@ -2,23 +2,76 @@
 <Layout::Section::Header @title="Node registration" />
 <Layout::Section::Body class="overflow-y-scroll h-full">
     <div class="container mx-auto max-w-4xl py-6 space-y-6">
-        <p class="text-sm text-gray-500">Register a logistics node with service area polygon, vehicle types, and availability windows.</p>
+        <p class="text-sm text-gray-500">
+            Register a logistics node with the Blackstar API (<code>POST {{this.endpoint}}</code>). Attestations are submitted separately and activate the node. The API only lets an account
+            that is already assigned to a node create one.
+        </p>
 
-        <form class="space-y-4" {{on "submit" this.submitNodeRegistration}}>
-            <InputGroup @name="Node name" @value={{this.nodeName}} @placeholder="Downtown Logistics Cell" />
+        {{#if this.operatorToken}}
+            <div class="flex items-center gap-3 text-sm">
+                <span>Signed in to the Blackstar API.</span>
+                <Button @text="Sign out" @size="xs" @onClick={{this.signOut}} />
+            </div>
 
-            <InputGroup @name="Vehicle types (comma separated)" @value={{this.vehicleTypes}} @placeholder="bike,van,truck" />
+            <form class="space-y-4" {{on "submit" this.submitNodeRegistration}}>
+                <InputGroup @name="Node ID (unique)" @value={{this.nodeId}} @placeholder="downtown-cell-01" />
 
-            <InputGroup @name="Availability windows" @value={{this.availabilityWindows}} @placeholder="mon-fri:08:00-18:00" />
+                <InputGroup @name="Legal entity name" @value={{this.legalEntityName}} @placeholder="Downtown Logistics Co-op LLC" />
 
-            <InputGroup @name="Service area polygon (lat,lng pairs)" @value={{this.polygon}} @placeholder="[[40.7128,-74.0060],[40.7306,-73.9866]]" />
+                <InputGroup @name="Jurisdiction" @value={{this.jurisdiction}} @placeholder="US-NY" />
 
-            <Button @type="primary" @text="Submit node registration" @icon="location-dot" @buttonType="submit" />
-        </form>
+                <InputGroup
+                    @name="Service radius (miles)"
+                    @value={{this.serviceRadius}}
+                    @placeholder="25"
+                    @helpText="Measured from the latitude/longitude below. Without coordinates, or at 0, the radius is not applied and eligibility falls back to jurisdiction."
+                />
 
-        {{#if this.submission}}
-            <ContentPanel @title="Registration payload preview" @open={{true}} @wrapperClass="bordered-classic">
-                <pre class="text-xs">{{json-pretty-print this.submission}}</pre>
+                <InputGroup @name="Latitude (optional)" @value={{this.latitude}} @placeholder="40.7128" />
+
+                <InputGroup @name="Longitude (optional)" @value={{this.longitude}} @placeholder="-74.0060" />
+
+                <InputGroup @name="Contact email (optional)" @value={{this.contactEmail}} @placeholder="ops@example.org" />
+
+                <InputGroup @name="Contact phone (optional)" @value={{this.contactPhone}} @placeholder="+1 555 0100" />
+
+                <InputGroup @name="Transport capabilities (optional, comma separated)" @value={{this.transportCapabilities}} @placeholder="bike,van" />
+
+                <Button @type="primary" @text="Submit node registration" @icon="location-dot" @buttonType="submit" @isLoading={{this.isSubmitting}} @disabled={{this.isSubmitting}} />
+            </form>
+        {{else}}
+            <ContentPanel @title="Sign in to the Blackstar API" @open={{true}} @wrapperClass="bordered-classic">
+                <p class="mb-3 text-xs text-gray-500">Node operator credentials for
+                    <code>POST /api/auth/token</code>. Your console login is a separate account and is not accepted by these routes.</p>
+                <form class="space-y-4" {{on "submit" this.signIn}}>
+                    <InputGroup @name="Email" @value={{this.signInEmail}} @type="email" />
+                    <InputGroup @name="Password" @value={{this.signInPassword}} @type="password" />
+                    <Button @type="primary" @text="Sign in" @buttonType="submit" @isLoading={{this.isSigningIn}} @disabled={{this.isSigningIn}} />
+                </form>
+                {{#if this.signInError}}
+                    <p class="mt-2 text-sm text-red-600">{{this.signInError}}</p>
+                {{/if}}
+            </ContentPanel>
+        {{/if}}
+
+        {{#if this.errorMessage}}
+            <ContentPanel @title="Registration failed" @open={{true}} @wrapperClass="bordered-classic">
+                <p class="text-sm text-red-600">{{this.errorMessage}}</p>
+                {{#if this.fieldErrors}}
+                    <ul class="mt-2 list-disc pl-5 text-sm text-red-600">
+                        {{#each-in this.fieldErrors as |field messages|}}
+                            {{#each messages as |message|}}
+                                <li><code>{{field}}</code>: {{message}}</li>
+                            {{/each}}
+                        {{/each-in}}
+                    </ul>
+                {{/if}}
+            </ContentPanel>
+        {{/if}}
+
+        {{#if this.createdNode}}
+            <ContentPanel @title="Node registered" @open={{true}} @wrapperClass="bordered-classic">
+                <pre class="text-xs">{{json-pretty-print this.createdNode}}</pre>
             </ContentPanel>
         {{/if}}
     </div>

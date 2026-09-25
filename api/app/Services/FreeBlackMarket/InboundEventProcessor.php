@@ -61,19 +61,42 @@ class InboundEventProcessor
         });
     }
 
-    public function retryFailed(): void
+    /**
+     * Re-process failed receipts whose backoff has elapsed. Shared by the
+     * authenticated retry endpoint (unbounded) and the scheduled `fbm:retry`
+     * command, which passes a limit and takes the oldest receipts first.
+     *
+     * @return int number of receipts re-attempted
+     */
+    public function retryFailed(?int $limit = null): int
     {
-        FbmInboundEventReceipt::query()
+        $query = FbmInboundEventReceipt::query()
             ->where('status', 'failed')
             ->whereNotNull('next_attempt_at')
-            ->where('next_attempt_at', '<=', now())
-            ->each(fn (FbmInboundEventReceipt $receipt) => $this->process($receipt->payload, $receipt->correlation_id));
+            ->where('next_attempt_at', '<=', now());
+
+        $retried = 0;
+        $retry = function (FbmInboundEventReceipt $receipt) use (&$retried): void {
+            $this->process($receipt->payload, $receipt->correlation_id);
+            $retried++;
+        };
+
+        if ($limit === null) {
+            $query->each($retry);
+        } else {
+            $query->orderBy('next_attempt_at')->orderBy('created_at')->limit($limit)->get()->each($retry);
+        }
+
+        return $retried;
     }
 
     protected function applyEvent(string $eventType, array $payload, ?string $correlationId = null): void
     {
         if ($eventType === 'order.created') {
-            // idempotent no-op placeholder for pre-validation pipeline.
+            // Deliberate no-op: the receipt is recorded as processed (so a
+            // redelivery is deduplicated) but nothing else happens. No
+            // pre-validation pipeline exists yet; listings are created only
+            // from delivery.option.selected.
             return;
         }
 
@@ -199,8 +222,9 @@ class InboundEventProcessor
             ['email' => $email],
             [
                 'name' => $payload['member_name'] ?? ($payload['seller_name'] ?? 'Node operator'),
-                // No password: this account is reached through the bridge and
-                // its credential, not through a Blackstar login (there is none).
+                // Random password: this account is reached through the bridge
+                // and its credential. POST /api/auth/token exists, but these
+                // operators cannot use it until a password-setup flow exists.
                 'password' => bcrypt(bin2hex(random_bytes(32))),
                 'node_id' => $node->id,
             ]

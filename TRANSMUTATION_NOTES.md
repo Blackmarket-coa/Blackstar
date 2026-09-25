@@ -14,9 +14,9 @@ as design docs only", and the code agrees. Re-verified feature by feature:
 
 | Feature | State |
 | --- | --- |
-| Shipment board | Shipped. `ShipmentBoardListing.php` with a guarded `transitionTo`, migrations, routes, tests. API-only — no console screen |
-| Claim | Shipped. `ShipmentBoardListingController::claim()` |
-| Bid | **Write-only.** `ShipmentBid` appears in the model, factory, migration and one `updateOrCreate`, plus an uncalled `bids()` relation. Nothing awards |
+| Shipment board | Shipped. `ShipmentBoardListing.php` with a guarded `transitionTo`, migrations, routes, tests. Console: the dispatch page lists a node's eligible open listings, read-only (updated 2026-09-25) |
+| Claim | Shipped. `ShipmentBoardListingController::claim()`; refuses `claim_policy: bid` listings since 7483f9e (2026-09-13) |
+| Bid | Shipped (updated 2026-09-25). `POST .../{listing}/bids` records one bid per node; `POST .../{listing}/award` (7483f9e, 2026-09-13) lets the listing's poster pick a bid, re-checks eligibility and records `awarded_shipment_bid_id`. Awarding is manual — nothing selects a winner automatically |
 | Shipment leg | Shipped and good. Guarded two-node handoff with proof and settlement reference, `ShipmentLegProgressionService`, tests |
 | Node attestation | Shipped |
 | Trust score | Shipped but inert and self-reported — the node's own user supplies the rates, and `ShipmentEligibilityService` never reads them |
@@ -27,15 +27,19 @@ as design docs only", and the code agrees. Re-verified feature by feature:
 
 ## 2. Three specific things worth fixing or recording
 
-- **`claim()` ignores `claim_policy`.** On a listing configured for bidding,
-  the first eligible node to POST `/claim` takes it and every bid row is
-  ignored. Either honour the policy or stop offering it as a setting.
-- **`nodes` cannot describe a place.** Fourteen columns, none of them latitude,
-  longitude, geometry, kind, hours or capacity. It carries a `service_radius`
-  with no centre, and that column is never read outside its own validator. A
-  `ShipmentLeg`'s `to_node_id` therefore points at a table that cannot say
-  where anything is. This is the blocker for any depot work, not the depot
-  model itself.
+- ~~**`claim()` ignores `claim_policy`.**~~ **Fixed 2026-09-13 (7483f9e).**
+  Originally: on a listing configured for bidding, the first eligible node to
+  POST `/claim` took it and every bid row was ignored. `claim()` now returns 422
+  for `claim_policy: bid`, and the new `award` endpoint is the only way such a
+  listing becomes claimed — by its poster, choosing a bid.
+- ~~**`nodes` cannot describe a place.**~~ **Partly fixed 2026-09-13 (a52a420).**
+  Nodes now carry nullable `latitude`/`longitude` and listings carry
+  `origin_latitude`/`origin_longitude`; `ShipmentEligibilityService` applies
+  `service_radius` (as miles) from the node's coordinates to the listing
+  origin, falling back to jurisdiction matching when either side has no
+  coordinates or the radius is 0. Still missing, and still the blocker for
+  depot work: no node kind, hours or capacity, and no geometry beyond a point
+  and radius.
 - ~~**FBM cannot see the relay.**~~ **Half fixed here 2026-09-10; the other
   half is an FBM change.** Blackstar emitted seven event types and FBM's
   `verify-blackstar-signature.ts` mapped five, so the two leg events — the
@@ -98,3 +102,10 @@ automatically selects a winning price, combined with a listing `bounty_amount`
 and a per-leg `settlement_ref`, moves toward clearing prices between parties —
 validate that against this guard and FBM's `posture-a-guard.ts` **before** any
 award endpoint is built, not after.
+
+**Update 2026-09-25:** an award endpoint now exists (7483f9e, 2026-09-13). It
+is not an auction clearing: the listing's poster picks a bid by hand, no money
+moves, and the awarded amount stays on the bid row rather than entering the
+`shipment.claimed` event. That commit does not record a review against
+`NonCustodialPaymentGuard` or `posture-a-guard.ts`; that check is still owed
+before anything pays out against `awarded_shipment_bid_id`.

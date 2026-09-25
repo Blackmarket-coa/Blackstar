@@ -41,11 +41,11 @@ Blackstar FLP is designed for ecosystems that need interoperable fulfillment wit
 | **Live Fleet Map** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/live-map-tracking.png" alt="Fleetbase Live Map Tracking" width="600" /> | Get a complete overview of your fleet and active orders on a live map. |
 | **Service Zones** | <img src="https://flb-assets.s3.ap-southeast-1.amazonaws.com/static/fleet-map-zones.png" alt="Fleetbase Fleet Map with Zones" width="600" /> | Define and manage service areas and zones for your fleet. |
 
-**Quickstart**
+**Quickstart** (runs this repository — see [Install](#-install))
 
 ```bash
-npm install -g @fleetbase/cli
-flb install-fleetbase
+git clone https://github.com/Blackmarket-coa/Blackstar.git
+cd Blackstar && cp api/.env.example api/.env && ./scripts/docker-install.sh
 ```
 
 ## 📖 Table of contents
@@ -116,31 +116,45 @@ flb install-fleetbase
 
 ## 💾 Install
 
-The easiest way to get started with Blackstar FLP is using the Fleetbase CLI bootstrap path in this repository, which automates Docker-based installation for protocol services. For non-Docker installation patterns, use the upstream install guide as a Laravel/Fleetbase baseline and apply this repository's federated configuration overlays.
+Run Blackstar from a checkout of **this** repository. `docker compose` builds the API,
+queue and scheduler images from `docker/Dockerfile`, which copies this repo's `api/` directory
+(Blackstar's shipment board, node, relay and FBM-bridge code) into the image, and builds the
+console from `console/`.
+
+Do not use `flb install-fleetbase` or clone `fleetbase/fleetbase` to run Blackstar: both install
+upstream Fleetbase, which contains none of the Blackstar code.
 
 ### Prerequisites
-- Node.js (v14 or higher)
 - Docker and Docker Compose
 - Git
+- `openssl` (used by the install script to generate `APP_KEY`)
 
-### Quick Install with CLI
-
-```bash
-# Install the Fleetbase CLI globally
-npm install -g @fleetbase/cli
-
-# Run the interactive installer
-flb install-fleetbase
-```
-
-### Alternative Install Script
-
-You can also use the install script directly:
+### Install with Docker
 
 ```bash
-git clone git@github.com:fleetbase/fleetbase.git  
-cd fleetbase && ./scripts/docker-install.sh
+git clone https://github.com/Blackmarket-coa/Blackstar.git
+cd Blackstar
+
+# docker-compose.yml mounts api/.env into the application container
+cp api/.env.example api/.env
+
+# Interactive: asks for host and environment, writes docker-compose.override.yml
+# and console config, runs `docker compose up -d`, then the API's deploy.sh
+./scripts/docker-install.sh
 ```
+
+To start the stack again later, `docker compose up -d --build` rebuilds the images from your
+current checkout.
+
+### About `packages/*`
+
+The repository declares 13 git submodules — 12 under `packages/` (`core-api`, `fleetops`,
+`storefront`, `ember-core`, `ember-ui`, `iam-engine`, `dev-engine`, `pallet`, `ledger`,
+`registry-bridge`, `fleetops-data`, `fleetbase-extensions-indexer`) plus `docs/`. All point at the
+upstream `fleetbase/*` repositories and are empty in a normal clone. They contain no Blackstar
+code and the Docker build does not use them: the API and console pull the published Fleetbase
+packages from Composer and npm. Initialise them only if you are developing against upstream
+Fleetbase engines.
 
 ### Accessing Blackstar FLP
 Once successfully installed and running you can access the Blackstar operations console on port 4200 and the API on port 8000.  
@@ -206,7 +220,7 @@ You can learn more about full installation, and configuration in the [official d
 
 ## ⌨️ Fleetbase CLI 
 
-The Fleetbase CLI remains the primary bootstrap tool for managing a Blackstar deployment derived from Fleetbase. It simplifies installation, extension management, authentication, and development workflows.
+The Fleetbase CLI is upstream Fleetbase tooling for registry extensions, authentication and extension development. It is not how Blackstar is installed: `flb install-fleetbase` installs upstream Fleetbase, not this repository (see [Install](#-install)).
 
 Install the CLI globally with npm:
 
