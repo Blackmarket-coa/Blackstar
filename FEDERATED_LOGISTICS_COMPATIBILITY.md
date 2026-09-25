@@ -124,7 +124,7 @@ Use either webhooks or an event bus. Minimal contract below.
 
 ### Inbound (from FreeBlackMarket to this protocol)
 
-- `order.created` → may trigger shipment listing pre-validation.
+- `order.created` → recorded as a receipt; otherwise a no-op.
 - `delivery.option.selected` (`federated_delivery_network`) → create `ShipmentBoardListing`.
 - `order.cancelled` → cancel open listing or request stop on in-transit shipment.
 

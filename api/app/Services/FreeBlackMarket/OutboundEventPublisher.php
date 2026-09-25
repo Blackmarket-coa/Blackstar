@@ -91,14 +91,34 @@ class OutboundEventPublisher
         $this->markFailed($event, 'HTTP ' . $response->status() . ': ' . $response->body());
     }
 
-    public function retryPending(): void
+    /**
+     * Re-dispatch pending/failed events whose backoff has elapsed. Shared by
+     * the authenticated retry endpoint (unbounded) and the scheduled
+     * `fbm:retry` command, which passes a limit and takes the oldest first.
+     *
+     * @return int number of events re-attempted
+     */
+    public function retryPending(?int $limit = null): int
     {
-        FbmOutboundEvent::query()
+        $query = FbmOutboundEvent::query()
             ->whereIn('status', ['pending', 'failed'])
             ->where(function ($query) {
                 $query->whereNull('next_attempt_at')->orWhere('next_attempt_at', '<=', now());
-            })
-            ->each(fn (FbmOutboundEvent $event) => $this->dispatch($event));
+            });
+
+        $retried = 0;
+        $retry = function (FbmOutboundEvent $event) use (&$retried): void {
+            $this->dispatch($event);
+            $retried++;
+        };
+
+        if ($limit === null) {
+            $query->each($retry);
+        } else {
+            $query->orderBy('created_at')->limit($limit)->get()->each($retry);
+        }
+
+        return $retried;
     }
 
     protected function markFailed(FbmOutboundEvent $event, string $error): void

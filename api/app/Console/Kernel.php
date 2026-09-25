@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Automatic retry of FreeBlackMarket events; before this, failed
+        // deliveries were retried only via the authenticated retry endpoint.
+        $schedule->command('fbm:retry')->everyFiveMinutes()->withoutOverlapping();
     }
 
     /**
