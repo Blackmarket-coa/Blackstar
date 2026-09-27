@@ -59,14 +59,16 @@ There's a `PULL_REQUEST_TEMPLATE.md` at the repo root — populate its headings.
 
 ---
 
-## Known open item
+## nginx
 
-`console/nginx.conf` carries ~59 `header-redefinition` findings. These need
-someone who can actually run `nginx -t` against the result: in nginx, an
-`add_header` in an inner block **discards all inherited `add_header`
-directives** from the outer block rather than adding to them, so "fixing" them
-by mechanical edit can silently drop security headers. Don't batch-edit this
-file without a config test in the loop.
+`console/nginx.conf` is small (3 `add_header` across 4 blocks). If you add
+headers here, know the nginx rule: an `add_header` in an inner block
+**discards all inherited `add_header` directives** from the outer block rather
+than adding to them. Verify with `nginx -t` plus an actual response-header
+check, not by reading the file.
+
+(The large header-redefinition backlog is in the **Blackout** repo's infra
+configs, not this one.)
 
 ---
 
