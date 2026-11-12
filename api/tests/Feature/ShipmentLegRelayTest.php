@@ -57,6 +57,8 @@ class ShipmentLegRelayTest extends TestCase
 
         [$listing, $nodeA, $nodeB, $nodeC, $userA] = $this->makeClaimedListing();
 
+        $listing->update(['source_fulfillment_ref' => 'ful_relay']);
+
         $leg1 = ShipmentLeg::factory()->create([
             'shipment_board_listing_id' => $listing->id,
             'sequence' => 1,
@@ -89,10 +91,11 @@ class ShipmentLegRelayTest extends TestCase
         // signed, verified and then unattributable to any order — which is
         // exactly what happened until this assertion existed. Asserting the
         // event_type alone, as the three lines above do, could not see it.
-        foreach (['shipment.leg.updated', 'shipment.leg.handoff_proof'] as $type) {
+        foreach (['shipment.leg.updated', 'shipment.leg.handoff_proof', 'shipment.in_transit', 'shipment.delivered'] as $type) {
             $events = FbmOutboundEvent::query()->where('event_type', $type)->get();
             $this->assertNotEmpty($events, "expected at least one {$type} event");
             foreach ($events as $event) {
+                $this->assertSame('ful_relay', $event->payload['source_fulfillment_ref'] ?? null);
                 $this->assertSame(
                     $listing->source_order_ref,
                     $event->payload['source_order_ref'] ?? null,

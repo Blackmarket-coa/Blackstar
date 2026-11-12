@@ -41,6 +41,7 @@ class ShipmentLegProgressionService
             $this->publisher->queueAndDispatch('shipment.leg.updated', [
                 'shipment_listing_id' => $listing->id,
                 'source_order_ref' => $listing->source_order_ref,
+                'source_fulfillment_ref' => $listing->source_fulfillment_ref,
                 'shipment_leg_id' => $leg->id,
                 'sequence' => $leg->sequence,
                 'status' => $leg->status,
@@ -53,6 +54,7 @@ class ShipmentLegProgressionService
             $this->publisher->queueAndDispatch('shipment.leg.handoff_proof', [
                 'shipment_listing_id' => $listing->id,
                 'source_order_ref' => $listing->source_order_ref,
+                'source_fulfillment_ref' => $listing->source_fulfillment_ref,
                 'shipment_leg_id' => $leg->id,
                 'sequence' => $leg->sequence,
                 'proof_of_handoff_hash' => $leg->proof_of_handoff_hash,
@@ -99,6 +101,7 @@ class ShipmentLegProgressionService
                     $this->publisher->queueAndDispatch('shipment.disputed', [
                         'shipment_listing_id' => $listing->id,
                         'source_order_ref' => $listing->source_order_ref,
+                        'source_fulfillment_ref' => $listing->source_fulfillment_ref,
                         'status' => $listing->status,
                         'failed_leg_id' => $updatedLeg->id,
                     ], $correlationId);
@@ -118,6 +121,7 @@ class ShipmentLegProgressionService
                 $this->publisher->queueAndDispatch('shipment.delivered', [
                     'shipment_listing_id' => $listing->id,
                     'source_order_ref' => $listing->source_order_ref,
+                    'source_fulfillment_ref' => $listing->source_fulfillment_ref,
                     'status' => $listing->status,
                 ], $correlationId);
             }
@@ -130,6 +134,7 @@ class ShipmentLegProgressionService
             $this->publisher->queueAndDispatch('shipment.in_transit', [
                 'shipment_listing_id' => $listing->id,
                 'source_order_ref' => $listing->source_order_ref,
+                'source_fulfillment_ref' => $listing->source_fulfillment_ref,
                 'status' => $listing->status,
             ], $correlationId);
         }
