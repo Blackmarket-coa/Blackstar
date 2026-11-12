@@ -1,28 +1,33 @@
-# Blackstar roadmap — dependencies recorded from the BMC launch plan
+# Blackstar roadmap
 
-Recorded 2026-10-04 from the operator's Black Mask launch spec (2026-10-03).
-The whole plan is in the free-black-market repo at
-`docs/BLACK_MASK_LAUNCH_PLAN.md`; the Blackout steps are in that repo's
-`docs/black-mask-chat-panel-and-account-link.md`. This file holds what touches
-Blackstar, which in this plan is **deferred**.
+## Current integration priority — 2026-11-12
 
-## Position in the launch order
+Reuse the existing Blackstar transport implementation inside FBM's character-built unified member portal. The [local integration contract](api/docs/fbm-unified-portal-integration.md) mirrors the canonical FBM plan and records source findings, gaps and acceptance.
 
-Blackout, Black Mask and FBM launch first. Vending units come later, funded by
-income from the existing structure. Blackstar is deferred until vending reaches
-its third stage.
+This supersedes the October 4 assumption that all Blackstar work waits until vending stage three. Vending/micro-depot expansion remains a separate later track; existing delivery/operator integration is planned now. No deployment date or readiness is asserted by this documentation change.
 
-## Steps
+| Package | Work | Release evidence |
+| --- | --- | --- |
+| 1. Source/runtime reconciliation | Identify deployed revisions, enabled bridge flags, event configuration and membership data | Built/deployed/enabled/blocked/unknown recorded separately |
+| 2. Character-build operator path | Reuse FBM explicit opt-in/provisioning and existing inactive-node/attestation/capability rules | Survey produces honest setup state; a vehicle answer or paid equipment does not activate a carrier |
+| 3. Member/operator session | Implement verified linking/sign-in and recovery; keep machine bridge keys server-side | Authenticated member actions reach only their permitted node/work |
+| 4. Existing board into the portal | Reuse eligible listings, voluntary claims and status APIs, then complete action UI | Ordinary delivery works end to end through the existing FBM fulfillment bridge |
+| 5. Bid/award and relay views | Reuse transport bids/awards and ordered leg progression | Resolve poster-only/service-account delegation gap; validate concurrent actions and leg-versus-shipment status |
+| 6. Coalition drives and grouped runs | Reuse Coalition map/coordination, known Coalition/drive refs and existing FBM batch/order-cycle primitives | Active membership, parcel/order mapping, permissions and recovery verified before pooling claims |
+| Later. Vending/depot expansion | Assess restock points and independent hardware economics | Separate scope, infrastructure and verified demand; no implied route optimizer |
 
-| # | Step | Depends on | Notes |
-|---|---|---|---|
-| S1 | **Vending stage 3 — vendor-stocked network.** FBM vendors stock vending units on consignment and **Blackstar micro-depots serve as restock points.** Units need their own revenue line (host fees, leasing, or a per-unit software fee) because a 3% commission cannot pay for hardware. | Vending stage 1 (a "unit OS" sold to operators who already own machines) and stage 2 (three to five BMC-owned units with BMC's own products) | Stage 2 must stand on its own and not wait on marketplace volume: FBM had 2 vendors and 3 products live and Blackstar was not deployed when the plan was written. |
-| S2 | **Enable GitHub Actions** before any vending work relies on CI here. The Actions API reported **0 runs ever** for this repository on 2026-10-04; the nine workflow files have never executed. | Operator setting | A green checkmark here has never meant anything (see `CLAUDE.md`). Expect the first run to surface a backlog that is not any one change's fault. |
-| S3 | **Deploy.** Blackstar is not deployed. The micro-depot role in S1 assumes a running API and console. | Phase 0 infrastructure capacity on the DL360, after the vault and Synapse load are understood | Not scheduled. |
+GlobalDispatchService currently returns null; the roadmap does not introduce forced assignment. Blackstar payment custody remains prohibited. Goods auctions are FBM commerce work and must not be described as implemented because transport bidding exists.
 
-## Not in scope for Blackstar in this plan
+## Historical October 4 observations — revalidate before release
 
-Billing (FBM), the hosted vault and its standby (Black Mask fork, DL360 and
-backup server), the chat panel and account link (Blackout), and sovereign
-identity beyond the optional account link. The securities-law review that gates
-community capital circles is not a Blackstar concern.
+The earlier [FBM Black Mask launch plan](https://github.com/Blackmarket-coa/free-black-market/blob/main/docs/BLACK_MASK_LAUNCH_PLAN.md) placed Blackstar after a three-stage vending rollout. That launch ordering is superseded for current portal/transport integration, while the following historical observations remain useful evidence to recheck:
+
+- On 2026-10-04 the Actions API reportedly had zero runs; workflow files alone did not prove functioning CI.
+- Blackstar was reported not deployed at that time. Current deployment state has not been audited by this doc update.
+- Vendor-stocked vending units/micro-depots require their own hardware/revenue/infrastructure plan; a 3% commerce commission is not a hardware funding claim.
+
+## Boundaries
+
+FBM owns commerce/billing/equipment and its existing inventory/agreements. Blackout Coalition owns the shared map/community coordination. Blackstar owns operator eligibility and physical transport state. Reuse authoritative records and versioned events rather than duplicating the backends.
+
+No runtime, flag, role, fee, dependency or deployment changes are made by this roadmap update.

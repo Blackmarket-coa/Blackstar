@@ -1,5 +1,7 @@
 # Federated Logistics Compatibility Blueprint
 
+> **2026-11-12 member-experience update:** [FBM unified-portal integration contract](api/docs/fbm-unified-portal-integration.md) is the current companion for character-survey/operator setup, the shared Coalition map and delivery tools inside one FBM member portal. Existing protocol/attestation/noncustody boundaries remain. Older phase tables below are historical planning, not proof of missing or deployed code.
+
 Canonical formal spec: [`api/docs/specification.md`](api/docs/specification.md). This blueprint remains the implementation and release-planning companion.
 
 This document adapts the federated logistics migration plan for compatibility with:
