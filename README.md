@@ -13,6 +13,8 @@ Unlike traditional dispatch software, Blackstar FLP centers on **independent nod
 
 Blackstar FLP is a **software coordination layer**, not a carrier, dispatcher, or custody wallet.
 
+**Unified FBM portal direction (2026-11-12):** [Integration contract](api/docs/fbm-unified-portal-integration.md) records how the existing operator/eligibility/board/claim/bid/relay code supports FBM's character-built member portal. Blackout Coalition supplies the shared map and community coordination. Reuse this implementation; session/delegation and runtime readiness still need verification.
+
 ### Core platform posture
 
 - **Federated architecture**: independent node operators coordinate without centralized force-assignment.
