@@ -13,7 +13,7 @@ Envelope:
 ```json
 {
   "event_id": "string (globally unique)",
-  "event_type": "order.created | delivery.option.selected | order.cancelled",
+  "event_type": "order.created | delivery.option.selected | order.cancelled | fulfillment.cancelled",
   "correlation_id": "string",
   "payload": { "...": "event specific" }
 }
@@ -34,7 +34,7 @@ secret disables the integration instead of authenticating against a default.
 - recorded idempotently as a receipt and otherwise a no-op (no listing creation, no validation).
 
 ### `delivery.option.selected`
-- when `payload.delivery_option === federated_delivery_network`, creates shipment board listing idempotently keyed by `source_order_ref`.
+- when `payload.delivery_option === federated_delivery_network`, creates shipment board listing idempotently keyed by (`source_order_ref`, optional `source_fulfillment_ref`).
 - `payload.created_by_user_id` is optional: FBM has no Blackstar user identity
   and omits it, so the listing creator defaults to the `FBM_SYSTEM_USER_ID`
   service account. If neither is available the event fails (and dead-letters)
@@ -169,3 +169,31 @@ deployment-global secrets:
   2. `correlation_id` field in body,
   3. generated UUID fallback.
 - Correlation ID is stored on inbound/outbound event records and emitted in outbound request headers.
+
+
+## Parcel identity extension (2026-11-12)
+
+`source_fulfillment_ref` is an optional nonempty string (max 255 characters),
+scoped to `source_order_ref`. Apply the fulfillment-ref migration before using
+this extension. All listing and relay events echo this ref, including claims,
+bid awards, status updates, and handoff proofs. A leg event remains leg progress;
+only `shipment.delivered` asserts the whole listing arrived.
+
+`fulfillment.cancelled` requires both refs and cancels only that parcel's listing
+from open/claimed/in_transit. `order.cancelled` cancels every live listing for the
+order. A processed cancellation also prevents a delayed selection event from
+creating an open job for a cancelled parcel. Invalid refs enter the existing
+retry/dead-letter path rather than widening the operation to the entire order.
+
+Deploy and migrate Blackstar first, then FBM's receipt-outcome migration and
+receiver. Leave FBM's `FBM_BLACKSTAR_FULFILLMENT_REFS=0` until active legacy
+order-only listings and pending deliveries are drained or explicitly reconciled.
+Enable it for new fulfillments after both sides are ready. Do not replay old
+order-only selections with new parcel keys; the migration does not guess a
+parcel for historical listings. Do not downgrade either receiver while scoped
+jobs or deliveries remain in flight.
+
+FBM's new receiver records `ambiguous_shipment` without a status write when an
+old order-only event could refer to several local shipments. Reconcile that
+receipt explicitly; replaying the same event id is still a no-op. Whole-order
+status writes are no longer used to guess that all parcels arrived.

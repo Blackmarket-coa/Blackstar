@@ -54,6 +54,65 @@ class FreeBlackMarketInteropTest extends TestCase
         $this->assertSame('processed', $receipt->status);
     }
 
+    public function test_two_fulfillments_create_independent_idempotent_listings(): void
+    {
+        $creator = User::factory()->create();
+        $processor = app(InboundEventProcessor::class);
+        $event = json_decode(file_get_contents(base_path('tests/Fixtures/freeblackmarket/delivery-option-selected.json')), true);
+        $event['payload']['created_by_user_id'] = $creator->id;
+        foreach (['ful_1', 'ful_2'] as $ref) {
+            $event['event_id'] = 'select-' . $ref;
+            $event['payload']['source_fulfillment_ref'] = $ref;
+            $this->assertSame('processed', $processor->process($event)->status);
+            // Even a new envelope id for the same parcel must not add a job.
+            $event['event_id'] .= '-retry';
+            $processor->process($event);
+        }
+        $this->assertDatabaseCount('shipment_board_listings', 2);
+        $this->assertSame(2, ShipmentBoardListing::where('source_order_ref', 'ORD-2001')->count());
+
+        $cancel = ['event_id' => 'cancel-ful-1', 'event_type' => 'fulfillment.cancelled', 'payload' => [
+            'source_order_ref' => 'ORD-2001', 'source_fulfillment_ref' => 'ful_1',
+        ]];
+        $this->assertSame('processed', $processor->process($cancel)->status);
+        $this->assertSame('cancelled', ShipmentBoardListing::where('source_fulfillment_ref', 'ful_1')->first()->status);
+        $this->assertSame('open', ShipmentBoardListing::where('source_fulfillment_ref', 'ful_2')->first()->status);
+        $processor->process($cancel);
+
+        $processor->process(['event_id' => 'cancel-order', 'event_type' => 'order.cancelled', 'payload' => ['source_order_ref' => 'ORD-2001']]);
+        $this->assertSame(2, ShipmentBoardListing::where('status', 'cancelled')->count());
+    }
+
+    public function test_cancel_before_selection_does_not_reopen_a_parcel(): void
+    {
+        $processor = app(InboundEventProcessor::class);
+        $processor->process(['event_id' => 'early-cancel', 'event_type' => 'fulfillment.cancelled', 'payload' => [
+            'source_order_ref' => 'ORD-2001', 'source_fulfillment_ref' => 'ful_early',
+        ]]);
+        $event = json_decode(file_get_contents(base_path('tests/Fixtures/freeblackmarket/delivery-option-selected.json')), true);
+        $event['payload']['created_by_user_id'] = User::factory()->create()->id;
+        $event['payload']['source_fulfillment_ref'] = 'ful_early';
+        $this->assertSame('processed', $processor->process($event)->status);
+        $this->assertSame('cancelled', ShipmentBoardListing::where('source_fulfillment_ref', 'ful_early')->first()->status);
+        $event['event_id'] = 'select-sibling';
+        $event['payload']['source_fulfillment_ref'] = 'ful_sibling';
+        $processor->process($event);
+        $this->assertSame('open', ShipmentBoardListing::where('source_fulfillment_ref', 'ful_sibling')->first()->status);
+    }
+
+    public function test_parcel_cancel_without_a_ref_cannot_cancel_the_order(): void
+    {
+        $creator = User::factory()->create();
+        $listing = ShipmentBoardListing::factory()->create(['created_by_user_id' => $creator->id]);
+        config()->set('freeblackmarket.max_retries', 1);
+        $receipt = app(InboundEventProcessor::class)->process([
+            'event_id' => 'malformed-parcel-cancel', 'event_type' => 'fulfillment.cancelled',
+            'payload' => ['source_order_ref' => $listing->source_order_ref],
+        ]);
+        $this->assertSame('dead_letter', $receipt->status);
+        $this->assertSame('open', $listing->fresh()->status);
+    }
+
     public function test_delivery_option_without_creator_is_owned_by_the_service_account(): void
     {
         config()->set('freeblackmarket.webhook_secret', 'test-webhook-secret');

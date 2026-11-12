@@ -24,6 +24,7 @@ class ShipmentBoardListing extends Model
 
     protected $fillable = [
         'source_order_ref',
+        'source_fulfillment_ref',
         'coalition_ref',
         'drive_ref',
         'status',

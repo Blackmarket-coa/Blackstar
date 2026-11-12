@@ -100,15 +100,46 @@ class InboundEventProcessor
             return;
         }
 
+        if (in_array($eventType, ['delivery.option.selected', 'order.cancelled', 'fulfillment.cancelled'], true)) {
+            // Reject malformed parcel keys rather than accidentally widening a
+            // parcel event into an order-level operation. Validation failures
+            // use the existing retry/dead-letter receipt path.
+            \Illuminate\Support\Facades\Validator::make($payload, [
+                'source_order_ref' => ['required', 'string', 'max:255'],
+                'source_fulfillment_ref' => $eventType === 'fulfillment.cancelled'
+                    ? ['required', 'string', 'max:255', 'regex:/\S/']
+                    : ['nullable', 'string', 'max:255', 'regex:/\S/'],
+            ])->validate();
+        }
+
         if ($eventType === 'delivery.option.selected') {
             if (($payload['delivery_option'] ?? null) !== 'federated_delivery_network') {
                 return;
             }
 
+            // A cancel may arrive before a retried selection. Keep the
+            // transport job cancelled when that delayed selection appears.
+            $cancelled = FbmInboundEventReceipt::query()
+                ->where('status', 'processed')
+                ->where('payload->payload->source_order_ref', $payload['source_order_ref'])
+                ->where(function ($query) use ($payload) {
+                    $query->where('event_type', 'order.cancelled');
+                    if (!empty($payload['source_fulfillment_ref'])) {
+                        $query->orWhere(function ($parcel) use ($payload) {
+                            $parcel->where('event_type', 'fulfillment.cancelled')
+                                ->where('payload->payload->source_fulfillment_ref', $payload['source_fulfillment_ref']);
+                        });
+                    }
+                })->exists();
+
             ShipmentBoardListing::firstOrCreate(
-                ['source_order_ref' => $payload['source_order_ref']],
                 [
-                    'status' => ShipmentBoardListing::STATUS_OPEN,
+                    'source_order_ref' => $payload['source_order_ref'],
+                    'source_fulfillment_ref' => $payload['source_fulfillment_ref'] ?? null,
+                ],
+                [
+                    'status' => $cancelled ? ShipmentBoardListing::STATUS_CANCELLED : ShipmentBoardListing::STATUS_OPEN,
+                    'cancelled_at' => $cancelled ? now() : null,
                     // Present only for a coalition goods drive. When set, the
                     // board narrows this listing to that coalition's own nodes
                     // (see ShipmentEligibilityService); absent, nothing changes.
@@ -145,13 +176,19 @@ class InboundEventProcessor
             return;
         }
 
-        if ($eventType === 'order.cancelled') {
-            $listing = ShipmentBoardListing::query()
-                ->where('source_order_ref', $payload['source_order_ref'] ?? '')
-                ->first();
+        if (in_array($eventType, ['order.cancelled', 'fulfillment.cancelled'], true)) {
+            $query = ShipmentBoardListing::query()
+                ->where('source_order_ref', $payload['source_order_ref']);
+            if ($eventType === 'fulfillment.cancelled') {
+                $query->where('source_fulfillment_ref', $payload['source_fulfillment_ref']);
+            }
 
-            if ($listing && in_array($listing->status, [ShipmentBoardListing::STATUS_OPEN, ShipmentBoardListing::STATUS_CLAIMED, ShipmentBoardListing::STATUS_IN_TRANSIT], true)) {
-                $listing->transitionTo(ShipmentBoardListing::STATUS_CANCELLED);
+            // Whole-order cancellation covers every parcel, while parcel
+            // cancellation is scoped. Lock against a simultaneous status write.
+            foreach ($query->lockForUpdate()->get() as $listing) {
+                if (in_array($listing->status, [ShipmentBoardListing::STATUS_OPEN, ShipmentBoardListing::STATUS_CLAIMED, ShipmentBoardListing::STATUS_IN_TRANSIT], true)) {
+                    $listing->transitionTo(ShipmentBoardListing::STATUS_CANCELLED);
+                }
             }
 
             return;

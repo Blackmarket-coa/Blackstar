@@ -99,6 +99,7 @@ class ShipmentBoardListingController extends Controller
         $this->publisher->queueAndDispatch('shipment.claimed', [
             'shipment_listing_id' => $shipmentBoardListing->id,
             'source_order_ref' => $shipmentBoardListing->source_order_ref,
+            'source_fulfillment_ref' => $shipmentBoardListing->source_fulfillment_ref,
             'claimed_by_node_id' => $shipmentBoardListing->claimed_by_node_id,
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
@@ -245,6 +246,7 @@ class ShipmentBoardListingController extends Controller
         $this->publisher->queueAndDispatch('shipment.claimed', [
             'shipment_listing_id' => $shipmentBoardListing->id,
             'source_order_ref' => $shipmentBoardListing->source_order_ref,
+            'source_fulfillment_ref' => $shipmentBoardListing->source_fulfillment_ref,
             'claimed_by_node_id' => $shipmentBoardListing->claimed_by_node_id,
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
@@ -272,6 +274,7 @@ class ShipmentBoardListingController extends Controller
         $this->publisher->queueAndDispatch($eventType, [
             'shipment_listing_id' => $shipmentBoardListing->id,
             'source_order_ref' => $shipmentBoardListing->source_order_ref,
+            'source_fulfillment_ref' => $shipmentBoardListing->source_fulfillment_ref,
             'claimed_by_node_id' => $shipmentBoardListing->claimed_by_node_id,
             'status' => $shipmentBoardListing->status,
         ], $correlationId);
@@ -284,6 +287,7 @@ class ShipmentBoardListingController extends Controller
         $payload = [
             'id' => $listing->id,
             'source_order_ref' => $listing->source_order_ref,
+            'source_fulfillment_ref' => $listing->source_fulfillment_ref,
             'status' => $listing->status,
             'origin' => $listing->origin,
             'destination' => $listing->destination,
